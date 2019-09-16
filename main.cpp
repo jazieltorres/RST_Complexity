@@ -5,8 +5,8 @@
 using namespace std;
 
 int main() {
-    vector<long> v1 = {0,3,4} ;
-    vector<long> v2 = {1,2,0} ;
+    vector<long> v1 = {3,3,0} ;
+    vector<long> v2 = {4,2,0} ;
     MExponent m1(v1) ;
     MExponent m2(v2) ;
     MExponent m3 = m1+m2 ;
