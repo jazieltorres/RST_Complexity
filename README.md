@@ -1,2 +1,2 @@
 # RST
-Implementation of the RST algorithm
+Implementation of the Rubio-Sweedler-Taylor algorithm
