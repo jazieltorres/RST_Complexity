@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent.h
+iostream
+-
+vector
+-
+numeric
+-
+
+/Users/Luis/Documents/Universidad/Research/RST/RST/main.cpp
+iostream
+-
+vector
+-
+MExponent.h
+/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent.h
+
