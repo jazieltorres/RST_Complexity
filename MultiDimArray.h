@@ -1,6 +1,7 @@
 #include <iostream>
 #include <vector>
 #include <forward_list>
+#include <NTL/ZZ_p.h>
 #include "MExponent.h"
 using namespace std;
 
@@ -8,12 +9,12 @@ using namespace std;
 #define MULTIDIMARRAY_H
 
 class MultiVarMonomial {
-    double coeff;
+    NTL::ZZ_p coeff;
     MExponent exp;
     MultiVarMonomial () {}
-    MultiVarMonomial (double& c) {coeff = c;}
+    MultiVarMonomial (NTL::ZZ_p& c) {coeff = c;}
     MultiVarMonomial (MExponent& e) {exp = e;}
-    MultiVarMonomial (double& c, MExponent& e) {coeff = c; exp = e;}
+    MultiVarMonomial (NTL::ZZ_p& c, MExponent& e) {coeff = c; exp = e;}
     void display(ostream& out) {out << coeff << "*" << exp;}
 };
 
@@ -22,11 +23,11 @@ ostream& operator<<(ostream& out, const MultiVarMonomial&);
 class MultiDimArray
 {
     private:
-        vector< vector<double> > A;
+        vector< vector<NTL::ZZ_p> > A;
         long delta_size;
         vector<MultiVarMonomial> grobner_basis;
     public:
-        void RST(const vector< vector<double> >&, const long&, const vector<long>&);
+        void RST(const vector< vector<NTL::ZZ_p> >&, const long&, const vector<long>&);
 } ;
 #endif
 
@@ -62,7 +63,7 @@ bool comp(const MExponent& e1, const MExponent& e2) {
     return (e1.grlex_less(e2));
 }
 
-void printM (const vector< vector<double> >& M) {
+void printM (const vector< vector<NTL::ZZ_p> >& M) {
     for (long i = 0; i<M.size(); i++){
         for (long j=0; j<M[0].size(); j++){
             cout << M[i][j] << " ";
@@ -71,18 +72,18 @@ void printM (const vector< vector<double> >& M) {
     }
 }
 
-void insertBefore(vector< vector<double> >& M, long& index, const long& m) {
+void insertBefore(vector< vector<NTL::ZZ_p> >& M, long& index, const long& m) {
     for (long i = 0; i < (m - index); i++) {
         M[m-i].swap(M[m-i-1]) ;
     }
 }
 
 
-void reduce(vector< vector<double> >& M, vector< vector<double> >& Id) {
+void reduce(vector< vector<NTL::ZZ_p> >& M, vector< vector<NTL::ZZ_p> >& Id) {
     const long m = M.size() - 1;
     const long n = M[0].size() - 1;
     const long n_id = Id[0].size() - 1;
-    vector<double> lambda(m, 0);
+    vector<NTL::ZZ_p> lambda(m, (NTL::ZZ_p)0);
     long j = 0 ;
 
     for (long i = 0; i < m; i++) {
@@ -123,9 +124,8 @@ void reduce(vector< vector<double> >& M, vector< vector<double> >& Id) {
     return;
 } // end reduce
 
-vector<double> rowPiAlpha(const MExponent& alpha, const vector< vector<double> >& A, vector<MExponent>& exponentsColumn) {
-    vector<double> piAlpha;
-
+vector<NTL::ZZ_p> rowPiAlpha(const MExponent& alpha, const vector< vector<NTL::ZZ_p> >& A, vector<MExponent>& exponentsColumn) {
+    vector<NTL::ZZ_p> piAlpha;
     return piAlpha;
 }
 
@@ -136,7 +136,7 @@ vector<double> rowPiAlpha(const MExponent& alpha, const vector< vector<double> >
 *
 *******************************************************/
 
-void MultiDimArray::RST(const vector< vector<double> >& A, const long& m, const vector<long>& period) {
+void MultiDimArray::RST(const vector< vector<NTL::ZZ_p> >& A, const long& m, const vector<long>& period) {
     MExponent e_period(period);
     MExponent e_bound(period);
 
@@ -153,8 +153,8 @@ void MultiDimArray::RST(const vector< vector<double> >& A, const long& m, const 
         if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
     }
 
-    vector< vector<double> > matrix;// Later this will be ZZ_p from NTL
-    vector< vector<double> > id_matrix;
+    vector< vector<NTL::ZZ_p> > matrix;
+    vector< vector<NTL::ZZ_p> > id_matrix;
     long delta_size(0);
 
     while (!exponentsRow.empty()) {
