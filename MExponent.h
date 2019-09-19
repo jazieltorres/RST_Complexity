@@ -1,50 +1,97 @@
 #include <iostream>
 #include <vector>
-#include <numeric>
+#include <numeric> // accumulate
 using namespace std;
 
 #ifndef MEXPONENT_H
 #define MEXPONENT_H
 
-// Class specification
-
-class MExponent 
+class MExponent
 {
     public:
-        void operator=(const MExponent&) ; // Overload assignment
+        // CONSTRUCTORS
         MExponent() ; // Default constructor
-        MExponent operator+(const MExponent&) const ; // Overload + to add two exponents
-        MExponent operator-(const MExponent&) const ; // Overload - to subtract two exponents
-        void setExp(const vector<long>&) ; // Function to set the vector of exponents
-        bool lex_less(const MExponent& m2) const ; // Function to compare by lex
-        bool grlex_less(const MExponent& m2) const ; // Function to compare by graded lex
-        bool leq_d(const MExponent& m2) const ; // Function to compare by division
-        MExponent(const vector<long>&) ; // Constructor
+        MExponent(long& m);
+        MExponent(const vector<long>&) ;
+
+        // DATA ACCESS AND MANIPULATION
+        const vector<long>& getExp() const ; // read-only access of exponents
+        vector<long>& editExp(); // access to modify exponents
+        void setExp(const vector<long>&) ; // set exponents
+
+        // ASSIGNMENT AND ARITHMETIC
+        void operator=(const MExponent&) ; // Overload assignment
+        MExponent operator+(const MExponent&) const ; // add two exponents
+        MExponent operator-(const MExponent&) const ; // subtract two exponents
+        MExponent scalar_mult(const long&) const ; // scalar multiplication
+        MExponent mod(const MExponent&) const ; // component wise mod
+
+        // MONOMIAL COMPARISONS
+        bool lex_less(const MExponent& m2) const ; // compare by lex
+        bool grlex_less(const MExponent& m2) const ; // compare by graded lex
+        bool leq_d(const MExponent& m2) const ; // compare by divisibility
+
         friend ostream& operator<<(ostream& out, const MExponent&) ; // Overload << to print vector of exponents
-        const vector<long>& getExp() const ; // Function to retrieve vector of exponents
+
 
     private:
         vector<long> exp;
 
 } ; // end MExponent
-
 #endif // MEXPONENT_H
 
-// Implementation
 
-// Default constructor
+
+/******************************************************
+*
+*           CONSTRUCTORS
+*
+*******************************************************/
+
+// Default
 MExponent::MExponent() : exp(3) { }
+
+MExponent::MExponent(long& m) {
+    exp.resize(m);
+}
 
 MExponent::MExponent(const vector<long>& e) {
     exp = e ;
- }
+}
 
-// Overload assignment of exponent
+/******************************************************
+*
+*           DATA ACCESS AND MANIPULATION
+*
+*******************************************************/
+
+// read-only access
+const vector<long>& MExponent::getExp() const {
+    return exp ;
+}
+
+// access to modify
+vector<long>& MExponent::editExp() {
+    return exp ;
+}
+
+// set exponents
+void MExponent::setExp(const vector<long>& e) {
+    exp = e ;
+}
+
+/******************************************************
+*
+*           ASSIGNMENT AND ARITHMETIC
+*
+*******************************************************/
+
+// assignment
 void MExponent::operator=(const MExponent& e) {
     exp = e.getExp() ;
 }
 
-// Overload + to add two exponents
+// addition
 MExponent MExponent::operator+(const MExponent& e) const {
     vector<long> result(exp.size()) ;
     for (int i = 0; i < exp.size(); i++) {
@@ -53,16 +100,37 @@ MExponent MExponent::operator+(const MExponent& e) const {
     return MExponent(result) ;
 }
 
- // Overload - to subtract two exponents
+// substraction
 MExponent MExponent::operator-(const MExponent& e) const {
     vector<long> result(exp.size()) ;
-    for (int i = 0; i < exp.size(); i++) {
+    for (int i = 0; i < exp.size(); i++)
         result[i] = exp[i] - e.getExp()[i] ;
-    }
     return MExponent(result) ;
 }
 
-// Function to compare by lex
+// scalar multiplication
+MExponent MExponent::scalar_mult(const long& alpha) const {
+    vector<long> result(exp.size()) ;
+    for(int i = 0; i < exp.size(); i++)
+        result[i] = exp[i] * alpha ;
+    return MExponent(result) ;
+}
+
+// mod component wise
+MExponent MExponent::mod(const MExponent& e) const {
+    vector<long> result(exp.size()) ;
+    for(int i = 0; i < exp.size(); i++)
+        result[i] = exp[i] % e.getExp()[i] ;
+    return MExponent(result) ;
+}
+
+/******************************************************
+*
+*           MONOMIAL COMPARISONS
+*
+*******************************************************/
+
+// lexicographic (lex)
 bool MExponent::lex_less(const MExponent& e) const {
     for (int i = 0; i < exp.size(); i++) {
         long x = exp[i] - e.getExp()[i] ;
@@ -72,7 +140,7 @@ bool MExponent::lex_less(const MExponent& e) const {
     return false ;
 }
 
-// Function to compare by graded lex
+// graded lexicographic (grlex)
 bool MExponent::grlex_less(const MExponent& e) const {
     int sum1 = accumulate(exp.begin(), exp.end(), 0) ;
     int sum2 = accumulate(e.getExp().begin(), e.getExp().end(), 0) ;
@@ -80,7 +148,7 @@ bool MExponent::grlex_less(const MExponent& e) const {
     return false ;
 }
 
-// Function to compare less or equal by divisibility
+// divisibility
 bool MExponent::leq_d(const MExponent& e) const {
     for(int i = 0; i < exp.size(); i++) {
         if(exp[i] > e.getExp()[i]) return false ;
@@ -88,15 +156,22 @@ bool MExponent::leq_d(const MExponent& e) const {
     return true ;
 }
 
-// Overload << to print vector of exponents
+
+/******************************************************
+*
+*           PRINT (<< OVERLOAD)
+*
+*******************************************************/
+
 ostream& operator<<(ostream& out, MExponent& e) {
     out << "(" ;
-    for(int i = 0; i < e.getExp().size()-1; i++) out << e.getExp()[i] << ", " ;
+    for(int i = 0; i < e.getExp().size()-1; i++)
+        out << e.getExp()[i] << ", " ;
     out << e.getExp()[e.getExp().size()-1] << ")";
     return out;
 }
 
-// Function to retrieve vector of exponents
-const vector<long>& MExponent::getExp() const {
-    return exp ;
-}
+
+/******************************************************
+*           END OF MExponent IMPLEMENTATION
+*******************************************************/
