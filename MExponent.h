@@ -1,10 +1,11 @@
+#ifndef MEXPONENT_H
+#define MEXPONENT_H
+
+
 #include <iostream>
 #include <vector>
 #include <numeric> // accumulate
 using namespace std;
-
-#ifndef MEXPONENT_H
-#define MEXPONENT_H
 
 class MExponent
 {
