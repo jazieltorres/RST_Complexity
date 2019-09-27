@@ -9,8 +9,6 @@
 
 using namespace std;
 
-
-
 template <long m>
 class MExponent {
     private:
@@ -35,7 +33,13 @@ class MExponent {
         bool grlex_less(const MExponent& m2) const ; // compare by graded lex
         bool leq_d(const MExponent& m2) const ; // compare by divisibility
 
-        friend ostream& operator<<(ostream& out, const MExponent<m>&) ; // Overload << to print vector of exponents
+        friend ostream& operator<<(ostream& out, const MExponent<m>& e) {
+          out << "(" ;
+          for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
+              out << *i << ", " ;
+          out << e.getExp()[e.getExp().length()-1] << ")";
+          return out;
+        } // Overload << to print vector of exponents
 
 } ; // end MExponent
 #endif // MEXPONENT_H
@@ -144,14 +148,14 @@ bool MExponent<m>::leq_d(const MExponent<m>& e) const {
 *
 *******************************************************/
 
-template <long m>
-ostream& operator<<(ostream& out, MExponent<m>& e) {
-    out << "(" ;
-    for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
-        out << *i << ", " ;
-    out << e.getExp()[e.getExp().length()-1] << ")";
-    return out;
-}
+// template <long m>
+// ostream& operator<<(ostream& out, MExponent<m>& e) {
+//     out << "(" ;
+//     for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
+//         out << *i << ", " ;
+//     out << e.getExp()[e.getExp().length()-1] << ")";
+//     return out;
+// }
 //
 //
 // /******************************************************

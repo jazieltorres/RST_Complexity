@@ -6,19 +6,29 @@
 
 #IncludeRegexTransform: 
 
-/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent.h
+/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent2.cpp
+iostream
+-
+numeric
+-
+blitz/array.h
+-
+
+/Users/Luis/Documents/Universidad/Research/RST/RST/MultiDimArray.cpp
 iostream
 -
 vector
 -
-numeric
+forward_list
 -
+NTL/ZZ_p.h
+-
+MExponent2.cpp
+/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent2.cpp
 
 /Users/Luis/Documents/Universidad/Research/RST/RST/main.cpp
 iostream
 -
-vector
--
-MExponent.h
-/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent.h
+MultiDimArray.cpp
+/Users/Luis/Documents/Universidad/Research/RST/RST/MultiDimArray.cpp
 

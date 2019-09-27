@@ -3,8 +3,6 @@
 
 using namespace blitz;
 
-
-
 int main() {
     NTL::ZZ p = (NTL::ZZ) 11;
     NTL::ZZ_p::init(p);

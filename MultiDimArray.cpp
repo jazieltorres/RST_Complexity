@@ -49,8 +49,6 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
 }
 
 
-
-
 /******************************************************
 *
 *       OTHER MODULES FOR RST IMPLEMENTATION
@@ -58,7 +56,7 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
 *******************************************************/
 
 template<long m>
-void generateDivisors(long depth, long& index, MExponent<m>& e, const vector<long>& period, vector< MExponent<m> >& list){
+void generateDivisors(long depth, long index, MExponent<m>& e, const vector<long>& period, vector< MExponent<m> >& list){
   if (depth > 0){
     for(int i=0; i <= period[depth-1]; i++){
         e.editExp()[depth-1] = i;
@@ -67,6 +65,7 @@ void generateDivisors(long depth, long& index, MExponent<m>& e, const vector<lon
   }
   else {
     list[index] = e;
+    cout << &list[index] << endl ;
     index++;
   }
 }
@@ -158,7 +157,7 @@ vector<F> rowPiAlpha(const MExponent<m>& alpha, const blitz::Array<F,m>& A, vect
     piAlpha.resize(n);
     for (long i=0; i<n; i++) {
         MExponent<m> index = exponentsColumn[i]+alpha;
-        cout << alpha << endl;
+        // cout << alpha << endl;
         // cout << exponentsColumn[i] << " + " << alpha << " = " << index << endl;
         // piAlpha[i] = A(index.mod(e_period).getExp());
     }
@@ -182,11 +181,22 @@ void MultiDimArray<F,m>::RST() {
     vector< MExponent<m> > exponentsColumn(sizeOfDivisors(e_bound));
     forward_list< MExponent<m> > exponentsRow;
 
+    generateDivisors<m>(m, 0,e_bound,period,exponentsColumn);
+
+    cout << "begin exponentsColumn" << endl ;
+    for (auto e = exponentsColumn.begin(); e != exponentsColumn.end(); e++){
+        cout << *e << endl ;
+    }
+
     sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
 
+
     for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
+        // cout << *e << endl ;
         if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
     }
+
+    cout << "end exponentsColumn" << endl ;
 
     vector< vector<F> > matrix;
     vector< vector<F> > id_matrix;
