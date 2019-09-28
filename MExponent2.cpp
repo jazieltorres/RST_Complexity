@@ -33,13 +33,14 @@ class MExponent {
         bool grlex_less(const MExponent& m2) const ; // compare by graded lex
         bool leq_d(const MExponent& m2) const ; // compare by divisibility
 
+        // Overload << to print vector of exponents
         friend ostream& operator<<(ostream& out, const MExponent<m>& e) {
           out << "(" ;
           for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
               out << *i << ", " ;
           out << e.getExp()[e.getExp().length()-1] << ")";
           return out;
-        } // Overload << to print vector of exponents
+        }
 
 } ; // end MExponent
 #endif // MEXPONENT_H
@@ -136,7 +137,7 @@ bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
 template <long m>
 bool MExponent<m>::leq_d(const MExponent<m>& e) const {
     for(int i = 0; i < exp.length(); i++) {
-        if(exp[i] > e.getExp()[i]) return false ;
+        if(exp[i] > e.getExp()[i]) return false;
     }
     return true ;
 }

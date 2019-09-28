@@ -16,7 +16,6 @@ int main() {
     MultiDimArray<F,m> array(A);
     array.RST();
 
-    cout << "Compiles!" << endl;
     return 0;
 }
 
