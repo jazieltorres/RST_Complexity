@@ -105,8 +105,16 @@
       <updated>1568654345032</updated>
       <workItem from="1568654350808" duration="1783000" />
       <workItem from="1569513171076" duration="1204000" />
-      <workItem from="1569850818747" duration="4338000" />
+      <workItem from="1569850818747" duration="4672000" />
     </task>
+    <task id="LOCAL-00001" summary="Now it compiles in CLion :) (Changes in CMakeLists.txt File">
+      <created>1569938592131</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1569938592131</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -124,5 +132,9 @@
         </entry>
       </map>
     </option>
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Now it compiles in CLion :) (Changes in CMakeLists.txt File" />
+    <option name="LAST_COMMIT_MESSAGE" value="Now it compiles in CLion :) (Changes in CMakeLists.txt File" />
   </component>
 </project>
