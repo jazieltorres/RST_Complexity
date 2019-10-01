@@ -8,43 +8,45 @@
 		<Option virtualFolders="CMake Files\;"/>
 		<Build>
 			<Target title="all">
-				<Option working_dir="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug"/>
+				<Option working_dir="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 all"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="rebuild_cache">
-				<Option working_dir="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug"/>
+				<Option working_dir="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 rebuild_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="edit_cache">
-				<Option working_dir="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug"/>
+				<Option working_dir="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug"/>
 				<Option type="4"/>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 edit_cache"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="RST">
-				<Option output="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/RST" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug"/>
+				<Option output="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/RST" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/Luis/Documents/Universidad/Research/RST/RST/."/>
+					<Add directory="/Users/Jaziel/Desktop/Research/RST/."/>
+					<Add directory="/usr/local/Cellar/ntl/11.3.3/include"/>
+					<Add directory="/usr/local/Cellar/blitz/HEAD-0e373f7/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
@@ -53,20 +55,22 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 RST"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 RST"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 			<Target title="RST/fast">
-				<Option output="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/RST" prefix_auto="0" extension_auto="0"/>
-				<Option working_dir="/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug"/>
+				<Option output="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/RST" prefix_auto="0" extension_auto="0"/>
+				<Option working_dir="/Users/Jaziel/Desktop/Research/RST/cmake-build-debug"/>
 				<Option object_output="./"/>
 				<Option type="1"/>
 				<Option compiler="gcc"/>
 				<Compiler>
-					<Add directory="/Users/Luis/Documents/Universidad/Research/RST/RST/."/>
+					<Add directory="/Users/Jaziel/Desktop/Research/RST/."/>
+					<Add directory="/usr/local/Cellar/ntl/11.3.3/include"/>
+					<Add directory="/usr/local/Cellar/blitz/HEAD-0e373f7/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/include/c++/v1"/>
 					<Add directory="/usr/local/include"/>
 					<Add directory="/Library/Developer/CommandLineTools/usr/lib/clang/10.0.1/include"/>
@@ -75,20 +79,20 @@
 					<Add directory="/Library/Frameworks"/>
 				</Compiler>
 				<MakeCommands>
-					<Build command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 RST/fast"/>
-					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
-					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
-					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Luis/Documents/Universidad/Research/RST/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<Build command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 RST/fast"/>
+					<CompileFile command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 &quot;$file&quot;"/>
+					<Clean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
+					<DistClean command="/usr/bin/make -j4 -f &quot;/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/Makefile&quot;  VERBOSE=1 clean"/>
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/Luis/Documents/Universidad/Research/RST/RST/MExponent.h">
+		<Unit filename="/Users/Jaziel/Desktop/Research/RST/MExponent.h">
 			<Option target="RST"/>
 		</Unit>
-		<Unit filename="/Users/Luis/Documents/Universidad/Research/RST/RST/main.cpp">
+		<Unit filename="/Users/Jaziel/Desktop/Research/RST/main.cpp">
 			<Option target="RST"/>
 		</Unit>
-		<Unit filename="/Users/Luis/Documents/Universidad/Research/RST/RST/CMakeLists.txt">
+		<Unit filename="/Users/Jaziel/Desktop/Research/RST/CMakeLists.txt">
 			<Option virtualFolder="CMake Files\"/>
 		</Unit>
 	</Project>

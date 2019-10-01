@@ -1,7 +1,7 @@
 file(REMOVE_RECURSE
   "CMakeFiles/RST.dir/main.cpp.o"
-  "RST.pdb"
   "RST"
+  "RST.pdb"
 )
 
 # Per-language clean rules from dependency scanning.

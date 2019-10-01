@@ -1,1 +1,1 @@
-/Library/Developer/CommandLineTools/usr/bin/c++  -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/RST.dir/main.cpp.o  -o RST 
+/Library/Developer/CommandLineTools/usr/bin/c++   -pthread -g -isysroot /Library/Developer/CommandLineTools/SDKs/MacOSX10.14.sdk -Wl,-search_paths_first -Wl,-headerpad_max_install_names  CMakeFiles/RST.dir/main.cpp.o  -o RST /usr/local/Cellar/ntl/11.3.3/lib/libntl.40.dylib /usr/local/Cellar/ntl/11.3.3/lib/libntl.dylib 
