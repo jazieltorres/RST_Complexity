@@ -126,13 +126,18 @@ vector<F> rowPiAlpha(const MExponent<m>& alpha, const blitz::Array<F,m>& A, vect
 
 template<typename F>
 void addDimension(vector< vector<F> >& idMatrix) {
-    unsigned long n;
-    if(idMatrix.empty())    n = idMatrix.size();
-    else                    n = idMatrix[0].size();
+    unsigned long n, m;
+    m = idMatrix.size();
+    if (m == 0) {
+        n = 0;
+    }
+    else {
+        n = idMatrix[0].size();
+    }
 
     vector<F> lastRow(n+1, (F)0);
     lastRow[n] = (F)1;
-    for (unsigned long i = 0; i < n; i++){
+    for (unsigned long i = 0; i < m ; i++){
         idMatrix[i].push_back((F)0);
     }
     idMatrix.push_back(lastRow);

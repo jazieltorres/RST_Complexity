@@ -9,7 +9,7 @@
 
 
 using namespace std;
-s
+
 template <unsigned long m>
 class MExponent {
     private:
