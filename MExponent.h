@@ -12,8 +12,8 @@ class MExponent
     public:
         // CONSTRUCTORS
         MExponent() ; // Default constructor
-        MExponent(long& m);
-        MExponent(const vector<long>&) ;
+        MExponent(unsigned long& m);
+        MExponent(const vector<unsigned long>&) ;
 
         // DATA ACCESS AND MANIPULATION
         const vector<long>& getExp() const ; // read-only access of exponents
@@ -52,11 +52,11 @@ class MExponent
 // Default
 MExponent::MExponent() : exp(3) { }
 
-MExponent::MExponent(long& m) {
+MExponent::MExponent(unsigned long& m) {
     exp.resize(m);
 }
 
-MExponent::MExponent(const vector<long>& e) {
+MExponent::MExponent(const vector<unsigned long>& e) {
     exp = e ;
 }
 

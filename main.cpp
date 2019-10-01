@@ -1,5 +1,5 @@
-#include <iostream>
 #include "MultiDimArray.cpp"
+#include "NTL/ZZ_p.h"
 
 using namespace blitz;
 
@@ -20,4 +20,4 @@ int main() {
 }
 
 
-// g++ -std=c++11 -pthread -march=native main.cpp  -lntl -lblitz -lgmp -lm
+// g++ -g -std=c++11 -pthread -march=native main.cpp  -lntl -lblitz -lgmp -lm

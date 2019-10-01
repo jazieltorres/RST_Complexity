@@ -9,19 +9,19 @@
 
 using namespace std;
 
-template <long m>
+template <unsigned long m>
 class MExponent {
     private:
-        blitz::TinyVector<long, m> exp ;
+        blitz::TinyVector<unsigned long, m> exp ;
     public:
         // CONSTRUCTORS
         MExponent() {}
-        MExponent(const vector<long>&) ;
-        MExponent(const blitz::TinyVector<long, m>&) ;
+        MExponent(const vector<unsigned long>&) ;
+        MExponent(const blitz::TinyVector<unsigned long, m>&) ;
 
         // DATA ACCESS AND MANIPULATION
-        const blitz::TinyVector<long, m>& getExp() const ; // read-only access of exponents
-        blitz::TinyVector<long, m>& editExp(); // access to modify exponents
+        const blitz::TinyVector<unsigned long, m>& getExp() const ; // read-only access of exponents
+        blitz::TinyVector<unsigned long, m>& editExp(); // access to modify exponents
 
         // ASSIGNMENT AND ARITHMETIC
         void operator=(const MExponent&) ; // Overload assignment
@@ -52,13 +52,13 @@ class MExponent {
 *
 *******************************************************/
 
-template <long m>
-MExponent<m>::MExponent(const vector<long>& e) {
-    for (int i = 0; i<exp.length(); i++) exp[i] = e[i] ;
+template <unsigned long m>
+MExponent<m>::MExponent(const vector<unsigned long>& e) {
+    for (unsigned long i = 0; i < exp.length(); i++) exp[i] = e[i] ;
 }
 
-template <long m>
-MExponent<m>::MExponent(const blitz::TinyVector<long, m>& e) {
+template <unsigned long m>
+MExponent<m>::MExponent(const blitz::TinyVector<unsigned long, m>& e) {
     exp = e ;
 }
 
@@ -69,14 +69,14 @@ MExponent<m>::MExponent(const blitz::TinyVector<long, m>& e) {
 *******************************************************/
 
 // read-only access
-template <long m>
-const blitz::TinyVector<long, m>& MExponent<m>::getExp() const {
+template <unsigned long m>
+const blitz::TinyVector<unsigned long, m>& MExponent<m>::getExp() const {
     return exp ;
 }
 
 // access to modify
-template <long m>
-blitz::TinyVector<long, m>& MExponent<m>::editExp() {
+template <unsigned long m>
+blitz::TinyVector<unsigned long, m>& MExponent<m>::editExp() {
     return exp ;
 }
 
@@ -87,22 +87,22 @@ blitz::TinyVector<long, m>& MExponent<m>::editExp() {
 *******************************************************/
 
 // assignment
-template <long m>
+template <unsigned long m>
 void MExponent<m>::operator=(const MExponent& e) {
     exp = e.getExp() ;
 }
 
 // addition
-template <long m>
+template <unsigned long m>
 MExponent<m> MExponent<m>::operator+(const MExponent& e) const {
     return MExponent(exp + e.getExp()) ;
 }
 
 // mod component wise
-template <long m>
+template <unsigned long m>
 MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
-    blitz::TinyVector<long, m> result ;
-    for(int i = 0; i < exp.length(); i++)
+    blitz::TinyVector<unsigned long, m> result ;
+    for(unsigned long i = 0; i < exp.length(); i++)
         result[i] = exp[i] % e.getExp()[i] ;
     return MExponent(result) ;
 }
@@ -114,10 +114,10 @@ MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
 *******************************************************/
 
 // lexicographic (lex)
-template <long m>
+template <unsigned long m>
 bool MExponent<m>::lex_less(const MExponent<m>& e) const {
-    for (int i = 0; i < exp.length(); i++) {
-        long x = exp[i] - e.getExp()[i] ;
+    for (unsigned i = 0; i < exp.length(); i++) {
+        unsigned long x = exp[i] - e.getExp()[i] ;
         if (x < 0)  return true ;
         else if (x > 0) return false ;
     }
@@ -125,7 +125,7 @@ bool MExponent<m>::lex_less(const MExponent<m>& e) const {
 }
 
 // graded lexicographic (grlex)
-template <long m>
+template <unsigned long m>
 bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
     int sum1 = sum(exp) ;
     int sum2 = sum(e.getExp()) ;
@@ -134,9 +134,9 @@ bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
 }
 
 // divisibility
-template <long m>
+template <unsigned long m>
 bool MExponent<m>::leq_d(const MExponent<m>& e) const {
-    for(int i = 0; i < exp.length(); i++) {
+    for(unsigned long i = 0; i < exp.length(); i++) {
         if(exp[i] > e.getExp()[i]) return false;
     }
     return true ;
