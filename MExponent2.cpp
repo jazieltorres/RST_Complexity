@@ -2,13 +2,14 @@
 #define MEXPONENT2_H
 
 
+#include <vector>
 #include <iostream>
 #include <numeric> // accumulate
 #include <blitz/array.h>
 
 
 using namespace std;
-
+s
 template <unsigned long m>
 class MExponent {
     private:
