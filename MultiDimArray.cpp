@@ -5,6 +5,7 @@
 #include <vector>
 #include <forward_list>
 #include "MExponent2.cpp"
+#include <algorithm>
 using namespace std;
 
 template <typename F, unsigned long m>
