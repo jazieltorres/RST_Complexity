@@ -13,8 +13,6 @@ algorithm
 -
 iostream
 -
-numeric
--
 blitz/array.h
 -
 
