@@ -156,10 +156,10 @@ public:
 };
 
 template<typename F, unsigned long m>
-void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& exponentsColumn) {
+void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& exponentsRow) {
     unsigned long n = idMatrix.size()-1;
-    for (unsigned long i = 0; i < idMatrix[0].size(); i++){
-        if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << exponentsColumn[i] << "\t";
+    for (unsigned long i = 0; i < idMatrix[0].size(); i++) {
+        if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << exponentsRow[i] << "\t";
     }
     cout << endl;
 }
@@ -179,12 +179,15 @@ void MultiDimArray<F,m>::RST() {
         bound.editExp()[i] = 2 * period[i] - 1;
     }
 
-    vector< MExponent<m> > exponentsColumn(sizeOfDivisors(bound));
+    vector< MExponent<m> >  exponentsColumn(sizeOfDivisors(bound)),
+                            idColumn;
     forward_list< MExponent<m> > exponentsRow;
+
 
     unsigned long index = 0;
     MExponent<m> exp;
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
+
     sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
 
     MExponent<m> e_period(period);
@@ -195,47 +198,17 @@ void MultiDimArray<F,m>::RST() {
     vector< vector<F> > matrix;
     vector< vector<F> > idMatrix;
 
+    MExponent<m> alpha;
     while (!exponentsRow.empty()) {
-        MExponent<m> alpha = exponentsRow.front();
+        alpha = exponentsRow.front();
         matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
         addDimension(idMatrix);
-
-
-        // // // TEST
-        // exponentsRow.pop_front();
-        // alpha = exponentsRow.front();
-        // matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
-        // addDimension(idMatrix);
-        // reduce(matrix, idMatrix);
-        //
-        // exponentsRow.pop_front();
-        // alpha = exponentsRow.front();
-        // matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
-        // addDimension(idMatrix);
-        //
-        //
-        //
-        // cout << "Matrix before:\n";
-        // printMatrix(matrix);
-        // cout << "\n\n\n";
-        // cout << "ID Matrix before:\n";
-        // printMatrix(idMatrix);
-        // cout << "\n\n\n";
-        //
-        // reduce(matrix, idMatrix);
-        //
-        // cout << "Matrix after:\n";
-        // printMatrix(matrix);
-        // cout << "\n\n\n";
-        // cout << "ID Matrix after:\n";
-        // printMatrix(idMatrix);
-        // cout << "\n\n\n";
-        // // END TEST
+        idColumn.push_back(alpha);
 
         reduce(matrix, idMatrix);
         vector<F> zeroRow(matrix[0].size(), (F)0);
         if (matrix[matrix.size()-1] == zeroRow) {
-            printPoly(idMatrix, exponentsColumn);
+            printPoly(idMatrix, idColumn);
             matrix.pop_back();
             idMatrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
@@ -244,6 +217,6 @@ void MultiDimArray<F,m>::RST() {
             exponentsRow.pop_front();
             delta_size++;
         }
-
     }
+    cout << "Delta size: " <<  delta_size << endl;
 }
