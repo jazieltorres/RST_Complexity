@@ -104,6 +104,8 @@ void printMatrix (const vector< vector<F> >& M) {
     unsigned long m = M.size();
     unsigned long n = M[0].size();
 
+    if (n>15) n = 15;
+
     for (unsigned long i = 0; i < m; i++){
         for (unsigned long j = 0; j < n; j++){
             cout << M[i][j] << " ";
@@ -195,8 +197,7 @@ void MultiDimArray<F,m>::RST() {
         if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
     }
 
-    vector< vector<F> > matrix;
-    vector< vector<F> > idMatrix;
+    vector< vector<F> > matrix, idMatrix;
 
     MExponent<m> alpha;
     while (!exponentsRow.empty()) {
@@ -205,13 +206,46 @@ void MultiDimArray<F,m>::RST() {
         addDimension(idMatrix);
         idColumn.push_back(alpha);
 
+
+//        cout << "BEFORE REDUCE:" << endl;
+//        printMatrix(matrix);
+//        cout << endl;
+//        printMatrix(idMatrix);
+
         reduce(matrix, idMatrix);
+
+//        cout << "\nAFTER REDUCE:" << endl;
+//        printMatrix(matrix);
+//        cout << endl;
+//        printMatrix(idMatrix);
+//        cout << "\n" << endl;
+
+
+
         vector<F> zeroRow(matrix[0].size(), (F)0);
+
+        //FOR TEST 3:
+//        bool isZero = true;
+//        for (int i=0; i<6; i++){
+//            if (matrix[matrix.size()-1][i] != zeroRow[i]) isZero = false;
+//        }
+        // END TEST 3 BLOCK
+
         if (matrix[matrix.size()-1] == zeroRow) {
+//        if(isZero) {
             printPoly(idMatrix, idColumn);
             matrix.pop_back();
             idMatrix.pop_back();
+
+//            cout << "BEFORE REMOVE" << endl;
+//            for (auto i=exponentsRow.begin(); i!=exponentsRow.end(); i++) cout << *i << " ";
+//            cout << endl;
+
             exponentsRow.remove_if(isMultiple<m>(alpha));
+
+//            cout << "AFTER REMOVE" << endl;
+//            for (auto i=exponentsRow.begin(); i!=exponentsRow.end(); i++) cout << *i << " ";
+//            cout << endl;
         }
         else {
             exponentsRow.pop_front();
