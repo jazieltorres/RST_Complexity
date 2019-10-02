@@ -11,14 +11,11 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="Now it compiles in CLion :) (Changes in CMakeLists.txt File)">
+    <list default="true" id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MExponent.h" beforeDir="false" afterPath="$PROJECT_DIR$/MExponent.h" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MExponent2.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MExponent2.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MultiDimArray.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MultiDimArray.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.make" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/RST" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/RST" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
@@ -80,7 +77,9 @@
       <updated>1568654345032</updated>
       <workItem from="1568654350808" duration="1783000" />
       <workItem from="1569513171076" duration="1204000" />
-      <workItem from="1569850818747" duration="10964000" />
+      <workItem from="1569850818747" duration="14281000" />
+      <workItem from="1569958322112" duration="5248000" />
+      <workItem from="1570039464790" duration="3879000" />
     </task>
     <task id="LOCAL-00001" summary="Now it compiles in CLion :) (Changes in CMakeLists.txt File">
       <created>1569938592131</created>
@@ -96,7 +95,14 @@
       <option name="project" value="LOCAL" />
       <updated>1569938794908</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="Now it compiles in CLion :) (Changes in CMakeLists.txt File)">
+      <created>1569947081218</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1569947081218</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -122,6 +128,13 @@
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/MultiDimArray.cpp</url>
+          <line>229</line>
+          <option name="timeStamp" value="8" />
+        </line-breakpoint>
+      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" suspend="NONE" type="CidrExceptionBreakpoint">
           <dependency master-id="0" />

@@ -7,6 +7,10 @@
 #IncludeRegexTransform: 
 
 /Users/Jaziel/Desktop/Research/RST/MExponent2.cpp
+vector
+-
+algorithm
+-
 iostream
 -
 numeric
@@ -23,6 +27,8 @@ forward_list
 -
 MExponent2.cpp
 /Users/Jaziel/Desktop/Research/RST/MExponent2.cpp
+algorithm
+-
 
 /Users/Jaziel/Desktop/Research/RST/main.cpp
 MultiDimArray.cpp
