@@ -3,8 +3,8 @@
 
 
 #include <vector>
+#include <algorithm>
 #include <iostream>
-#include <numeric> // accumulate
 #include <blitz/array.h>
 
 
@@ -16,9 +16,9 @@ class MExponent {
         blitz::TinyVector<unsigned long, m> exp ;
     public:
         // CONSTRUCTORS
-        MExponent() {}
-        MExponent(const vector<unsigned long>&) ;
-        MExponent(const blitz::TinyVector<unsigned long, m>&) ;
+        MExponent() = default;
+        explicit MExponent(const vector<unsigned long>&) ;
+        explicit MExponent(const blitz::TinyVector<unsigned long, m>&) ;
 
         // DATA ACCESS AND MANIPULATION
         const blitz::TinyVector<unsigned long, m>& getExp() const ; // read-only access of exponents
@@ -30,9 +30,9 @@ class MExponent {
         MExponent mod(const MExponent&) const ; // component wise mod
 
         // MONOMIAL COMPARISONS
-        bool lex_less(const MExponent& m2) const ; // compare by lex
-        bool grlex_less(const MExponent& m2) const ; // compare by graded lex
-        bool leq_d(const MExponent& m2) const ; // compare by divisibility
+        bool lex_less(const MExponent&) const ; // compare by lex
+        bool grlex_less(const MExponent&) const ; // compare by graded lex
+        bool leq_d(const MExponent&) const ; // compare by divisibility
 
         // Overload << to print vector of exponents
         friend ostream& operator<<(ostream& out, const MExponent<m>& e) {
@@ -42,6 +42,12 @@ class MExponent {
           out << e.getExp()[e.getExp().length()-1] << ")";
           return out;
         }
+
+
+//        bool operator < (const MExponent<m>& e) const
+//        {
+//            return grlex_less(e);
+//        }
 
 } ; // end MExponent
 #endif // MEXPONENT_H
@@ -62,6 +68,7 @@ template <unsigned long m>
 MExponent<m>::MExponent(const blitz::TinyVector<unsigned long, m>& e) {
     exp = e ;
 }
+
 
 /******************************************************
 *
@@ -117,12 +124,7 @@ MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
 // lexicographic (lex)
 template <unsigned long m>
 bool MExponent<m>::lex_less(const MExponent<m>& e) const {
-    for (unsigned i = 0; i < exp.length(); i++) {
-        unsigned long x = exp[i] - e.getExp()[i] ;
-        if (x < 0)  return true ;
-        else if (x > 0) return false ;
-    }
-    return false ;
+    return lexicographical_compare(exp.begin(), exp.end(), e.getExp().begin(), e.getExp().end());
 }
 
 // graded lexicographic (grlex)
@@ -130,8 +132,10 @@ template <unsigned long m>
 bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
     int sum1 = sum(exp) ;
     int sum2 = sum(e.getExp()) ;
-    if (sum1 < sum2 || (sum1 == sum2 && lex_less(e))) return true ;
-    return false ;
+    if (sum1 > sum2) return false;
+    else if (sum1 < sum2) return true;
+    else return lex_less(e);
+
 }
 
 // divisibility
