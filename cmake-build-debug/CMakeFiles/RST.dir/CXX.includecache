@@ -6,7 +6,7 @@
 
 #IncludeRegexTransform: 
 
-/Users/Jaziel/Desktop/Research/RST/MExponent2.cpp
+/Users/Jaziel/Desktop/Research/RST/MExponent.cpp
 vector
 -
 algorithm
@@ -23,8 +23,8 @@ vector
 -
 forward_list
 -
-MExponent2.cpp
-/Users/Jaziel/Desktop/Research/RST/MExponent2.cpp
+MExponent.cpp
+/Users/Jaziel/Desktop/Research/RST/MExponent.cpp
 algorithm
 -
 

@@ -8,7 +8,7 @@ include_directories(.)
 
 add_executable(RST
         main.cpp
-        MExponent.h)
+        )
 
 include_directories(/usr/local/Cellar/ntl/11.3.3/include)
 link_directories(/usr/local/Cellar/ntl/11.3.3/lib)

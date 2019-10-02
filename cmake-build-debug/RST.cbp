@@ -86,9 +86,6 @@
 				</MakeCommands>
 			</Target>
 		</Build>
-		<Unit filename="/Users/Jaziel/Desktop/Research/RST/MExponent.h">
-			<Option target="RST"/>
-		</Unit>
 		<Unit filename="/Users/Jaziel/Desktop/Research/RST/main.cpp">
 			<Option target="RST"/>
 		</Unit>

@@ -1,5 +1,5 @@
-#ifndef MEXPONENT2_H
-#define MEXPONENT2_H
+#ifndef MEXPONENT_H
+#define MEXPONENT_H
 
 
 #include <vector>
