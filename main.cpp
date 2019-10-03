@@ -3,36 +3,38 @@
 
 using namespace blitz;
 
+// Comentario de prueba para gitlab
+
 int main() {
 // TEST #1
-    NTL::ZZ p = (NTL::ZZ) 11;
-    NTL::ZZ_p::init(p);
-
-    typedef NTL::ZZ_p F;
-    const long m = 2;
-
-    blitz::Array<F,m> A(2,2);
-    A = (F)3, (F)10,
-        (F)1, (F)8;
-    MultiDimArray<F,m> array(A);
-    array.RST();
+//    NTL::ZZ p = (NTL::ZZ) 11;
+//    NTL::ZZ_p::init(p);
+//
+//    typedef NTL::ZZ_p F;
+//    const long m = 2;
+//
+//    blitz::Array<F,m> A(2,2);
+//    A = (F)3, (F)10,
+//        (F)1, (F)8;
+//    MultiDimArray<F,m> array(A);
+//    array.RST();
 
 
 
 // TEST #2
-//    NTL::ZZ p = (NTL::ZZ) 2;
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const long m = 2;
-//    blitz::Array<F,m> A(6,7);
-//    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
-//        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
-//        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
-//        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
-//        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
-//        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
-//    MultiDimArray<F,m> array(A);
-//    array.RST();
+    NTL::ZZ p = (NTL::ZZ) 2;
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const long m = 2;
+    blitz::Array<F,m> A(6,7);
+    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
+        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
+        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
+        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
+        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
+        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
+    MultiDimArray<F,m> array(A);
+    array.RST();
 
 
 // TEST #3
