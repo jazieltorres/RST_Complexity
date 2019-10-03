@@ -3,8 +3,6 @@
 
 using namespace blitz;
 
-// Comentario de prueba para gitlab
-
 int main() {
 // TEST #1
 //    NTL::ZZ p = (NTL::ZZ) 11;
