@@ -6,6 +6,7 @@
 #include <forward_list>
 #include "MExponent.cpp"
 #include <algorithm>
+#include <cmath> // pow
 using namespace std;
 
 template <typename F, unsigned long m>
@@ -16,6 +17,7 @@ class MultiDimArray {
         unsigned long delta_size;
     public:
         explicit MultiDimArray(blitz::Array<F,m>&);
+        MultiDimArray(function<long (long)>, function<F (long)>, long, long);
         static const unsigned long dimension = m;
         void RST();
 } ;
@@ -31,6 +33,22 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
     }
     delta_size = 0;
 }
+
+// MultiDimArray(Costas, Legendre, Costas period, Legendre period)
+template <typename F, unsigned long m>
+MultiDimArray<F,m>::MultiDimArray(function<long(long)> func1, function<F(long)> func2, long n1, long n2){
+    period = {(unsigned long)n1, (unsigned long)n2};
+    delta_size = 0;
+    A.resize(n1, n2);
+    blitz::TinyVector<unsigned long, 2> index;
+    for (long i = 0; i < n1; i++) {
+        for (long j = 0; j < n2; j++) {
+            index = i,j;
+            A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
+        }
+    }
+}
+
 
 
 /******************************************************
@@ -168,7 +186,6 @@ void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& exponentsR
 
 
 
-
 /******************************************************
 *
 *       THE ONE AND ONLY: RST
@@ -202,6 +219,9 @@ void MultiDimArray<F,m>::RST() {
     MExponent<m> alpha;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
+
+//        cout << "ALPHA:\t" << alpha << endl;
+
         matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
         addDimension(idMatrix);
         idColumn.push_back(alpha);
