@@ -80,7 +80,7 @@ bool isRoot(long& a, long& p) {
     return false;
 }
 
-long func(const long& i){
+long noShiftFunc(const long& i){
     return 0;
 }
 
@@ -121,7 +121,7 @@ int main() {
 
 
 
-// HARD CODE LEGENDRE AND COSTAS SEQUENCES
+// HARD-CODE LEGENDRE AND COSTAS SEQUENCES
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
@@ -134,51 +134,44 @@ int main() {
 //    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl;
 //
 //    cout << "Costas:" << endl;
-//    for (long i=0; i<p_costas-1; i++) cout << CostasSeq(p_costas,root)(i) << " "; cout << endl;
+//    for (long i=0; i<p_costas-1; i++) cout << CostasSeq(p_costas,root)(i) << " "; cout << "\n" << endl;
 //    MultiDimArray<F,dim> Array(CostasSeq(p_costas,root), LegendreSeq(p_legendre), p_costas-1, p_legendre);
 //    Array.RST();
 //
 //    unsigned long d = Array.getDeltaSize();
 //    long n1 = p_costas - 1;
 //    long criteria = p_legendre % 8;
-//    bool satisfied = true;
 //
 //    if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+//        cout << "Failed case 1\t" << (p_legendre - 1) / 2 * n1 << " : " << d << endl;
 //        cout << "p legendre: " << p_legendre << endl;
 //        cout << "p costas: " << p_costas << endl;
 //        cout << "root: " << root << endl;
-//        cout << "Failed case 1\t" << (p_legendre - 1) / 2 * n1 << " : " << d << endl << endl;
-//        satisfied = false;
 //    }
 //    if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+//        cout << "Failed case 2\t" << n1 * (p_legendre - 1) + 1 << " : " << d << endl;
 //        cout << "p legendre: " << p_legendre << endl;
 //        cout << "p costas: " << p_costas << endl;
 //        cout << "root: " << root << endl;
-//        cout << "Failed case 2\t" << n1 * (p_legendre - 1) + 1 << " : " << d << endl << endl;
-//        satisfied = false;
 //    }
 //    if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+//        cout << "Failed case 3\t" << n1 * (p_legendre - 1) << " : " << d << endl;
 //        cout << "p legendre: " << p_legendre << endl;
 //        cout << "p costas: " << p_costas << endl;
 //        cout << "root: " << root << endl;
-//        cout << "Failed case 3\t" << n1 * (p_legendre - 1) << " : " << d << endl << endl;
-//        satisfied = false;
 //    }
 //    if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+//        cout << "Failed case 4\t" << (p_legendre - 1) / 2 * n1 + 1 << " : " << d << endl;
 //        cout << "p legendre: " << p_legendre << endl;
 //        cout << "p costas: " << p_costas << endl;
 //        cout << "root: " << root << endl;
-//        cout << "Failed case 4\t" << (p_legendre - 1) / 2 * n1 + 1 << " : " << d << endl << endl;
-//        outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t' << (p_legendre - 1) / 2 * n1 + 1 - d << "\n";
-//        satisfied = false;
 //    }
-// ^ HARD CODE SEQUENCES ^
+// ^ HARD-CODE SEQUENCES ^
 
 
 
 // LEGENDRE AND COSTAS SEQUENCES WITH RANDOM PRIMES
-// Set the following parameters:
-//    long numTest = 10;
+//    long numTest = 5;
 //    long p_legendreMAX = 10;
 //    long p_costasMAX = 10;
 //
@@ -250,85 +243,84 @@ int main() {
 
 
 // LEGENDRE AND COSTAS SEQUENCES WITH PRIMES LESS THAN primesUpTo
-    long primesUpTo = 20;
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned long dim = 2;
-
-    vector<long> primes;
-    for (long i=3; i<=primesUpTo; i++){
-        if (isPrime(i)) primes.push_back(i);
-    }
-
-    double testSatisfied = 0;
-    long numTest = 0;
-    srand(time(NULL));
-    ofstream outfile ("failCases.txt", ios::app) ;
-    for(long p_costas : primes) {
-        vector<long> roots;
-        for(long c=2; c<p_costas; c++){
-            if(isRoot(c,p_costas)) roots.push_back(c);
-        }
-        for (long p_legendre : primes) {
-            for(auto root:roots) {
-                numTest++;
-                cout << "Test " << numTest << endl;
-                MultiDimArray<F, dim> Array(CostasSeq(p_costas, root), LegendreSeq(p_legendre),
-                        p_costas - 1, p_legendre);
-                Array.RST();
-
-                unsigned long d = Array.getDeltaSize();
-                long n1 = p_costas - 1;
-                long criteria = p_legendre % 8;
-                bool satisfied = true;
-
-                if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-                    cout << "p legendre: " << p_legendre << endl;
-                    cout << "p costas: " << p_costas << endl;
-                    cout << "root: " << root << endl;
-                    cout << "Failed case 1\t" << (p_legendre - 1) / 2 * n1 << " : " << d << endl << endl;
-                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
-                        << (p_legendre - 1) / 2 * n1 - d << "\n";
-                    satisfied = false;
-                }
-                if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-                    cout << "p legendre: " << p_legendre << endl;
-                    cout << "p costas: " << p_costas << endl;
-                    cout << "root: " << root << endl;
-                    cout << "Failed case 2\t" << n1 * (p_legendre - 1) + 1 << " : " << d << endl << endl;
+//    long primesUpTo = 20;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 2;
+//
+//    vector<long> primes;
+//    for (long i=3; i<=primesUpTo; i++){
+//        if (isPrime(i)) primes.push_back(i);
+//    }
+//
+//    double testSatisfied = 0;
+//    long numTest = 0;
+//    ofstream outfile ("failCases.txt", ios::app) ;
+//    for(long p_costas : primes) {
+//        vector<long> roots;
+//        for(long c=2; c<p_costas; c++){
+//            if(isRoot(c,p_costas)) roots.push_back(c);
+//        }
+//        for (long p_legendre : primes) {
+//            for(auto root:roots) {
+//                numTest++;
+//                cout << "Test " << numTest << endl;
+//                MultiDimArray<F, dim> Array(CostasSeq(p_costas, root), LegendreSeq(p_legendre),
+//                        p_costas - 1, p_legendre);
+//                Array.RST();
+//
+//                unsigned long d = Array.getDeltaSize();
+//                long n1 = p_costas - 1;
+//                long criteria = p_legendre % 8;
+//                bool satisfied = true;
+//
+//                if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+//                    cout << "p legendre: " << p_legendre << endl;
+//                    cout << "p costas: " << p_costas << endl;
+//                    cout << "root: " << root << endl;
+//                    cout << "Failed case 1\t" << (p_legendre - 1) / 2 * n1 << " : " << d << endl << endl;
+//                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
+//                        << (p_legendre - 1) / 2 * n1 - d << "\n";
+//                    satisfied = false;
+//                }
+//                if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+//                    cout << "p legendre: " << p_legendre << endl;
+//                    cout << "p costas: " << p_costas << endl;
+//                    cout << "root: " << root << endl;
+//                    cout << "Failed case 2\t" << n1 * (p_legendre - 1) + 1 << " : " << d << endl << endl;
 //                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
 //                        << (n1 * (p_legendre - 1) + 1 - d) << "\n";
-                    satisfied = false;
-                }
-                if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-                    cout << "p legendre: " << p_legendre << endl;
-                    cout << "p costas: " << p_costas << endl;
-                    cout << "root: " << root << endl;
-                    cout << "Failed case 3\t" << n1 * (p_legendre - 1) << " : " << d << endl << endl;
-                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
-                        << n1 * (p_legendre - 1) - d << "\n";
-                    satisfied = false;
-                }
-                if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-                    cout << "p legendre: " << p_legendre << endl;
-                    cout << "p costas: " << p_costas << endl;
-                    cout << "root: " << root << endl;
-                    cout << "Failed case 4\t" << (p_legendre - 1) / 2 * n1 + 1 << " : " << d << endl << endl;
-                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
-                        << (p_legendre - 1) / 2 * n1 + 1 - d << "\n";
-                    satisfied = false;
-                }
-
-                if (satisfied) {
-                    testSatisfied = testSatisfied + 1;
-                }
-            }
-        }
-    }
-
-    outfile.close();
-    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+//                    satisfied = false;
+//                }
+//                if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+//                    cout << "p legendre: " << p_legendre << endl;
+//                    cout << "p costas: " << p_costas << endl;
+//                    cout << "root: " << root << endl;
+//                    cout << "Failed case 3\t" << n1 * (p_legendre - 1) << " : " << d << endl << endl;
+//                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
+//                        << n1 * (p_legendre - 1) - d << "\n";
+//                    satisfied = false;
+//                }
+//                if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+//                    cout << "p legendre: " << p_legendre << endl;
+//                    cout << "p costas: " << p_costas << endl;
+//                    cout << "root: " << root << endl;
+//                    cout << "Failed case 4\t" << (p_legendre - 1) / 2 * n1 + 1 << " : " << d << endl << endl;
+//                    outfile << p_legendre << "\t" << p_costas << "\t" << root << '\t'
+//                        << (p_legendre - 1) / 2 * n1 + 1 - d << "\n";
+//                    satisfied = false;
+//                }
+//
+//                if (satisfied) {
+//                    testSatisfied = testSatisfied + 1;
+//                }
+//            }
+//        }
+//    }
+//
+//    outfile.close();
+//    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
 // ^ SEQUENCES WITH PRIMES LESS THAN ^
 
 
