@@ -5,8 +5,7 @@
 #include <vector>
 #include <forward_list>
 #include "MExponent.cpp"
-#include <algorithm>
-#include <cmath> // pow
+#include <algorithm> //sort
 using namespace std;
 
 template <typename F, unsigned long m>
@@ -17,9 +16,10 @@ class MultiDimArray {
         unsigned long delta_size;
     public:
         explicit MultiDimArray(blitz::Array<F,m>&);
-        MultiDimArray(function<long (long)>, function<F (long)>, long, long);
+        MultiDimArray(const function<long (long)>&, const function<F (long)>&, long, long);
         static const unsigned long dimension = m;
         void RST();
+        unsigned long getDeltaSize(){return delta_size;}
 } ;
 
 #endif
@@ -36,7 +36,8 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
 
 // MultiDimArray(Costas, Legendre, Costas period, Legendre period)
 template <typename F, unsigned long m>
-MultiDimArray<F,m>::MultiDimArray(function<long(long)> func1, function<F(long)> func2, long n1, long n2){
+MultiDimArray<F,m>::MultiDimArray(const function<long(long)>& func1, const function<F(long)>& func2,
+        long n1, long n2) {
     period = {(unsigned long)n1, (unsigned long)n2};
     delta_size = 0;
     A.resize(n1, n2);
@@ -45,7 +46,9 @@ MultiDimArray<F,m>::MultiDimArray(function<long(long)> func1, function<F(long)> 
         for (long j = 0; j < n2; j++) {
             index = i,j;
             A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
+//            cout << A(index) << " ";
         }
+//        cout << endl;
     }
 }
 
@@ -216,6 +219,7 @@ void MultiDimArray<F,m>::RST() {
 
     vector< vector<F> > matrix, idMatrix;
 
+
     MExponent<m> alpha;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
@@ -225,6 +229,8 @@ void MultiDimArray<F,m>::RST() {
         matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
         addDimension(idMatrix);
         idColumn.push_back(alpha);
+
+
 
 
 //        cout << "BEFORE REDUCE:" << endl;
@@ -253,7 +259,7 @@ void MultiDimArray<F,m>::RST() {
 
         if (matrix[matrix.size()-1] == zeroRow) {
 //        if(isZero) {
-            printPoly(idMatrix, idColumn);
+//            printPoly(idMatrix, idColumn);
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -271,6 +277,7 @@ void MultiDimArray<F,m>::RST() {
             exponentsRow.pop_front();
             delta_size++;
         }
+        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
-    cout << "Delta size: " <<  delta_size << endl;
+//    cout << "Delta size: " <<  delta_size << endl;
 }
