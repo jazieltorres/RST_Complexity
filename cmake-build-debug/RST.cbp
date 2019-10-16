@@ -86,6 +86,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/Users/Jaziel/Desktop/Research/RST/Test.cpp">
+			<Option target="RST"/>
+		</Unit>
 		<Unit filename="/Users/Jaziel/Desktop/Research/RST/main.cpp">
 			<Option target="RST"/>
 		</Unit>

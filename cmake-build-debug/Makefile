@@ -123,6 +123,33 @@ RST/fast:
 	$(MAKE) -f CMakeFiles/RST.dir/build.make CMakeFiles/RST.dir/build
 .PHONY : RST/fast
 
+Test.o: Test.cpp.o
+
+.PHONY : Test.o
+
+# target to build an object file
+Test.cpp.o:
+	$(MAKE) -f CMakeFiles/RST.dir/build.make CMakeFiles/RST.dir/Test.cpp.o
+.PHONY : Test.cpp.o
+
+Test.i: Test.cpp.i
+
+.PHONY : Test.i
+
+# target to preprocess a source file
+Test.cpp.i:
+	$(MAKE) -f CMakeFiles/RST.dir/build.make CMakeFiles/RST.dir/Test.cpp.i
+.PHONY : Test.cpp.i
+
+Test.s: Test.cpp.s
+
+.PHONY : Test.s
+
+# target to generate assembly for a file
+Test.cpp.s:
+	$(MAKE) -f CMakeFiles/RST.dir/build.make CMakeFiles/RST.dir/Test.cpp.s
+.PHONY : Test.cpp.s
+
 main.o: main.cpp.o
 
 .PHONY : main.o
@@ -159,6 +186,9 @@ help:
 	@echo "... rebuild_cache"
 	@echo "... edit_cache"
 	@echo "... RST"
+	@echo "... Test.o"
+	@echo "... Test.i"
+	@echo "... Test.s"
 	@echo "... main.o"
 	@echo "... main.i"
 	@echo "... main.s"

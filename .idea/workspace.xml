@@ -11,20 +11,23 @@
     </configurations>
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="">
+    <list default="true" id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="Add constructor support series as arguments">
+      <change afterPath="$PROJECT_DIR$/Test.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/CMakeLists.txt" beforeDir="false" afterPath="$PROJECT_DIR$/CMakeLists.txt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/MExponent.h" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/MExponent2.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MExponent.cpp" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/MultiDimArray.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/MultiDimArray.cpp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Test.cpp" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/a.out" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/Makefile2" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/CXX.includecache" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/CXX.includecache" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.internal" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.internal" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/depend.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/DependInfo.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/DependInfo.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/build.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/build.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/cmake_clean.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/cmake_clean.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/link.txt" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/link.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/progress.make" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/RST.dir/progress.make" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/CMakeFiles/progress.marks" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/cmake-build-debug/Makefile" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/Makefile" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/RST" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/RST" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/cmake-build-debug/RST.cbp" beforeDir="false" afterPath="$PROJECT_DIR$/cmake-build-debug/RST.cbp" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/test.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/main.cpp" beforeDir="false" afterPath="$PROJECT_DIR$/main.cpp" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -42,8 +45,10 @@
   <component name="ProjectId" id="1Qvc7hqJEB3t1p73JR3YfWvYVly" />
   <component name="ProjectLevelVcsManager">
     <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
   </component>
   <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
@@ -52,7 +57,9 @@
     <property name="node.js.path.for.package.tslint" value="project" />
     <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
     <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
   </component>
   <component name="RunDashboard">
     <option name="ruleStates">
@@ -87,7 +94,15 @@
       <workItem from="1569513171076" duration="1204000" />
       <workItem from="1569850818747" duration="14281000" />
       <workItem from="1569958322112" duration="5248000" />
-      <workItem from="1570039464790" duration="12150000" />
+      <workItem from="1570039464790" duration="12677000" />
+      <workItem from="1570107302860" duration="1859000" />
+      <workItem from="1570138876757" duration="2248000" />
+      <workItem from="1570197792171" duration="1706000" />
+      <workItem from="1570562052491" duration="4000" />
+      <workItem from="1570811276072" duration="172000" />
+      <workItem from="1570811538595" duration="8831000" />
+      <workItem from="1570897102477" duration="7681000" />
+      <workItem from="1570933584760" duration="35082000" />
     </task>
     <task id="LOCAL-00001" summary="Now it compiles in CLion :) (Changes in CMakeLists.txt File">
       <created>1569938592131</created>
@@ -159,7 +174,42 @@
       <option name="project" value="LOCAL" />
       <updated>1570058012284</updated>
     </task>
-    <option name="localTasksCounter" value="11" />
+    <task id="LOCAL-00011" summary="Deleted unnecessary files and rename MExponent2 to MExponent">
+      <created>1570058768061</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1570058768061</updated>
+    </task>
+    <task id="LOCAL-00012" summary="First commit to Gitlab - Only added a comment">
+      <created>1570113280495</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1570113280495</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Checking git connection">
+      <created>1570139257954</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1570139257954</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add constructor support series as arguments">
+      <created>1570912304592</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1570912304592</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add Legendre and Costas series (examples)">
+      <created>1570912378472</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1570912378472</updated>
+    </task>
+    <option name="localTasksCounter" value="16" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -179,6 +229,7 @@
     </option>
   </component>
   <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
     <MESSAGE value="Now it compiles in CLion :) (Changes in CMakeLists.txt File" />
     <MESSAGE value="Now it compiles in CLion :) (Changes in CMakeLists.txt File)" />
     <MESSAGE value="Last changes to auxiliary files (autogenerated by CLion)" />
@@ -188,17 +239,15 @@
     <MESSAGE value="Added commented prints for debugging and modifications for Test 3" />
     <MESSAGE value="Added test 3" />
     <MESSAGE value="Auxiliary compiling files autogenerated by CLion" />
-    <option name="LAST_COMMIT_MESSAGE" value="Auxiliary compiling files autogenerated by CLion" />
+    <MESSAGE value="Deleted unnecessary files and rename MExponent2 to MExponent" />
+    <MESSAGE value="First commit to Gitlab - Only added a comment" />
+    <MESSAGE value="Checking git connection" />
+    <MESSAGE value="Add constructor support series as arguments" />
+    <MESSAGE value="Add Legendre and Costas series (examples)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Add Legendre and Costas series (examples)" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
-          <url>file://$PROJECT_DIR$/MultiDimArray.cpp</url>
-          <line>203</line>
-          <option name="timeStamp" value="10" />
-        </line-breakpoint>
-      </breakpoints>
       <default-breakpoints>
         <breakpoint enabled="true" suspend="NONE" type="CidrExceptionBreakpoint">
           <dependency master-id="0" />
