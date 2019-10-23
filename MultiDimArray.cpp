@@ -12,11 +12,12 @@ template <typename F, unsigned long m>
 class MultiDimArray {
     private:
         blitz::Array<F, m> A;
-        vector<unsigned long> period;
         unsigned long delta_size;
     public:
+        vector<unsigned long> period;
         explicit MultiDimArray(blitz::Array<F,m>&);
         MultiDimArray(const function<long (long)>&, const function<F (long)>&, long, long);
+        MultiDimArray(const vector<long>&, const function<F (long)>&, long, long);
         static const unsigned long dimension = m;
         void RST();
         unsigned long getDeltaSize(){return delta_size;}
@@ -46,11 +47,75 @@ MultiDimArray<F,m>::MultiDimArray(const function<long(long)>& func1, const funct
         for (long j = 0; j < n2; j++) {
             index = i,j;
             A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
-//            cout << A(index) << " ";
         }
-//        cout << endl;
     }
+
+// FOR PRINTING THE ARRAY
+//    for (long j=n2-1; j>=0; j--) {
+//        for (long i=0; i<n1; i++) {
+//            index = i,j;
+//            cout << A(index) << " ";
+//        }
+//        cout << endl;
+//    }
 }
+
+
+// Constructor for permutations
+template <typename F, unsigned long m>
+MultiDimArray<F,m>::MultiDimArray(const vector<long>& func1, const function<F(long)>& func2,
+                                  long n1, long n2) {
+    period = {(unsigned long)n1, (unsigned long)n2};
+    delta_size = 0;
+    A.resize(n1, n2);
+    blitz::TinyVector<unsigned long, 2> index;
+    for (long i = 0; i < n1; i++) {
+        for (long j = 0; j < n2; j++) {
+            index = i,j;
+            A(index) = func2(((j-func1[i]) % n2 + n2) % n2);
+        }
+    }
+
+// FOR PRINTING THE ARRAY
+//    for (long j=n2-1; j>=0; j--) {
+//        for (long i=0; i<n1; i++) {
+//            index = i,j;
+//            cout << A(index) << " ";
+//        }
+//        cout << endl;
+//    }
+}
+
+// Constructor for logWelch with column of zeros at the end
+//template <typename F, unsigned long m>
+//MultiDimArray<F,m>::MultiDimArray(const function<long(long)>& func1, const function<F(long)>& func2,
+//                                  long n1, long n2) {
+//
+//    period = {(unsigned long)n1+1, (unsigned long)n2};
+//    cout << "period " << period[0] << " " << period[1] << endl;
+//    delta_size = 0;
+//    A.resize(n1+1, n2);
+//    blitz::TinyVector<unsigned long, 2> index;
+//    for (long i = 0; i < n1; i++) {
+//        for (long j = 0; j < n2; j++) {
+//            index = i,j;
+//            A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
+//        }
+//        for (long j=0; j<n2; j++){
+//            index = n1, j;
+//            A(index) = 0;
+//        }
+//    }
+//
+//// FOR PRINTING THE ARRAY
+//    for (long j=n2-1; j>=0; j--) {
+//        for (long i=0; i<n1+1; i++) {
+//            index = i,j;
+//            cout << A(index) << " ";
+//        }
+//        cout << endl;
+//    }
+//}
 
 
 
@@ -179,13 +244,45 @@ public:
 };
 
 template<typename F, unsigned long m>
-void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& exponentsRow) {
+void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& idColumn) {
     unsigned long n = idMatrix.size()-1;
     for (unsigned long i = 0; i < idMatrix[0].size(); i++) {
-        if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << exponentsRow[i] << "\t";
+        if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << idColumn[i] << "\t";
     }
     cout << endl;
 }
+
+template<typename F, unsigned long m>
+vector< MExponent<m> > getPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& idColumn) {
+    vector< MExponent<m> > poly;
+    unsigned long n = idMatrix.size()-1;
+    for (unsigned long i = 0; i < idMatrix[0].size(); i++) {
+        if(idMatrix[n][i] != (F)0) poly.push_back(idColumn[i]);
+    }
+    return poly;
+}
+
+template <unsigned long m>
+void printStars(vector< MExponent<m> >& v, vector<unsigned long>& period) {
+    for(long i=2*period[1]+1; i>0; i--){
+        for(long j=0; j<period[0]; j++) {
+            if (1 == i % 2) {
+                cout << "--";
+            }
+            else {
+                bool yes = false;
+                for (auto e : v){
+                    if ((e.getExp()[0]== j) && (e.getExp()[1]==i/2-1)) yes = true;
+                }
+                if(yes) cout << "|*";
+                else cout << "| ";
+            }
+        }
+        if(1 == i%2) cout << " " << endl;
+        else cout << "|" << endl;
+    }
+}
+
 
 
 
@@ -218,6 +315,8 @@ void MultiDimArray<F,m>::RST() {
     }
 
     vector< vector<F> > matrix, idMatrix;
+    vector< MExponent<m> > leadingMonomials;
+    vector< vector <MExponent<m> > > grobnerBasis;
 
 
     MExponent<m> alpha;
@@ -250,16 +349,10 @@ void MultiDimArray<F,m>::RST() {
 
         vector<F> zeroRow(matrix[0].size(), (F)0);
 
-        //FOR TEST 3:
-//        bool isZero = true;
-//        for (int i=0; i<6; i++){
-//            if (matrix[matrix.size()-1][i] != zeroRow[i]) isZero = false;
-//        }
-        // END TEST 3 BLOCK
-
         if (matrix[matrix.size()-1] == zeroRow) {
-//        if(isZero) {
+            leadingMonomials.push_back(alpha);
 //            printPoly(idMatrix, idColumn);
+            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -280,4 +373,15 @@ void MultiDimArray<F,m>::RST() {
         if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 //    cout << "Delta size: " <<  delta_size << endl;
+
+// Printing leading monomials in the array, whom closes the monomials in the delta set
+//    cout << "Leading Monomials " << endl;
+//    printStars(leadingMonomials, period);
+
+//    cout << "\n\n\n Grobner basis" << endl;
+//    for (auto poly : grobnerBasis) {
+//        printStars(poly, period);
+//        cout << endl;
+//    }
+
 }
