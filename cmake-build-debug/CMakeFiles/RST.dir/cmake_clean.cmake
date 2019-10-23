@@ -1,5 +1,4 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/RST.dir/Test.cpp.o"
   "CMakeFiles/RST.dir/main.cpp.o"
   "RST"
   "RST.pdb"
