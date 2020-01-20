@@ -46,7 +46,10 @@ MultiDimArray<F,m>::MultiDimArray(const function<long(long)>& func1, const funct
     for (long i = 0; i < n1; i++) {
         for (long j = 0; j < n2; j++) {
             index = i,j;
-            A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
+            if (func1(i) == -1)
+                A(index) = 0;
+            else
+                A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
         }
     }
 
@@ -150,7 +153,7 @@ unsigned long sizeOfDivisors(const MExponent<m> e) {
 
 template<unsigned long m>
 bool comp(const MExponent<m>& e1, const MExponent<m>& e2) {
-    return (e1.grlex_less(e2));
+    return (e1.lex_less(e2));
 }
 
 template<typename F>
@@ -350,9 +353,9 @@ void MultiDimArray<F,m>::RST() {
         vector<F> zeroRow(matrix[0].size(), (F)0);
 
         if (matrix[matrix.size()-1] == zeroRow) {
-            leadingMonomials.push_back(alpha);
+//            leadingMonomials.push_back(alpha);
 //            printPoly(idMatrix, idColumn);
-            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
+//            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -370,14 +373,14 @@ void MultiDimArray<F,m>::RST() {
             exponentsRow.pop_front();
             delta_size++;
         }
-        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
+//        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 //    cout << "Delta size: " <<  delta_size << endl;
 
 // Printing leading monomials in the array, whom closes the monomials in the delta set
 //    cout << "Leading Monomials " << endl;
 //    printStars(leadingMonomials, period);
-
+//
 //    cout << "\n\n\n Grobner basis" << endl;
 //    for (auto poly : grobnerBasis) {
 //        printStars(poly, period);
