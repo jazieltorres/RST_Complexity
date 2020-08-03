@@ -32,11 +32,13 @@ long powerMod(const long& x, const long& n, const long& mod);
 long f(const long& x, const long& mod, long& a, long& b);
 long LegendreComplexity(long& p);
 
+
 /******************************************************
 *
 *       SEQUENCES
 *
 *******************************************************/
+
 
 struct MSeq {
     vector<long> v;

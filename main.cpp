@@ -1,4 +1,4 @@
-#include "MultiDimArray.hpp"
+#include "MultiDimArray.cpp"
 #include "Functions.h"
 #include "NTL/ZZ_p.h"
 #include <chrono>
@@ -41,22 +41,22 @@ int main() {
 *
 *******************************************************/
 
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const long m = 2;
-    blitz::Array<F,m> A(6,7);
-    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
-        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
-        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
-        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
-        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
-        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
-    MultiDimArray<F,m> array(A);
-    array.RST();
-    cout << "Delta: " << array.getDeltaSize() << endl;
-
-    return 0;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const long m = 2;
+//    blitz::Array<F,m> A(6,7);
+//    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
+//        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
+//        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
+//        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
+//        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
+//        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
+//    MultiDimArray<F,m> array(A);
+//    array.RST();
+//    cout << "Delta: " << array.getDeltaSize() << endl;
+//
+//    return 0;
 
 
 
@@ -68,39 +68,41 @@ int main() {
 
 //    cout << "Started" << endl;
 //
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const unsigned long dim = 2;
-//
-//    long p_legendre =    11;
-//    long p_shift =       11;
-//    long root =          5;
-//
-////    For the vector of shifts
-////    vector<long> shift({0, 1, 3, 1, 0, 3});
-////    long p_shift = shift.size();
-//
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const unsigned long dim = 2;
+
+    long p_legendre =    11;
+    long p_shift =       11;
+    long root =          5;
+
+//    For the vector of shifts
+//    vector<long> shift({0, 1, 3, 1, 0, 3});
+//    long p_shift = shift.size();
+
 //    PolynomialSeq Poly(p_shift, root, 2, 3);
-//
+
 //    for (long i=0; i<p_shift-1; i++)
 //        cout << Poly(i) << " ";
 //    cout << endl;
-////    return 0;
-//
-////    cout << "Legendre: ";
-////    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
-////    cout << "Log-Welch:" << endl;
-////    for (long i=0; i<p_shift-1; i++) cout << LosWelchSeq(p_shift,root)(i) << " "; cout << "\n" << endl;
-////    cout << "Quadratic:" << endl;
-////    for (long i=0; i<p_shift-1; i++) cout << ExpQuadraticSeq(p_shift, root)(i) << " "; cout << endl;
-////    cout << "Polynomial Sequence: ";
-////    for (long i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
-//
-//
-//    MultiDimArray<F,dim> A(Poly, LegendreSeq(p_legendre), p_shift, p_legendre);
+//    return 0;
+
+//    cout << "Legendre: ";
+    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
+//    cout << "Log-Welch:" << endl;
+//    for (long i=0; i<p_shift-1; i++) cout << LosWelchSeq(p_shift,root)(i) << " "; cout << "\n" << endl;
+//    cout << "Quadratic:" << endl;
+//    for (long i=0; i<p_shift-1; i++) cout << ExpQuadraticSeq(p_shift, root)(i) << " "; cout << endl;
+//    cout << "Polynomial Sequence: ";
+//    for (long i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
+
+
+//    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
 //
 //    A.RST();
+//
+//    cout << "Delta: " << A.getDeltaSize() << endl;
 //
 //    unsigned long d = A.getDeltaSize();
 //    long n1 = A.period[0];

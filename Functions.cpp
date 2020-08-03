@@ -111,16 +111,9 @@ long LegendreComplexity(long& p) {
 }
 
 
-
-
-
-
-
-
-long LogRootSeq(long i) {
+long LogRootSeq(long i){
     return i;
 }
-
 long noShiftFunc(const long& i){
     return 0;
 }
