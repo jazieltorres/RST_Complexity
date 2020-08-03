@@ -5,10 +5,17 @@
 #include <chrono>
 #include <iostream>
 #include <fstream>
+#include <string>
+
 
 using namespace blitz;
 using namespace std;
 
+unsigned long readDim() {
+    unsigned long dim;
+    cin >> dim;
+    return dim;
+}
 
 bool compare(vector<long>& v1, vector<long>& v2){
     return lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
@@ -31,6 +38,16 @@ long powerMod(const long& x, const long& n, const long& mod){
     return result;
 }
 
+struct M_Seq {
+    vector<long> v;
+    M_Seq() {
+        v = {0,0,1,0,1,1,1};
+    }
+    NTL::ZZ_p operator () (const long& i) const {
+        return (NTL::ZZ_p) v[i];
+    }
+};
+
 struct LegendreSeq {
     long mod;
     explicit LegendreSeq(long p) {
@@ -46,15 +63,37 @@ struct LegendreSeq {
     }
 };
 
+// This is the polynomial (degree 3) that generates the PolynomialSeq
+long f(const long& x, const long& mod, long& a, long& b) {
+    return( a * powerMod(x, 3, mod) +
+            b * powerMod(x, 2, mod) +
+            x )
+            % mod;
+}
+
+struct PolynomialSeq {
+    long m;
+    long alpha;
+    long A;
+    long B;
+    explicit PolynomialSeq(long mod, long root, long a, long b) {
+        m = mod; alpha = root; A = a; B = b;
+    }
+    long operator () (const long& i) {
+        return f(powerMod(alpha, i, m), m, A, B);
+    }
+};
+
 
 struct ExpQuadratic {
     long mod;
     long root;
-    explicit ExpQuadratic(long p, long r) {
-        mod = p; root = r;
+    long a;
+    explicit ExpQuadratic(long p, long r, long A) {
+        mod = p; root = r; a = A;
     }
     long operator () (const long& i) {
-        return (powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
+        return (a * powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
     }
 };
 
@@ -71,20 +110,31 @@ struct LogQuadratic {
         }
     }
     long operator () (const long& i) {
-        long result = (powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
+        long result = (4*powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
         return logTable[result];
     }
 };
 
 
-struct CostasSeq {
+struct ExponentialSeq {
     long mod;
     long root;
-    explicit CostasSeq(long m, long r){
+    explicit ExponentialSeq(long m, long r){
         mod = m; root = r;
     }
     long operator () (const long& i) const {
         return powerMod(root, i, mod);
+    }
+};
+
+struct OneSequence {
+    long n;
+    explicit OneSequence(long length) {
+        n = length;
+    }
+    NTL::ZZ_p operator () (const long& i) const {
+        if(i==0)    return (NTL::ZZ_p) 1;
+        else        return (NTL::ZZ_p) 0;
     }
 };
 
@@ -180,17 +230,19 @@ bool isCostas(vector<long>& shift) {
 
 int main() {
 // TEST #1
-//    NTL::ZZ p = (NTL::ZZ) 11;
-//    NTL::ZZ_p::init(p);
-//
-//    typedef NTL::ZZ_p F;
-//    const long m = 2;
-//
-//    blitz::Array<F,m> A(2,2);
+    NTL::ZZ p(11);
+    NTL::ZZ_p::init(p);
+
+    typedef NTL::ZZ_p F;
+    const long m = 2;
+
+    blitz::Array<F,m> A(2,2);
 //    A = (F)3, (F)10,
 //        (F)1, (F)8;
 //    MultiDimArray<F,m> array(A);
 //    array.RST();
+
+    return 0;
 
 
 
@@ -211,27 +263,41 @@ int main() {
 
 
 
-// HARD-CODE LEGENDRE AND COSTAS SEQUENCES
+// HARD-CODE SEQUENCES
+//    cout << "Started" << endl;
+//
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
 //    const unsigned long dim = 2;
 //
-//    long p_legendre =    5;
-//    long p_costas =      19;
-//    long root =          3;
+//    long p_legendre =    11;
+//    long p_shift =       11;
+//    long root =          5;
 //
 ////    For the vector of shifts
-////    vector<long> shift({0, 1, 2, 5, 4, 3});
+////    vector<long> shift({0, 1, 3, 1, 0, 3});
+////    long p_shift = shift.size();
 //
-//    cout << "Legendre: ";
-//    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
+//    PolynomialSeq Poly(p_shift, root, 2, 3);
+//
+//    for (long i=0; i<p_shift-1; i++)
+//        cout << Poly(i) << " ";
+//    cout << endl;
+////    return 0;
+//
+////    cout << "Legendre: ";
+////    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
 ////    cout << "Log-Welch:" << endl;
-////    for (long i=0; i<p_costas-1; i++) cout << LogWelch(p_costas,root)(i) << " "; cout << "\n" << endl;
-//    cout << "Costas:" << endl;
-//    for (long i=0; i<p_costas-1; i++) cout << CostasSeq(p_costas, root)(i) << " "; cout << endl;
+////    for (long i=0; i<p_shift-1; i++) cout << LogWelch(p_shift,root)(i) << " "; cout << "\n" << endl;
+////    cout << "Quadratic:" << endl;
+////    for (long i=0; i<p_shift-1; i++) cout << ExpQuadratic(p_shift, root)(i) << " "; cout << endl;
+////    cout << "Polynomial Sequence: ";
+////    for (long i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
 //
-//    MultiDimArray<F,dim> A(CostasSeq(p_costas, root), LegendreSeq(p_legendre), p_costas-1, p_legendre);
+//
+//    MultiDimArray<F,dim> A(Poly, LegendreSeq(p_legendre), p_shift, p_legendre);
+//
 //    A.RST();
 //
 //    unsigned long d = A.getDeltaSize();
@@ -260,28 +326,28 @@ int main() {
 //    if (!satisfied) {
 //        cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
 //        cout << "p legendre: " << p_legendre << endl;
-//        cout << "p costas: " << p_costas << endl;
+//        cout << "p costas: " << p_shift << endl;
 //        cout << "root: " << root << endl;
-//
-////        ofstream outfile ("failCases.txt", ios::app) ;
-////        outfile << p_legendre << '\t' << p_costas << '\t' << root << '\t' << expected - d << "\t\t"
-////            << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
-////        vector<bool> check(shift.size(), false);
-////        for(long i=0; i<shift.size(); i++){
-////            if(!check[i]){
-////                outfile << "(" << i;
-////                check[i] = true;
-////                long next = shift[i];
-////                while (next != i){
-////                    outfile << ", " << next;
-////                    check[next] = true;
-////                    next = shift[next];
-////                }
-////                outfile << ")";
-////            }
-////        }
-////        outfile << endl;
-////        outfile.close();
+
+//        ofstream outfile ("failCases.txt", ios::app) ;
+//        outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
+//            << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
+//        vector<bool> check(shift.size(), false);
+//        for(long i=0; i<shift.size(); i++){
+//            if(!check[i]){
+//                outfile << "(" << i;
+//                check[i] = true;
+//                long next = shift[i];
+//                while (next != i){
+//                    outfile << ", " << next;
+//                    check[next] = true;
+//                    next = shift[next];
+//                }
+//                outfile << ")";
+//            }
+//        }
+//        outfile << endl;
+//        outfile.close();
 //    }
 // ^ HARD-CODE SEQUENCES ^
 
@@ -290,7 +356,7 @@ int main() {
 // LEGENDRE AND COSTAS SEQUENCES WITH RANDOM PRIMES
 //    long numTest = 5;
 //    long p_legendreMAX = 10;
-//    long p_costasMAX = 10;
+//    long p_shiftMAX = 10;
 //
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
@@ -305,45 +371,45 @@ int main() {
 //        long p_legendre = rand() % p_legendreMAX;
 //        while (!isPrime(p_legendre)) {p_legendre++;}
 ////        cout << "p legendre: " << p_legendre << endl;
-//        long p_costas = rand() % p_costasMAX;
-//        while (!isPrime(p_costas)) { p_costas++; }
-////        cout << "p costas: " << p_costas << endl;
-//        long root = rand() % p_costas;
-//        while (!isRoot(root, p_costas)) { root = rand() % p_costas; }
+//        long p_shift = rand() % p_shiftMAX;
+//        while (!isPrime(p_shift)) { p_shift++; }
+////        cout << "p costas: " << p_shift << endl;
+//        long root = rand() % p_shift;
+//        while (!isRoot(root, p_shift)) { root = rand() % p_shift; }
 ////        cout << "root: " << root << endl;
-//        MultiDimArray<F, dim> Array(CostasSeq(p_costas, root), LegendreSeq(p_legendre),
-//                p_costas - 1, p_legendre);
+//        MultiDimArray<F, dim> Array(CostasSeq(p_shift, root), LegendreSeq(p_legendre),
+//                p_shift - 1, p_legendre);
 //        Array.RST();
 //
 //        unsigned long d = Array.getDeltaSize();
-//        long n1 = p_costas - 1;
+//        long n1 = p_shift - 1;
 //        long criteria = p_legendre % 8;
 //        bool satisfied = true;
 //
 //        if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
 //            cout << "p legendre: " << p_legendre << endl;
-//            cout << "p costas: " << p_costas << endl;
+//            cout << "p costas: " << p_shift << endl;
 //            cout << "root: " << root << endl;
 //            cout << "Failed case 1\t" << (p_legendre - 1) / 2 * n1 << " : " << d << endl << endl;
 //            satisfied = false;
 //        }
 //        if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
 //            cout << "p legendre: " << p_legendre << endl;
-//            cout << "p costas: " << p_costas << endl;
+//            cout << "p costas: " << p_shift << endl;
 //            cout << "root: " << root << endl;
 //            cout << "Failed case 2\t" << n1 * (p_legendre - 1) + 1 << " : " << d << endl << endl;
 //            satisfied = false;
 //        }
 //        if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
 //            cout << "p legendre: " << p_legendre << endl;
-//            cout << "p costas: " << p_costas << endl;
+//            cout << "p costas: " << p_shift << endl;
 //            cout << "root: " << root << endl;
 //            cout << "Failed case 3\t" << n1 * (p_legendre - 1) << " : " << d << endl << endl;
 //            satisfied = false;
 //        }
 //        if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
 //            cout << "p legendre: " << p_legendre << endl;
-//            cout << "p costas: " << p_costas << endl;
+//            cout << "p costas: " << p_shift << endl;
 //            cout << "root: " << root << endl;
 //            cout << "Failed case 4\t" << (p_legendre - 1) / 2 * n1 + 1 << " : " << d << endl << endl;
 //            satisfied = false;
@@ -360,7 +426,7 @@ int main() {
 
 
 // LEGENDRE AND COSTAS SEQUENCES WITH PRIMES LESS THAN primesUpTo
-//    long primesFrom = 3;
+//    long primesFrom = 5;
 //    long primesUpTo = 37;
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
@@ -374,16 +440,16 @@ int main() {
 //
 //    double testSatisfied = 0;
 //    long numTest = 0;
-//    for(long p_costas : primes) {
+//    for(long p_shift : primes) {
 //        long root;
-//        for(long c=2; c<p_costas; c++){
-//            if(isRoot(c,p_costas)) root = c;
+//        for(long c=2; c<p_shift; c++){
+//            if(isRoot(c,p_shift)) root = c;
 //        }
 //        for (long p_legendre : primes) {
 //            numTest++;
 //            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-//            MultiDimArray<F, dim> A(LogRoot, LegendreSeq(p_legendre),
-//                    p_costas - 1, p_legendre);
+//            MultiDimArray<F, dim> A(ExpQuadratic(p_shift, root), LegendreSeq(p_legendre),
+//                    p_shift - 1, p_legendre);
 //            A.RST();
 //
 //            unsigned long d = A.getDeltaSize();
@@ -412,11 +478,11 @@ int main() {
 //            if (!satisfied) {
 //                cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
 //                cout << "p legendre: " << p_legendre << endl;
-//                cout << "p costas: " << p_costas << endl;
+//                cout << "p costas: " << p_shift << endl;
 //                cout << "root: " << root << endl;
 //
 //                ofstream outfile ("failCases.txt", ios::app) ;
-//                outfile << p_legendre << '\t' << p_costas << '\t' << root << '\t' << expected - d << "\t\t"
+//                outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
 //                    << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
 //                outfile.close();
 //            }
@@ -429,7 +495,7 @@ int main() {
 
 
 // COMPLEXITY OF LEGENDRE
-//    long primesUpTo = 50;
+//    long primesUpTo = 80;
 //
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
@@ -476,10 +542,10 @@ int main() {
 //    double testSatisfied = 0;
 //    long numTest = 0;
 //    ofstream outfile ("failCases.txt", ios::app) ;
-//    for(long p_costas : primes) {
+//    for(long p_shift : primes) {
 //        vector<long> roots;
-//        for(long c=2; c<p_costas; c++){
-//            if(isRoot(c,p_costas)) roots.push_back(c);
+//        for(long c=2; c<p_shift; c++){
+//            if(isRoot(c,p_shift)) roots.push_back(c);
 //        }
 //
 //        for (long p_legendre : primes) {
@@ -488,12 +554,12 @@ int main() {
 //
 //            vector<bool> check_root;
 //            for (long root : roots) {
-//                MultiDimArray<F, dim> A(CostasSeq(p_costas, root), LegendreSeq(p_legendre),
-//                                            p_costas - 1, p_legendre);
+//                MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
+//                                            p_shift - 1, p_legendre);
 //                A.RST();
 //
 //                unsigned long d = A.getDeltaSize();
-//                long n1 = p_costas - 1;
+//                long n1 = p_shift - 1;
 //                long criteria = p_legendre % 8;
 //                bool satisfied = true;
 //
@@ -519,7 +585,7 @@ int main() {
 //            if(check) testSatisfied = testSatisfied + 1;
 //            else {
 //                outfile << "p_legendre: " << p_legendre << endl;
-//                outfile << "p_costas: " << p_costas << endl << endl;
+//                outfile << "p_shift: " << p_shift << endl << endl;
 //            }
 //        }
 //    }
@@ -537,15 +603,15 @@ int main() {
 //    typedef NTL::ZZ_p F;
 //    const unsigned long dim = 2;
 //
-//    long p_legendre =   7;
-//    long p_costas =     7;
-//    vector<long> shift(p_costas-1);
-//    for (long i=0; i<p_costas-1; i++){
+//    long p_legendre =   5;
+//    long shift_len =    7;
+//    vector<long> shift(shift_len);
+//    for (long i=0; i<shift_len; i++){
 //        shift[i] = i;
 //    }
 //
 //    long total=1, numTest=0;
-//    for (long i=2; i<p_costas; i++){
+//    for (long i=2; i<shift_len; i++){
 //        total = total*i;
 //    }
 //    double testSatisfied = 0;
@@ -554,12 +620,12 @@ int main() {
 //
 //    do {
 //        numTest++;
-//        cout << "Test " << numTest << " of " << total << endl;
-//        MultiDimArray<F, dim> Array(shift, LegendreSeq(p_legendre), p_costas - 1, p_legendre);
+////        cout << "Test " << numTest << " of " << total << endl;
+//        MultiDimArray<F, dim> Array(shift, LegendreSeq(p_legendre), shift_len, p_legendre);
 //        Array.RST();
 //
 //        unsigned long d = Array.getDeltaSize();
-//        long n1 = p_costas - 1;
+//        long n1 = shift_len;
 //        long criteria = p_legendre % 8;
 //        long expected = 0;
 //        bool satisfied = true;
@@ -582,7 +648,10 @@ int main() {
 //        }
 //
 //        if(satisfied) testSatisfied += 1;
-//        else permutations.push_back(shift);
+//        else {
+//            permutations.push_back(shift);
+////            cout << d << "\t" << expected << endl;
+//        }
 ////        if (!satisfied) {
 ////            ofstream outfile("failCases.txt", ios::app);
 ////            outfile << expected - d << "\t\t" << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << "\t\t";
@@ -614,24 +683,24 @@ int main() {
 ////        else {
 ////            testSatisfied += 1;
 ////        }
-//    } while ( next_permutation(shift.begin(), shift.end()) );
+//    } while ( next_permutation(shift.begin(), shift.end()) && numTest<20);
 //
-////    for(auto&& v : permutations){
-////        while (v[0] != 0){
-////            v.push_back(v[0]);
-////            v.erase(v.begin());
-////        }
-////    }
-////    sort(permutations.begin(), permutations.end(), compare);
+//    for(auto&& v : permutations){
+//        while (v[0] != 0){
+//            v.push_back(v[0]);
+//            v.erase(v.begin());
+//        }
+//    }
+//    sort(permutations.begin(), permutations.end(), compare);
 //
-//    for (auto v : permutations){
+//    for (auto v : permutations) {
 //        for (auto s:v){
-//            cout << s << " ";
+//            cout << s << ", ";
 //        }
 //        cout << endl;
 //    }
 //
-//    cout << "Proportion " << testSatisfied/total;
+//    cout << "Proportion " << testSatisfied << "/" << numTest << " = " << testSatisfied/numTest;
 // ^ PERMUTATIONS ^
 
 
@@ -642,120 +711,423 @@ int main() {
 //    typedef NTL::ZZ_p F;
 //    const unsigned long dim = 2;
 //
-//    long p_legendre =    19;
-//    long p_shift = p_legendre;
-//    long root(2);
-//    while (!isRoot(root, p_shift)) root++;
-//
-//    cout << "Legendre: ";
-//    for (long i=0; i<p_legendre; i++)
-//        cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
-//    cout << "Shift Sequence:" << endl;
-//    ExpQuadratic ShiftSeq(p_shift, root);
-//    for (long i=0; i<p_shift-1; i++)
-//        cout << ShiftSeq(i) << " "; cout << endl << endl;
-//
-//    MultiDimArray<F,dim> A(ShiftSeq, LegendreSeq(p_legendre), p_shift-1, p_legendre);
-//    A.RST();
-//
-//    unsigned long d = A.getDeltaSize();
-//    cout << "Linear complexity\t" << d << endl;
-//    double size = p_legendre*(p_shift-1);
-//    cout << "Normalized complexity\t" << d/size << endl;
-//
-//    long n1 = A.period[0];
-//    long criteria = p_legendre % 8;
-//    long expected = 0;
-//    bool satisfied = true;
-//
-//    if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-//        satisfied = false;
-//        expected = (p_legendre - 1) / 2 * n1;
-//    }
-//    if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-//        satisfied = false;
-//        expected = n1 * (p_legendre - 1) + 1;
-//    }
-//    if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-//        satisfied = false;
-//        expected = n1 * (p_legendre - 1);
-//    }
-//    if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-//        satisfied = false;
-//        expected = (p_legendre - 1) / 2 * n1 + 1;
+//    vector<long> primes;
+//    for (long i=11; i<=11; i++) {
+//        if(isPrime(i)) primes.push_back(i);
 //    }
 //
-//    if (!satisfied) {
-//        cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
-//        cout << "p legendre: " << p_legendre << endl;
-//        cout << "p costas: " << p_shift << endl;
-//        cout << "root: " << root << endl;
+//    for(long p_legendre : primes) {
+//        cout << " - - - - - - - - - - - - - - - - - - - - -" << endl;
+//        cout << "PRIME: " << p_legendre << endl << endl;
+//        long p_shift = p_legendre;
+//        long root(2);
+//        while (!isRoot(root, p_shift)) root++;
+//
+//        cout << "Legendre: ";
+//        for (long i = 0; i < p_legendre; i++)
+//            cout << LegendreSeq(p_legendre)(i) << " ";
+//        cout << endl << endl;
+//        cout << "Shift Sequence:" << endl;
+//        ExpQuadratic ShiftSeq(p_shift, root);
+//        for (long i = 0; i < p_shift - 1; i++)
+//            cout << ShiftSeq(i) << " ";
+//        cout << endl << endl;
+//
+//        MultiDimArray<F, dim> A(ShiftSeq, LegendreSeq(p_legendre), p_shift - 1, p_legendre);
+//        A.RST();
+//
+//        unsigned long d = A.getDeltaSize();
+//        cout << "Linear complexity\t" << d << endl;
+//        double size = p_legendre * (p_shift - 1);
+//        cout << "Normalized complexity\t" << d / size << endl;
+//
+//        long n1 = A.period[0];
+//        long criteria = p_legendre % 8;
+//        long expected = 0;
+//        bool satisfied = true;
+//
+//        if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+//            satisfied = false;
+//            expected = (p_legendre - 1) / 2 * n1;
+//        }
+//        if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+//            satisfied = false;
+//            expected = n1 * (p_legendre - 1) + 1;
+//        }
+//        if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+//            satisfied = false;
+//            expected = n1 * (p_legendre - 1);
+//        }
+//        if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+//            satisfied = false;
+//            expected = (p_legendre - 1) / 2 * n1 + 1;
+//        }
+//
+//        if (!satisfied) {
+//            cout << "Failed case " << criteria / 2 + 1 << "\t" << expected << " : " << d << endl;
+//            cout << "p legendre: " << p_legendre << endl;
+//            cout << "p costas: " << p_shift << endl;
+//            cout << "root: " << root << endl;
+//        }
 //    }
 // ^^ EXPONENTIAL QUADRATIC (VALUE) ^^
 
 
 // EXPONENTIAL QUADRATIC (LOG)
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned long dim = 2;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 2;
+//
+//    vector<long> primes;
+//    for (long i=7; i<=19; i++) {
+//        if(isPrime(i)) primes.push_back(i);
+//    }
+//
+//    for(long p_legendre : primes) {
+//        cout << " - - - - - - - - - - - - - - - - - - - - -" << endl;
+//        cout << "PRIME: " << p_legendre << endl << endl;
+//
+//        long p_shift = p_legendre;
+//        long root(2);
+//        while (!isRoot(root, p_shift)) root++;
+//
+//        cout << "Legendre: ";
+//        for (long i = 0; i < p_legendre; i++)
+//            cout << LegendreSeq(p_legendre)(i) << " ";
+//        cout << endl << endl;
+//        cout << "Shift Sequence (Root " << root << ")" << endl;
+//        LogQuadratic ShiftSeq(p_shift, root);
+//        for (long i = 0; i < p_shift - 1; i++)
+//            cout << ShiftSeq(i) << " ";
+//        cout << endl << endl;
+//
+//        MultiDimArray<F, dim> A(ShiftSeq, LegendreSeq(p_legendre), p_shift - 1, p_legendre);
+//        A.RST();
+//
+//        unsigned long d = A.getDeltaSize();
+//        cout << "Linear complexity\t" << d << endl;
+//        double size = p_legendre * (p_shift - 1);
+//        cout << "Normalized complexity\t" << d / size << endl;
+//
+//        long n1 = A.period[0];
+//        long criteria = p_legendre % 8;
+//        long expected = 0;
+//        bool satisfied = true;
+//
+//        if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+//            satisfied = false;
+//            expected = (p_legendre - 1) / 2 * n1;
+//        }
+//        if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+//            satisfied = false;
+//            expected = n1 * (p_legendre - 1) + 1;
+//        }
+//        if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+//            satisfied = false;
+//            expected = n1 * (p_legendre - 1);
+//        }
+//        if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+//            satisfied = false;
+//            expected = (p_legendre - 1) / 2 * n1 + 1;
+//        }
+//
+//        if (!satisfied) {
+//            cout << "Failed case " << criteria / 2 + 1 << "\t" << expected << " : " << d << endl;
+//            cout << "p legendre: " << p_legendre << endl;
+//            cout << "p costas: " << p_shift << endl;
+//            cout << "root: " << root << endl;
+//        }
+//    }
 
-    long p_legendre =    29;
-    long p_shift = p_legendre;
-    long root(2);
-    while (!isRoot(root, p_shift)) root++;
-
-    cout << "Legendre: ";
-    for (long i=0; i<p_legendre; i++)
-        cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
-    cout << "Shift Sequence (Root " << root << ")"  << endl;
-    LogQuadratic ShiftSeq(p_shift, root);
-    for (long i=0; i<p_shift-1; i++)
-        cout << ShiftSeq(i) << " "; cout << endl << endl;
-
-    MultiDimArray<F,dim> A(ShiftSeq, LegendreSeq(p_legendre), p_shift-1, p_legendre);
-    A.RST();
-
-    unsigned long d = A.getDeltaSize();
-    cout << "Linear complexity\t" << d << endl;
-    double size = p_legendre*(p_shift-1);
-    cout << "Normalized complexity\t" << d/size << endl;
-
-    long n1 = A.period[0];
-    long criteria = p_legendre % 8;
-    long expected = 0;
-    bool satisfied = true;
-
-    if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-        satisfied = false;
-        expected = (p_legendre - 1) / 2 * n1;
-    }
-    if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-        satisfied = false;
-        expected = n1 * (p_legendre - 1) + 1;
-    }
-    if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-        satisfied = false;
-        expected = n1 * (p_legendre - 1);
-    }
-    if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-        satisfied = false;
-        expected = (p_legendre - 1) / 2 * n1 + 1;
-    }
-
-    if (!satisfied) {
-        cout << "Failed case " << criteria / 2 + 1 << "\t" << expected << " : " << d << endl;
-        cout << "p legendre: " << p_legendre << endl;
-        cout << "p costas: " << p_shift << endl;
-        cout << "root: " << root << endl;
-    }
 
 
 
 
-    return 0;
+// ALL COMBINATION OF COEFFICIENTS IN POLYNOMIAL SHIFT SEQUENCE
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 2;
+//
+//    long p_legendre =    23;
+//    long p_shift =       23;
+//    long root =          5;
+//
+//    long counter = 1;
+//    for (long a = 4; a < p_legendre; a++) {
+//        cout << "Test " << counter << endl;
+//        counter++;
+//        for (long b = 1; b < p_legendre; b++) {
+//            MultiDimArray<F, dim> A(PolynomialSeq(p_shift, root, a, b), LegendreSeq(p_legendre), p_shift - 1, p_legendre);
+//
+//            A.RST();
+//
+//            unsigned long d = A.getDeltaSize();
+////            cout << d << endl;
+//
+//
+//            long n1 = A.period[0];
+//            long criteria = p_legendre % 8;
+//            long expected = 0;
+//            bool satisfied = true;
+//
+//            if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+//                satisfied = false;
+//                expected = (p_legendre - 1) / 2 * n1;
+//            }
+//            if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+//                satisfied = false;
+//                expected = n1 * (p_legendre - 1) + 1;
+//            }
+//            if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+//                satisfied = false;
+//                expected = n1 * (p_legendre - 1);
+//            }
+//            if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+//                satisfied = false;
+//                expected = (p_legendre - 1) / 2 * n1 + 1;
+//            }
+//
+//            if (!satisfied) {
+//                cout << a << " " << b << endl;
+////                for (int i=0; i<p_shift-1; i++)
+////                    cout << PolynomialSeq(p_shift, root, a, b)(i) << " ";
+////                cout << endl;
+//            }
+//        }
+//    }
 
+
+
+
+//GENERALIZED LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION IIB)
+// Files are generated in the Sage program Generalized_Legendre
+
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 2;
+//
+//
+//    string line;
+//    vector<long> v(dim);
+//    long size = 1;
+//    for (int i=0; i<dim; i++) {
+//        cin >> v[i];
+//        size = size * v[i];
+//    }
+//
+////    cout << "Size " << size << endl;
+//
+////    Removing character in buffer after cin
+//    getline(cin, line);
+//
+//    int ctr = 0;
+//
+//    while(ctr < 30 && getline(cin, line)) {
+//        ctr++;
+//        // Skipping following two lines
+//        getline(cin, line); getline(cin, line);
+//
+//        MultiDimArray<F, dim> A(v);
+//        for (long i = 0; i < size; i++) {
+////            cout << i << endl;
+//            blitz::TinyVector<int,dim> position;
+//            F value;
+//
+//            getline(cin, line);
+//            stringstream ss(line);
+//            for (int n=0; n<dim; n++)
+//                ss >> position[n];
+//            ss >> value;
+//            A.setAt(position, value);
+//        }
+////        A.print();
+////        cout << endl;
+//        A.RST();
+////        cout << ctr << endl;
+////        cout << "Delta size: " << A.getDeltaSize() << endl;
+//    }
+////    cout << "\n\nNext line in buffer:" << endl;
+////    getline(cin, line);
+////    cout << line << endl;
+
+
+
+
+
+
+
+
+
+
+//GENERALIZED TERNARY LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION IIB)
+// Files are generated in the Sage program Generalized_Legendre
+
+//    NTL::ZZ p(3);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 2;
+//
+//
+//    string line;
+//    vector<long> v(dim);
+//    long size = 1;
+//    for (int i=0; i<dim; i++) {
+//        cin >> v[i];
+//        size = size * v[i];
+//    }
+//
+////    cout << "Size " << size << endl;
+//
+////    Removing character in buffer after cin
+//    getline(cin, line);
+//
+//    int ctr = 0;
+//
+//    while(getline(cin, line)) {
+//        ctr++;
+//        // Skipping following two lines
+//        getline(cin, line); getline(cin, line);
+//
+//        MultiDimArray<F, dim> A(v);
+//        for (long i = 0; i < size; i++) {
+////            cout << i << endl;
+//            blitz::TinyVector<int,dim> position;
+//            F value;
+//
+//            getline(cin, line);
+//            stringstream ss(line);
+//            for (int n=0; n<dim; n++)
+//                ss >> position[n];
+//            ss >> value;
+//            A.setAt(position, value);
+//        }
+////        A.print();
+////        cout << endl;
+//        A.RST();
+//        cout << ctr << endl;
+//        cout << "Delta size: " << A.getDeltaSize() << endl;
+//    }
+////    cout << "\n\nNext line in buffer:" << endl;
+////    getline(cin, line);
+////    cout << line << endl;
+
+
+
+
+
+
+//GENERALIZED 3D BINARY LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION III-B)
+// Files are generated in the Sage program Generalized_Legendre
+
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 3;
+//
+//
+//    string line;
+//    vector<long> v(dim);
+//    long size = 1;
+//    for (int i=0; i<dim; i++) {
+//        cin >> v[i];
+//        size = size * v[i];
+//    }
+//
+////    cout << "Size " << size << endl;
+//
+////    Removing character in buffer after cin
+//    getline(cin, line);
+//
+//    int ctr = 0;
+//
+//    while(getline(cin, line)) {
+//        ctr++;
+//        // Skipping following two lines
+//        getline(cin, line); getline(cin, line);
+//
+//        MultiDimArray<F, dim> A(v);
+//        for (long i = 0; i < size; i++) {
+////            cout << i << endl;
+//            blitz::TinyVector<int,dim> position;
+//            F value;
+//
+//            getline(cin, line);
+//            stringstream ss(line);
+//            for (int n=0; n<dim; n++)
+//                ss >> position[n];
+//            ss >> value;
+//            A.setAt(position, value);
+//        }
+////        A.print();
+////        cout << endl;
+//        A.RST();
+////        cout << ctr << endl;
+//        cout << "Delta size: " << A.getDeltaSize() << '\t' << A.getDeltaSize()/(1.0 * size) << endl;
+//    }
+////    cout << "\n\nNext line in buffer:" << endl;
+////    getline(cin, line);
+////    cout << line << endl;
+
+
+
+
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned long dim = 3;
+//
+//
+//    string line;
+//    vector<long> v(dim);
+//    long size = 1;
+//    for (int i=0; i<dim; i++) {
+//        cin >> v[i];
+//        size = size * v[i];
+//    }
+//
+////    cout << "Size " << size << endl;
+//
+////    Removing character in buffer after cin
+//    getline(cin, line);
+//
+//    int ctr = 0;
+//
+//    while(getline(cin, line)) {
+//        ctr++;
+//        // Skipping following two lines
+//        getline(cin, line); getline(cin, line);
+//
+//        MultiDimArray<F, dim> A(v);
+//        for (long i = 0; i < size; i++) {
+////            cout << i << endl;
+//            blitz::TinyVector<int,dim> position;
+//            F value;
+//
+//            getline(cin, line);
+//            stringstream ss(line);
+//            for (int n=0; n<dim; n++)
+//                ss >> position[n];
+//            ss >> value;
+//            A.setAt(position, value);
+//        }
+////        A.print();
+////        cout << endl;
+//        A.RST();
+////        cout << ctr << endl;
+//        cout << "Delta size: " << A.getDeltaSize() << '\t' << A.getDeltaSize()/(1.0 * size) << endl;
+//    }
+////    cout << "\n\nNext line in buffer:" << endl;
+////    getline(cin, line);
+////    cout << line << endl;
+//
+//    return 0;
 }
 
 
 // g++ -g -std=c++11 -pthread -march=native main.cpp  -lntl -lblitz -lgmp -lm
+
+
+
