@@ -30,7 +30,8 @@ class MExponent {
         MExponent mod(const MExponent&) const ; // component wise mod
 
         // MONOMIAL COMPARISONS
-        bool lex_less(const MExponent&) const ; // compare by lex
+        bool lex_less(const MExponent&) const ; // compare by lex Y<X
+        bool lex_less2(const MExponent&) const ; // compare by lex X<Y
         bool grlex_less(const MExponent&) const ; // compare by graded lex
         bool leq_d(const MExponent&) const ; // compare by divisibility
 
@@ -42,13 +43,6 @@ class MExponent {
           out << e.getExp()[e.getExp().length()-1] << ")";
           return out;
         }
-
-
-//        bool operator < (const MExponent<m>& e) const
-//        {
-//            return grlex_less(e);
-//        }
-
 } ; // end MExponent
 #endif // MEXPONENT_H
 
@@ -121,10 +115,26 @@ MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
 *
 *******************************************************/
 
-// lexicographic (lex)
+// lexicographic (lex) X<Y
 template <unsigned long m>
 bool MExponent<m>::lex_less(const MExponent<m>& e) const {
     return lexicographical_compare(exp.begin(), exp.end(), e.getExp().begin(), e.getExp().end());
+}
+
+//
+template <unsigned long m>
+bool MExponent<m>::lex_less2(const MExponent<m>& e) const {
+    auto first1 = exp.end()-1;
+    auto last1 = exp.begin()-1;
+    auto first2 = e.getExp().end()-1;
+    auto last2 = e.getExp().begin()-1;
+    while (first1!=last1)
+    {
+        if (first2==last2 || *first2<*first1) return false;
+        else if (*first1<*first2) return true;
+        --first1; --first2;
+    }
+    return (first2!=last2);
 }
 
 // graded lexicographic (grlex)
@@ -135,7 +145,6 @@ bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
     if (sum1 > sum2) return false;
     else if (sum1 < sum2) return true;
     else return lex_less(e);
-
 }
 
 // divisibility
@@ -162,8 +171,4 @@ bool MExponent<m>::leq_d(const MExponent<m>& e) const {
 //     out << e.getExp()[e.getExp().length()-1] << ")";
 //     return out;
 // }
-//
-//
-// /******************************************************
-// *           END OF MExponent IMPLEMENTATION
-// *******************************************************/
+
