@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <vector>
+#include <string>
 #include <forward_list>
 #include "MExponent.cpp"
 #include <algorithm> //sort
@@ -16,14 +17,34 @@ class MultiDimArray {
     public:
         vector<unsigned long> period;
         explicit MultiDimArray(blitz::Array<F,m>&);
+//        Constructor: receives a blitz array of dimension m, with entries in F.
+
+        MultiDimArray(const vector<long>&);
+//        Constructor: receives period vector and a file with coordinates and value
+
         MultiDimArray(const function<long (long)>&, const function<F (long)>&, long, long);
+//        Constructor: receives shift sequence, column sequence, and their periods, respectively.
+
         MultiDimArray(const vector<long>&, const function<F (long)>&, long, long);
+//        Constructor: same as above but shift sequence is a vector.
+
         static const unsigned long dimension = m;
         void RST();
         unsigned long getDeltaSize(){return delta_size;}
+        void setAt(const blitz::TinyVector<int,m>&, F&);
+        void print();
 } ;
 
 #endif
+
+
+
+/******************************************************
+*
+*       CONSTRUCTORS
+*
+*******************************************************/
+
 
 template <typename F, unsigned long m>
 MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
@@ -33,6 +54,26 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
         period[i] = A.extent(i);
     }
     delta_size = 0;
+}
+
+
+template<typename F, unsigned long m>
+MultiDimArray<F,m>::MultiDimArray(const vector<long>& period_vector){
+    delta_size = 0;
+    if (m != period_vector.size()) {
+        cout << "ERROR: Period vector length does not match array dimensions" << endl;
+    }
+    else {
+        blitz::TinyVector<long, m> period2, index;
+        for (int i=0; i<m; i++) {
+            period2[i] = period_vector[i];
+        }
+        A.resize(period2);
+        period.resize(m);
+        for (unsigned long i=0; i<m; i++){
+            period[i] = A.extent(i);
+        }
+    }
 }
 
 // MultiDimArray(Costas, Legendre, Costas period, Legendre period)
@@ -46,8 +87,12 @@ MultiDimArray<F,m>::MultiDimArray(const function<long(long)>& func1, const funct
     for (long i = 0; i < n1; i++) {
         for (long j = 0; j < n2; j++) {
             index = i,j;
-            if (func1(i) == -1)
-                A(index) = 0;
+            if (func1(i) == -1) {
+                if (n2 % 4 == 1)
+                    A(index) = 1;
+                else
+                    A(index) = 0;
+            }
             else
                 A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
         }
@@ -80,13 +125,13 @@ MultiDimArray<F,m>::MultiDimArray(const vector<long>& func1, const function<F(lo
     }
 
 // FOR PRINTING THE ARRAY
-//    for (long j=n2-1; j>=0; j--) {
-//        for (long i=0; i<n1; i++) {
-//            index = i,j;
-//            cout << A(index) << " ";
-//        }
-//        cout << endl;
-//    }
+    for (long j=n2-1; j>=0; j--) {
+        for (long i=0; i<n1; i++) {
+            index = i,j;
+            cout << A(index) << " ";
+        }
+        cout << endl;
+    }
 }
 
 // Constructor for logWelch with column of zeros at the end
@@ -121,6 +166,31 @@ MultiDimArray<F,m>::MultiDimArray(const vector<long>& func1, const function<F(lo
 //}
 
 
+//template <typename F, unsigned long m>
+//void MultiDimArray<F,m>::setAt(const vector<long>& coordinates, F& value) {
+//    blitz::TinyVector<F,m> position;
+//    for (int i=0; i<m; i++)
+//        position[i] = coordinates[i];
+//    A(position) = value;
+//}
+
+template <typename F, unsigned long m>
+void MultiDimArray<F,m>::setAt(const blitz::TinyVector<int, m>& coordinates, F& value) {
+    A(coordinates) = value;
+}
+
+template <typename F, unsigned long m>
+void MultiDimArray<F, m>::print(){
+    blitz::TinyVector<int, m> index;
+    for (long j=period[1]-1; j>=0; j--) {
+        for (long i=0; i<period[0]; i++) {
+            index = i,j;
+            cout << A(index) << " ";
+        }
+        cout << endl;
+    }
+}
+
 
 /******************************************************
 *
@@ -129,7 +199,8 @@ MultiDimArray<F,m>::MultiDimArray(const vector<long>& func1, const function<F(lo
 *******************************************************/
 
 template<unsigned long m>
-void generateDivisors(unsigned long depth, unsigned long& index, MExponent<m>& e, const MExponent<m>& bound, vector< MExponent<m> >& list){
+void generateDivisors(unsigned long depth, unsigned long& index, MExponent<m>& e,
+        const MExponent<m>& bound, vector< MExponent<m> >& list){
   if (depth > 0){
     for(unsigned long i = 0; i <= bound.getExp()[depth-1]; i++) {
         e.editExp()[depth-1] = i;
@@ -204,7 +275,8 @@ void printMatrix (const vector< vector<F> >& M) {
 }
 
 template<typename F, unsigned long m>
-vector<F> rowPiAlpha(const MExponent<m>& alpha, const blitz::Array<F,m>& A, vector< MExponent<m> >& exponentsColumn, MExponent<m> e_period) {
+vector<F> rowPiAlpha(const MExponent<m>& alpha, const blitz::Array<F,m>& A,
+        vector< MExponent<m> >& exponentsColumn, MExponent<m> e_period) {
     unsigned long n = exponentsColumn.size();
     vector<F> piAlpha;
     piAlpha.resize(n);
@@ -296,6 +368,7 @@ void printStars(vector< MExponent<m> >& v, vector<unsigned long>& period) {
 *******************************************************/
 template<typename F, unsigned long m>
 void MultiDimArray<F,m>::RST() {
+//    cout << "In RST" << endl;
     MExponent<m> bound;
     for (unsigned long i = 0; i < m; i++) {
         bound.editExp()[i] = 2 * period[i] - 1;
@@ -353,9 +426,9 @@ void MultiDimArray<F,m>::RST() {
         vector<F> zeroRow(matrix[0].size(), (F)0);
 
         if (matrix[matrix.size()-1] == zeroRow) {
-//            leadingMonomials.push_back(alpha);
+            leadingMonomials.push_back(alpha);
 //            printPoly(idMatrix, idColumn);
-//            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
+            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -376,7 +449,7 @@ void MultiDimArray<F,m>::RST() {
 //        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 //    cout << "Delta size: " <<  delta_size << endl;
-
+//
 // Printing leading monomials in the array, whom closes the monomials in the delta set
 //    cout << "Leading Monomials " << endl;
 //    printStars(leadingMonomials, period);
