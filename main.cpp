@@ -1,232 +1,13 @@
 #include "MultiDimArray.hpp"
-//#include "Test.cpp"
+#include "Functions.h"
 #include "NTL/ZZ_p.h"
-#include <cmath>
 #include <chrono>
 #include <iostream>
 #include <fstream>
 #include <string>
 
 
-using namespace blitz;
 using namespace std;
-
-unsigned long readDim() {
-    unsigned long dim;
-    cin >> dim;
-    return dim;
-}
-
-bool compare(vector<long>& v1, vector<long>& v2){
-    return lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
-}
-
-
-bool isQuadratic(const long& n, const long& p){
-    for (long i=0; i<p; i++){
-        if ((i*i %p) == n) return true;
-    }
-    return false;
-}
-
-long powerMod(const long& x, const long& n, const long& mod){
-    if (n == 0) return 1;
-    long result = x;
-    for (long i=1; i<n; i++){
-        result = (result * x) % mod;
-    }
-    return result;
-}
-
-struct M_Seq {
-    vector<long> v;
-    M_Seq() {
-        v = {0,0,1,0,1,1,1};
-    }
-    NTL::ZZ_p operator () (const long& i) const {
-        return (NTL::ZZ_p) v[i];
-    }
-};
-
-struct LegendreSeq {
-    long mod;
-    explicit LegendreSeq(long p) {
-        mod = p;
-    }
-    NTL::ZZ_p operator () (const long& i) const {
-        bool result;
-        if ((i % mod) == 0)
-            result = false;
-        else
-            result = isQuadratic(i,mod);
-        return (NTL::ZZ_p) result;
-    }
-};
-
-// This is the polynomial (degree 3) that generates the PolynomialSeq
-long f(const long& x, const long& mod, long& a, long& b) {
-    return( a * powerMod(x, 3, mod) +
-            b * powerMod(x, 2, mod) +
-            x )
-            % mod;
-}
-
-struct PolynomialSeq {
-    long m;
-    long alpha;
-    long A;
-    long B;
-    explicit PolynomialSeq(long mod, long root, long a, long b) {
-        m = mod; alpha = root; A = a; B = b;
-    }
-    long operator () (const long& i) {
-        return f(powerMod(alpha, i, m), m, A, B);
-    }
-};
-
-
-struct ExpQuadratic {
-    long mod;
-    long root;
-    long a;
-    explicit ExpQuadratic(long p, long r, long A) {
-        mod = p; root = r; a = A;
-    }
-    long operator () (const long& i) {
-        return (a * powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
-    }
-};
-
-struct LogQuadratic {
-    long mod;
-    long root;
-    vector<long> logTable;
-    explicit LogQuadratic(long p, long r) {
-        mod = p; root = r;
-        logTable.resize(p);
-        logTable[0] = -1;
-        for (long i=0; i<mod-1; i++) {
-            logTable[powerMod(root, i, mod)] = i;
-        }
-    }
-    long operator () (const long& i) {
-        long result = (4*powerMod(root*root, i, mod) + powerMod(root, i, mod)) % mod;
-        return logTable[result];
-    }
-};
-
-
-struct ExponentialSeq {
-    long mod;
-    long root;
-    explicit ExponentialSeq(long m, long r){
-        mod = m; root = r;
-    }
-    long operator () (const long& i) const {
-        return powerMod(root, i, mod);
-    }
-};
-
-struct OneSequence {
-    long n;
-    explicit OneSequence(long length) {
-        n = length;
-    }
-    NTL::ZZ_p operator () (const long& i) const {
-        if(i==0)    return (NTL::ZZ_p) 1;
-        else        return (NTL::ZZ_p) 0;
-    }
-};
-
-struct LogWelch {
-    long mod;
-    long root;
-    vector<long> log;
-    explicit LogWelch(long m, long r){
-        mod = m;
-        root = r;
-        log.resize(m);
-        for (long i=0; i<m-1; i++){
-            log[powerMod(r,i,m)-1] = i;
-        }
-    }
-    long operator () (const long& i) const {
-            return log[i];
-    }
-};
-
-long LogRoot(long i) {
-    return i;
-};
-
-template <typename Func>
-void printSeq(Func func1, long period){
-    for (long i = 0; i < period; i++) {
-        cout << func1(i) << " ";
-    }
-    cout << endl;
-}
-
-bool isPrime(long& n){
-    if (n<3) return false;
-    long bound = floor(sqrt(n));
-    for (long i=2; i<=bound; i++){
-        if (n%i == 0) return false;
-    }
-    return true;
-}
-
-bool isRoot(long& a, long& p) {
-    long num = a*a;
-    long ord = 1;
-    while (num % p != a) {
-        num = num*a % p;
-        ord++;
-    }
-    if (ord == p-1) return true;
-    return false;
-}
-
-long noShiftFunc(const long& i){
-    return 0;
-}
-
-long LegendreComplexity(long& p) {
-    long criteria = p % 8;
-    if(criteria == 1) return (p-1)/2;
-    if(criteria == 3) return p;
-    if(criteria == 5) return p-1;
-    if(criteria == 7) return (p+1)/2;
-    return 0;
-}
-
-bool isHere(vector<long> differences, long diff){
-    for (auto d : differences){
-        if (d==diff) return true;
-    }
-    return false;
-}
-
-
-bool isCostas(vector<long>& shift) {
-    for (long i=1; i<shift.size()-1; i++){
-        vector<long> differences;
-        long first_index(0);
-        while (first_index + i < shift.size()) {
-            long diff = shift[first_index + i] - shift[first_index];
-            if (isHere(differences, diff)) return false;
-            else {
-                differences.push_back(diff);
-            }
-            first_index++;
-        }
-    }
-    return true;
-}
-
-
-
-
 
 int main() {
 // TEST #1
@@ -237,12 +18,13 @@ int main() {
     const long m = 2;
 
     blitz::Array<F,m> A(2,2);
-//    A = (F)3, (F)10,
-//        (F)1, (F)8;
-//    MultiDimArray<F,m> array(A);
-//    array.RST();
+    A = (F)3, (F)10,
+        (F)1, (F)8;
+    MultiDimArray<F,m> array(A);
+    array.RST();
 
-    cout << "Working fine" << endl;
+    cout << "Delta: " << array.getDeltaSize() << endl;
+
     return 0;
 
 
@@ -290,9 +72,9 @@ int main() {
 ////    cout << "Legendre: ";
 ////    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
 ////    cout << "Log-Welch:" << endl;
-////    for (long i=0; i<p_shift-1; i++) cout << LogWelch(p_shift,root)(i) << " "; cout << "\n" << endl;
+////    for (long i=0; i<p_shift-1; i++) cout << LosWelchSeq(p_shift,root)(i) << " "; cout << "\n" << endl;
 ////    cout << "Quadratic:" << endl;
-////    for (long i=0; i<p_shift-1; i++) cout << ExpQuadratic(p_shift, root)(i) << " "; cout << endl;
+////    for (long i=0; i<p_shift-1; i++) cout << ExpQuadraticSeq(p_shift, root)(i) << " "; cout << endl;
 ////    cout << "Polynomial Sequence: ";
 ////    for (long i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
 //
@@ -449,7 +231,7 @@ int main() {
 //        for (long p_legendre : primes) {
 //            numTest++;
 //            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-//            MultiDimArray<F, dim> A(ExpQuadratic(p_shift, root), LegendreSeq(p_legendre),
+//            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root), LegendreSeq(p_legendre),
 //                    p_shift - 1, p_legendre);
 //            A.RST();
 //
@@ -729,7 +511,7 @@ int main() {
 //            cout << LegendreSeq(p_legendre)(i) << " ";
 //        cout << endl << endl;
 //        cout << "Shift Sequence:" << endl;
-//        ExpQuadratic ShiftSeq(p_shift, root);
+//        ExpQuadraticSeq ShiftSeq(p_shift, root);
 //        for (long i = 0; i < p_shift - 1; i++)
 //            cout << ShiftSeq(i) << " ";
 //        cout << endl << endl;
@@ -798,7 +580,7 @@ int main() {
 //            cout << LegendreSeq(p_legendre)(i) << " ";
 //        cout << endl << endl;
 //        cout << "Shift Sequence (Root " << root << ")" << endl;
-//        LogQuadratic ShiftSeq(p_shift, root);
+//        LogQuadraticSeq ShiftSeq(p_shift, root);
 //        for (long i = 0; i < p_shift - 1; i++)
 //            cout << ShiftSeq(i) << " ";
 //        cout << endl << endl;
