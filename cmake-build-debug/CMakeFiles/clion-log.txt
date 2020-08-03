@@ -1,5 +1,0 @@
-/Applications/CLion.app/Contents/bin/cmake/mac/bin/cmake -DCMAKE_BUILD_TYPE=Debug -G "CodeBlocks - Unix Makefiles" /Users/Jaziel/Desktop/Research/RST
-LIBRARIES = /usr/local/Cellar/ntl/11.3.3/lib/libntl.40.dylib;/usr/local/Cellar/ntl/11.3.3/lib/libntl.dylib
--- Configuring done
--- Generating done
--- Build files have been written to: /Users/Jaziel/Desktop/Research/RST/cmake-build-debug

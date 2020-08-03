@@ -1,3 +1,0 @@
-/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/CMakeFiles/rebuild_cache.dir
-/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/CMakeFiles/edit_cache.dir
-/Users/Jaziel/Desktop/Research/RST/cmake-build-debug/CMakeFiles/RST.dir
