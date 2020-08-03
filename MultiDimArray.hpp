@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <forward_list>
-#include "MExponent.cpp"
+#include "MExponent.hpp"
 #include <algorithm> //sort
 using namespace std;
 

@@ -1,4 +1,4 @@
-#include "MultiDimArray.cpp"
+#include "MultiDimArray.hpp"
 //#include "Test.cpp"
 #include "NTL/ZZ_p.h"
 #include <cmath>
@@ -242,6 +242,7 @@ int main() {
 //    MultiDimArray<F,m> array(A);
 //    array.RST();
 
+    cout << "Working fine" << endl;
     return 0;
 
 
