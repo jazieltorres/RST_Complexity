@@ -10,43 +10,62 @@
 using namespace std;
 
 int main() {
-// TEST #1
-    NTL::ZZ p(11);
-    NTL::ZZ_p::init(p);
 
+/******************************************************
+*
+*       TEST #1
+*
+*******************************************************/
+
+//    NTL::ZZ p(11);
+//    NTL::ZZ_p::init(p);
+//
+//    typedef NTL::ZZ_p F;
+//    const long m = 2;
+//
+//    blitz::Array<F,m> A(2,2);
+//    A = (F)3, (F)10,
+//        (F)1, (F)8;
+//    MultiDimArray<F,m> array(A);
+//    array.RST();
+//
+//    cout << "Delta: " << array.getDeltaSize() << endl;
+//
+//    return 0;
+
+
+
+/******************************************************
+*
+*   TEST #2 (From Multidimensional paper, Arce et al.)
+*
+*******************************************************/
+
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
     typedef NTL::ZZ_p F;
     const long m = 2;
-
-    blitz::Array<F,m> A(2,2);
-    A = (F)3, (F)10,
-        (F)1, (F)8;
+    blitz::Array<F,m> A(6,7);
+    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
+        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
+        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
+        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
+        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
+        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
     MultiDimArray<F,m> array(A);
     array.RST();
-
     cout << "Delta: " << array.getDeltaSize() << endl;
 
     return 0;
 
 
 
-// TEST #2
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const long m = 2;
-//    blitz::Array<F,m> A(6,7);
-//    A = (F)0, (F)0, (F)1, (F)1, (F)0, (F)1, (F)0,
-//        (F)1, (F)0, (F)0, (F)0, (F)1, (F)1, (F)0,
-//        (F)0, (F)0, (F)0, (F)1, (F)1, (F)0, (F)1,
-//        (F)1, (F)1, (F)0, (F)1, (F)0, (F)0, (F)0,
-//        (F)0, (F)1, (F)0, (F)0, (F)0, (F)1, (F)1,
-//        (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
-//    MultiDimArray<F,m> array(A);
-//    array.RST();
+/******************************************************
+*
+*   HARD-CODED SEQUENCES
+*
+*******************************************************/
 
-
-
-// HARD-CODE SEQUENCES
 //    cout << "Started" << endl;
 //
 //    NTL::ZZ p(2);
@@ -132,11 +151,16 @@ int main() {
 //        outfile << endl;
 //        outfile.close();
 //    }
-// ^ HARD-CODE SEQUENCES ^
 
 
 
-// LEGENDRE AND COSTAS SEQUENCES WITH RANDOM PRIMES
+
+/******************************************************
+*
+*   LEGENDRE AND COSTAS SEQUENCES WITH RANDOM PRIMES
+*
+*******************************************************/
+
 //    long numTest = 5;
 //    long p_legendreMAX = 10;
 //    long p_shiftMAX = 10;
@@ -203,12 +227,16 @@ int main() {
 //        }
 //    } // end for
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-// ^ SEQUENCES WITH RANDOM PRIMES ^
 
 
 
 
-// LEGENDRE AND COSTAS SEQUENCES WITH PRIMES LESS THAN primesUpTo
+/******************************************************
+*
+* LEGENDRE AND COSTAS SEQUENCES WITH PRIMES LESS THAN primesUpTo
+*
+*******************************************************/
+
 //    long primesFrom = 5;
 //    long primesUpTo = 37;
 //    NTL::ZZ p(2);
@@ -273,11 +301,15 @@ int main() {
 //        }
 //    }
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-// ^ SEQUENCES WITH PRIMES LESS THAN ^
 
 
 
-// COMPLEXITY OF LEGENDRE
+/******************************************************
+*
+*             COMPLEXITY OF LEGENDRE
+*
+*******************************************************/
+
 //    long primesUpTo = 80;
 //
 //    NTL::ZZ p(2);
@@ -306,10 +338,16 @@ int main() {
 //    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
 //    cout << duration.count() << " ms" << endl;
-// ^ COMPLEXITY OF LEGENDRE ^
 
 
-// TEST FOR EACH ROOT
+
+
+/******************************************************
+*
+*   TEST FOR EACH ROOT: EXPONENTIAL AND LEGENDRE
+*
+*******************************************************/
+
 //    long primesFrom = 3;
 //    long primesUpTo = 20;
 //    NTL::ZZ p(2);
@@ -375,12 +413,16 @@ int main() {
 //
 //    outfile.close();
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-// ^ TEST FOR EACH ROOT ^
 
 
 
 
-// PERMUTATIONS OF NUMBERS FROM 0 TO N1-2 FOR SHIFT
+/******************************************************
+*
+*   PERMUTATIONS OF NUMBERS FROM 0 TO N1-2 FOR SHIFT
+*
+*******************************************************/
+
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
@@ -484,11 +526,16 @@ int main() {
 //    }
 //
 //    cout << "Proportion " << testSatisfied << "/" << numTest << " = " << testSatisfied/numTest;
-// ^ PERMUTATIONS ^
 
 
 
-// EXPONENTIAL QUADRATIC (VALUE)
+
+/******************************************************
+*
+*   EXPONENTIAL QUADRATIC (VALUE) AND LEGENDRE
+*
+*******************************************************/
+
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
@@ -553,10 +600,14 @@ int main() {
 //            cout << "root: " << root << endl;
 //        }
 //    }
-// ^^ EXPONENTIAL QUADRATIC (VALUE) ^^
 
 
-// EXPONENTIAL QUADRATIC (LOG)
+/******************************************************
+*
+*   EXPONENTIAL QUADRATIC (LOG) AND LEGENDRE
+*
+*******************************************************/
+
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
@@ -626,8 +677,13 @@ int main() {
 
 
 
+/******************************************************
+*
+*   ALL COMBINATION OF COEFFICIENTS IN
+*   POLYNOMIAL SHIFT SEQUENCE
+*
+*******************************************************/
 
-// ALL COMBINATION OF COEFFICIENTS IN POLYNOMIAL SHIFT SEQUENCE
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
 //    typedef NTL::ZZ_p F;
@@ -683,9 +739,15 @@ int main() {
 
 
 
-
-//GENERALIZED LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION IIB)
-// Files are generated in the Sage program Generalized_Legendre
+/******************************************************
+*
+*  GENERALIZED LEGENDRE FORM PAPER MULTI-DIM
+*  ARRAYS FOR WATERMARKING (SECTION IIB)
+*
+*   Files are generated in the Sage program
+*   Generalized_Legendre
+*
+*******************************************************/
 
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
@@ -739,13 +801,17 @@ int main() {
 
 
 
+/******************************************************
+*
+* GENERALIZED TERNARY LEGENDRE FORM PAPER MULTI-DIM
+* ARRAYS FOR WATERMARKING (SECTION IIB)
+*
+*   Files are generated in the Sage program
+*   Generalized_Legendre
+*
+*******************************************************/
 
-
-
-
-
-
-//GENERALIZED TERNARY LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION IIB)
+//
 // Files are generated in the Sage program Generalized_Legendre
 
 //    NTL::ZZ p(3);
@@ -800,10 +866,15 @@ int main() {
 
 
 
-
-
-//GENERALIZED 3D BINARY LEGENDRE FORM PAPER MULTI-DIM ARRAYS FOR WATERMARKING (SECTION III-B)
-// Files are generated in the Sage program Generalized_Legendre
+/******************************************************
+*
+* GENERALIZED 3D BINARY LEGENDRE FORM PAPER MULTI-DIM
+* ARRAYS FOR WATERMARKING (SECTION III-B)
+*
+*   Files are generated in the Sage program
+*   Generalized_Legendre
+*
+*******************************************************/
 
 //    NTL::ZZ p(2);
 //    NTL::ZZ_p::init(p);
