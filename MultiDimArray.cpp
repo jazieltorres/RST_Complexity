@@ -5,7 +5,7 @@
 #include <vector>
 #include <string>
 #include <forward_list>
-#include "MExponent.cpp"
+#include "Monomial.cpp"
 #include <algorithm> //sort
 using namespace std;
 
