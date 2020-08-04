@@ -197,11 +197,11 @@ double MultiDimArray<F,m>::normalized_complexity() {
 *******************************************************/
 
 template<int m>
-void generateDivisors(int depth, int& index, MExponent<m>& e,
-        const MExponent<m>& bound, vector< MExponent<m> >& list){
+void generateDivisors(int depth, int& index, Monomial<m>& e,
+        const Monomial<m>& bound, vector< Monomial<m> >& list){
   if (depth > 0){
-    for(int i = 0; i <= bound.getExp()[depth-1]; i++) {
-        e.editExp()[depth-1] = i;
+    for(int i = 0; i <= bound.exponent()[depth-1]; i++) {
+        e.get_exponent()[depth-1] = i;
         generateDivisors(depth-1, index, e, bound, list);
     }
   }
@@ -212,16 +212,16 @@ void generateDivisors(int depth, int& index, MExponent<m>& e,
 }
 
 template<int m>
-int sizeOfDivisors(const MExponent<m> e) {
+int sizeOfDivisors(const Monomial<m> e) {
     int size(1);
-    for (auto x : e.getExp()) {
+    for (auto x : e.exponent()) {
         size = size * (x + 1);
     }
     return size;
 }
 
 template<int m>
-bool comp(const MExponent<m>& e1, const MExponent<m>& e2) {
+bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.lex_less(e2));
 }
 
@@ -273,14 +273,14 @@ void printMatrix (const vector< vector<F> >& M) {
 }
 
 template<typename F, int m>
-vector<F> rowPiAlpha(const MExponent<m>& alpha, const blitz::Array<F,m>& A,
-        vector< MExponent<m> >& exponentsColumn, MExponent<m> period) {
+vector<F> rowPiAlpha(const Monomial<m>& alpha, const blitz::Array<F,m>& A,
+        vector< Monomial<m> >& exponentsColumn, Monomial<m> period) {
     int n = exponentsColumn.size();
     vector<F> piAlpha;
     piAlpha.resize(n);
     for (int i = 0; i < n; i++) {
-        MExponent<m> index = exponentsColumn[i]+alpha;
-        piAlpha[i] = A(index.mod(period).getExp());
+        Monomial<m> index = exponentsColumn[i]+alpha;
+        piAlpha[i] = A(index.mod(period).exponent());
     }
     return piAlpha;
 }
@@ -308,16 +308,16 @@ void addDimension(vector< vector<F> >& idMatrix) {
 template<int m>
 class isMultiple {
 private:
-    MExponent<m> alpha;
+    Monomial<m> alpha;
 public:
-    explicit isMultiple(MExponent<m>& e) {alpha = e;}
-    bool operator () (const MExponent<m>& e) const {
+    explicit isMultiple(Monomial<m>& e) {alpha = e;}
+    bool operator () (const Monomial<m>& e) const {
         return alpha.leq_d(e);
     }
 };
 
 template<typename F, int m>
-void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& idColumn) {
+void printPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
     int n = idMatrix.size()-1;
     for (int i = 0; i < idMatrix[0].size(); i++) {
         if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << idColumn[i] << "\t";
@@ -326,8 +326,8 @@ void printPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& idColumn) 
 }
 
 template<typename F, int m>
-vector< MExponent<m> > getPoly(vector< vector<F> >& idMatrix, vector< MExponent<m> >& idColumn) {
-    vector< MExponent<m> > poly;
+vector< Monomial<m> > getPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
+    vector< Monomial<m> > poly;
     int n = idMatrix.size()-1;
     for (int i = 0; i < idMatrix[0].size(); i++) {
         if(idMatrix[n][i] != (F)0) poly.push_back(idColumn[i]);
@@ -336,7 +336,7 @@ vector< MExponent<m> > getPoly(vector< vector<F> >& idMatrix, vector< MExponent<
 }
 
 template <int m>
-void printStars(vector< MExponent<m> >& v, vector<int>& period) {
+void printStars(vector< Monomial<m> >& v, vector<int>& period) {
     for(int i=2*period[1]+1; i>0; i--){
         for(int j=0; j<period[0]; j++) {
             if (1 == i % 2) {
@@ -345,7 +345,7 @@ void printStars(vector< MExponent<m> >& v, vector<int>& period) {
             else {
                 bool yes = false;
                 for (auto e : v){
-                    if ((e.getExp()[0]== j) && (e.getExp()[1]==i/2-1)) yes = true;
+                    if ((e.exponent()[0]== j) && (e.exponent()[1]==i/2-1)) yes = true;
                 }
                 if(yes) cout << "|*";
                 else cout << "| ";
@@ -368,19 +368,19 @@ template<typename F, int m>
 void MultiDimArray<F,m>::RST() {
     delta_size = 0;
 
-    MExponent<m> bound;
+    Monomial<m> bound;
     for (int i = 0; i < m; i++) {
-        bound.editExp()[i] = 2 * period[i] - 1;
+        bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    vector< MExponent<m> >  exponentsColumn(sizeOfDivisors(bound)),
+    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound)),
                             idColumn;
-    forward_list< MExponent<m> > exponentsRow;
+    forward_list< Monomial<m> > exponentsRow;
 
 
     int index = 0;
-    MExponent<m> exp;
-    MExponent<m> e_period(period);
+    Monomial<m> exp;
+    Monomial<m> e_period(period);
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
 
     sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
@@ -390,11 +390,11 @@ void MultiDimArray<F,m>::RST() {
     }
 
     vector< vector<F> > matrix, idMatrix;
-    vector< MExponent<m> > leadingMonomials;
-    vector< vector <MExponent<m> > > grobnerBasis;
+    vector< Monomial<m> > leadingMonomials;
+    vector< vector <Monomial<m> > > grobnerBasis;
 
 
-    MExponent<m> alpha;
+    Monomial<m> alpha;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
 
