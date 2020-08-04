@@ -89,7 +89,7 @@ int main() {
 //    return 0;
 
 //    cout << "Legendre: ";
-    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
+//    for (long i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
 //    cout << "Log-Welch:" << endl;
 //    for (long i=0; i<p_shift-1; i++) cout << LosWelchSeq(p_shift,root)(i) << " "; cout << "\n" << endl;
 //    cout << "Quadratic:" << endl;
@@ -98,11 +98,11 @@ int main() {
 //    for (long i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
 
 
-//    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
-//
-//    A.RST();
-//
-//    cout << "Delta: " << A.getDeltaSize() << endl;
+    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
+
+    A.RST();
+
+    cout << "Delta: " << A.getDeltaSize() << endl;
 //
 //    unsigned long d = A.getDeltaSize();
 //    long n1 = A.period[0];

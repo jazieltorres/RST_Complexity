@@ -156,19 +156,3 @@ bool MExponent<m>::leq_d(const MExponent<m>& e) const {
     return true ;
 }
 
-
-/******************************************************
-*
-*           PRINT (<< OVERLOAD)
-*
-*******************************************************/
-
-// template <long m>
-// ostream& operator<<(ostream& out, MExponent<m>& e) {
-//     out << "(" ;
-//     for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
-//         out << *i << ", " ;
-//     out << e.getExp()[e.getExp().length()-1] << ")";
-//     return out;
-// }
-

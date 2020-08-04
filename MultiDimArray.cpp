@@ -31,7 +31,7 @@ class MultiDimArray {
         static const unsigned long dimension = m;
         void RST();
         unsigned long getDeltaSize(){return delta_size;}
-        void setAt(const blitz::TinyVector<int,m>&, F&);
+        void setAt(const blitz::TinyVector<int,m>&, F&);  // setAt(coordinate, value)
         void print();
 } ;
 
