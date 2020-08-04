@@ -241,32 +241,36 @@ int main() {
 *
 *******************************************************/
 
-//    int primesFrom = 5;
-//    int primesUpTo = 37;
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const unsigned int dim = 2;
-//
-//    vector<int> primes;
-//    for (int i=primesFrom; i<=primesUpTo; i++){
-//        if (isPrime(i)) primes.push_back(i);
-//    }
-//
-//    double testSatisfied = 0;
-//    int numTest = 0;
-//    for(int p_shift : primes) {
-//        int root;
-//        for(int c=2; c<p_shift; c++){
-//            if(isRoot(c,p_shift)) root = c;
-//        }
-//        for (int p_legendre : primes) {
-//            numTest++;
-//            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-//            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root), LegendreSeq(p_legendre),
-//                    p_shift - 1, p_legendre);
-//            A.RST();
-//
+    int primesFrom = 5;
+    int primesUpTo = 20;
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const unsigned int dim = 2;
+
+    vector<int> primes;
+    for (int i=primesFrom; i<=primesUpTo; i++){
+        if (isPrime(i)) primes.push_back(i);
+    }
+
+    double testSatisfied = 0;
+    int numTest = 0;
+
+    auto start = chrono::high_resolution_clock::now();
+
+    for(int p_shift : primes) {
+        int root;
+        for(int c=2; c<p_shift; c++){
+            if(isRoot(c,p_shift)) root = c;
+        }
+        for (int p_legendre : primes) {
+            numTest++;
+            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
+            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre),
+                    p_shift - 1, p_legendre);
+            A.RST();
+
+
 //            unsigned int d = A.getDeltaSize();
 //            int n1 = A.period[0];
 //            int criteria = p_legendre % 8;
@@ -302,10 +306,14 @@ int main() {
 //                outfile.close();
 //            }
 //            else testSatisfied += 1;
-//        }
-//    }
+        }
+    }
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
+    cout << duration.count() << " s" << endl;
 
+    return 0;
 
 
 /******************************************************
@@ -314,34 +322,36 @@ int main() {
 *
 *******************************************************/
 
-    int primesUpTo = 100;
-
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-
-    vector<int> primes;
-    for (int i=3; i<=primesUpTo; i++) {
-        if(isPrime(i)) primes.push_back(i);
-    }
-    double testSatisfied = 0;
-    int numTest = 0;
-    auto start = chrono::high_resolution_clock::now();
-    for(int p_legendre : primes) {
-        numTest++;
-//        cout << "Test " << numTest << " of " << primes.size() << endl;
-        MultiDimArray<F,2> A(noShiftFunc, LegendreSeq(p_legendre), 1, p_legendre);
-        A.RST();
-        int d = A.getDeltaSize();
-        if(d != LegendreComplexity(p_legendre)) {
-            cout << "Failed with " << p_legendre << endl;
-        }
-        else testSatisfied = testSatisfied+1;
-    }
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-    cout << duration.count() << " ms" << endl;
+//    int primesUpTo = 100;
+//
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//
+//    vector<int> primes;
+//    for (int i=3; i<=primesUpTo; i++) {
+//        if(isPrime(i)) primes.push_back(i);
+//    }
+//    double testSatisfied = 0;
+//    int numTest = 0;
+//    auto start = chrono::high_resolution_clock::now();
+//    for(int p_legendre : primes) {
+//        numTest++;
+////        cout << "Test " << numTest << " of " << primes.size() << endl;
+//        MultiDimArray<F,2> A(noShiftFunc, LegendreSeq(p_legendre), 1, p_legendre);
+//        A.RST();
+//        int d = A.getDeltaSize();
+//        if(d != LegendreComplexity(p_legendre)) {
+//            cout << "Failed with " << p_legendre << endl;
+//        }
+//        else testSatisfied = testSatisfied+1;
+//    }
+//    auto stop = chrono::high_resolution_clock::now();
+//    auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+//    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+//    cout << duration.count() << " ms" << endl;
+//
+//    return 0;
 
 
 
