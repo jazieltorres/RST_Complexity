@@ -31,10 +31,11 @@ class MultiDimArray {
         static const int dimension = m;
         void RST();
 //        Complexity
-        int getDeltaSize(){return delta_size;}
+        int complexity();
+        double normalized_complexity();
         void setAt(const blitz::TinyVector<int,m>&, F&);
         void print();
-        void printPeriod();
+        blitz::TinyVector<int, m> period_vector();
 } ;
 
 #endif
@@ -55,13 +56,13 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
     for (int i=0; i<m; i++){
         period[i] = A.extent(i);
     }
-    delta_size = 0;
+    delta_size = -1;
 }
 
 //  Constructor: receives period vector and resizes array
 template<typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<F,m>& period_vector){
-    delta_size = 0;
+    delta_size = -1;
     period = period_vector;
     A.resize(period);
 }
@@ -77,7 +78,7 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
     else {
         period = n1, n2;
         A.resize(period);
-        delta_size = 0;
+        delta_size = -1;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -102,7 +103,7 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
     if (m != 2) {
         period = n1, n2;
         A.resize(period);
-        delta_size = 0;
+        delta_size = -1;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -158,8 +159,34 @@ void MultiDimArray<F, m>::print() {
 }
 
 template <typename F, int m>
-void MultiDimArray<F,m>::printPeriod() {
-    cout << period << endl;
+blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
+    return period;
+}
+
+
+template <typename F, int m>
+int MultiDimArray<F,m>::complexity() {
+    if (delta_size == -1) {
+        this->RST();
+        return delta_size;
+    }
+    else
+        return delta_size;
+}
+
+
+template <typename F, int m>
+double MultiDimArray<F,m>::normalized_complexity() {
+    double size(1);
+    for (auto x : period)
+        size = size * x;
+
+    if (delta_size == -1) {
+        this->RST();
+        return delta_size/size;
+    }
+    else
+        return delta_size/size;
 }
 
 
@@ -339,6 +366,8 @@ void printStars(vector< MExponent<m> >& v, vector<int>& period) {
 *******************************************************/
 template<typename F, int m>
 void MultiDimArray<F,m>::RST() {
+    delta_size = 0;
+
     MExponent<m> bound;
     for (int i = 0; i < m; i++) {
         bound.editExp()[i] = 2 * period[i] - 1;
