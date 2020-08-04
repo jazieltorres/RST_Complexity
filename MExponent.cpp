@@ -10,19 +10,19 @@
 
 using namespace std;
 
-template <unsigned long m>
+template <int m>
 class MExponent {
     private:
-        blitz::TinyVector<unsigned long, m> exp ;
+        blitz::TinyVector<int, m> exp ;
     public:
         // CONSTRUCTORS
         MExponent() = default;
-        explicit MExponent(const vector<unsigned long>&) ;
-        explicit MExponent(const blitz::TinyVector<unsigned long, m>&) ;
+        explicit MExponent(const vector<int>&) ;
+        explicit MExponent(const blitz::TinyVector<int, m>&) ;
 
         // DATA ACCESS AND MANIPULATION
-        const blitz::TinyVector<unsigned long, m>& getExp() const ; // read-only access of exponents
-        blitz::TinyVector<unsigned long, m>& editExp(); // access to modify exponents
+        const blitz::TinyVector<int, m>& getExp() const ; // read-only access of exponents
+        blitz::TinyVector<int, m>& editExp(); // access to modify exponents
 
         // ASSIGNMENT AND ARITHMETIC
         void operator=(const MExponent&) ; // Overload assignment
@@ -53,13 +53,13 @@ class MExponent {
 *
 *******************************************************/
 
-template <unsigned long m>
-MExponent<m>::MExponent(const vector<unsigned long>& e) {
-    for (unsigned long i = 0; i < exp.length(); i++) exp[i] = e[i] ;
+template <int m>
+MExponent<m>::MExponent(const vector<int>& e) {
+    for (int i = 0; i < exp.length(); i++) exp[i] = e[i] ;
 }
 
-template <unsigned long m>
-MExponent<m>::MExponent(const blitz::TinyVector<unsigned long, m>& e) {
+template <int m>
+MExponent<m>::MExponent(const blitz::TinyVector<int, m>& e) {
     exp = e ;
 }
 
@@ -71,14 +71,14 @@ MExponent<m>::MExponent(const blitz::TinyVector<unsigned long, m>& e) {
 *******************************************************/
 
 // read-only access
-template <unsigned long m>
-const blitz::TinyVector<unsigned long, m>& MExponent<m>::getExp() const {
+template <int m>
+const blitz::TinyVector<int, m>& MExponent<m>::getExp() const {
     return exp ;
 }
 
 // access to modify
-template <unsigned long m>
-blitz::TinyVector<unsigned long, m>& MExponent<m>::editExp() {
+template <int m>
+blitz::TinyVector<int, m>& MExponent<m>::editExp() {
     return exp ;
 }
 
@@ -89,22 +89,22 @@ blitz::TinyVector<unsigned long, m>& MExponent<m>::editExp() {
 *******************************************************/
 
 // assignment
-template <unsigned long m>
+template <int m>
 void MExponent<m>::operator=(const MExponent& e) {
     exp = e.getExp() ;
 }
 
 // addition
-template <unsigned long m>
+template <int m>
 MExponent<m> MExponent<m>::operator+(const MExponent& e) const {
     return MExponent(exp + e.getExp()) ;
 }
 
 // mod component wise
-template <unsigned long m>
+template <int m>
 MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
-    blitz::TinyVector<unsigned long, m> result ;
-    for(unsigned long i = 0; i < exp.length(); i++)
+    blitz::TinyVector<int, m> result ;
+    for(int i = 0; i < exp.length(); i++)
         result[i] = exp[i] % e.getExp()[i] ;
     return MExponent(result) ;
 }
@@ -116,13 +116,13 @@ MExponent<m> MExponent<m>::mod(const MExponent<m>& e) const {
 *******************************************************/
 
 // lexicographic (lex) X<Y
-template <unsigned long m>
+template <int m>
 bool MExponent<m>::lex_less(const MExponent<m>& e) const {
     return lexicographical_compare(exp.begin(), exp.end(), e.getExp().begin(), e.getExp().end());
 }
 
 //
-template <unsigned long m>
+template <int m>
 bool MExponent<m>::lex_less2(const MExponent<m>& e) const {
     auto first1 = exp.end()-1;
     auto last1 = exp.begin()-1;
@@ -138,7 +138,7 @@ bool MExponent<m>::lex_less2(const MExponent<m>& e) const {
 }
 
 // graded lexicographic (grlex)
-template <unsigned long m>
+template <int m>
 bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
     int sum1 = sum(exp) ;
     int sum2 = sum(e.getExp()) ;
@@ -148,9 +148,9 @@ bool MExponent<m>::grlex_less(const MExponent<m>& e) const {
 }
 
 // divisibility
-template <unsigned long m>
+template <int m>
 bool MExponent<m>::leq_d(const MExponent<m>& e) const {
-    for(unsigned long i = 0; i < exp.length(); i++) {
+    for(int i = 0; i < exp.length(); i++) {
         if(exp[i] > e.getExp()[i]) return false;
     }
     return true ;
@@ -163,7 +163,7 @@ bool MExponent<m>::leq_d(const MExponent<m>& e) const {
 *
 *******************************************************/
 
-// template <long m>
+// template <int m>
 // ostream& operator<<(ostream& out, MExponent<m>& e) {
 //     out << "(" ;
 //     for(auto i = e.getExp().begin(); i != e.getExp().end()-1; i++)
