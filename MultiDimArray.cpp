@@ -15,7 +15,6 @@ class MultiDimArray {
         blitz::Array<F, m> A;
         blitz::TinyVector<int, m> period;
         vector< Monomial<m> > lead_monomials;
-        vector< vector <Monomial<m> > > basis;
         int delta_size;
     public:
 //      Constructor: receives a blitz array of dimension m, with entries in F.
@@ -402,6 +401,7 @@ void MultiDimArray<F,m>::RST() {
     }
 
     vector< vector<F> > matrix, idMatrix;
+    vector< vector <Monomial<m> > > basis;
     Monomial<m> alpha;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
