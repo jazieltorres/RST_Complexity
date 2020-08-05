@@ -13,8 +13,10 @@ template <typename F, int m>
 class MultiDimArray {
     private:
         blitz::Array<F, m> A;
-        int delta_size;
         blitz::TinyVector<int, m> period;
+        vector< Monomial<m> > lead_monomials;
+        vector< vector <Monomial<m> > > basis;
+        int delta_size;
     public:
 //      Constructor: receives a blitz array of dimension m, with entries in F.
         explicit MultiDimArray(blitz::Array<F,m>&);
@@ -29,13 +31,16 @@ class MultiDimArray {
         MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
 
         static const int dimension = m;
+        
+//      Rubio-Sweedler-Taylor algorithm
         void RST();
-//        Complexity
         int complexity();
         double normalized_complexity();
         void setAt(const blitz::TinyVector<int,m>&, F&);
-        void print();
+        void print_array();
         blitz::TinyVector<int, m> period_vector();
+        void draw_lead_monomials();
+        
 } ;
 
 #endif
@@ -141,13 +146,21 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
 //}
 
 
+
+/******************************************************
+*
+*       CLASS METHODS
+*
+*******************************************************/
+
+
 template <typename F, int m>
 void MultiDimArray<F,m>::setAt(const blitz::TinyVector<int, m>& coordinates, F& value) {
     A(coordinates) = value;
 }
 
 template <typename F, int m>
-void MultiDimArray<F, m>::print() {
+void MultiDimArray<F, m>::print_array() {
     blitz::TinyVector<int, m> index;
     for (int j=period[1]-1; j>=0; j--) {
         for (int i=0; i<period[0]; i++) {
@@ -190,9 +203,31 @@ double MultiDimArray<F,m>::normalized_complexity() {
 }
 
 
+template <typename F, int m>
+void MultiDimArray<F,m>::draw_lead_monomials() {
+    for(int i=2*period[1]+1; i>0; i--){
+        for(int j=0; j<period[0]; j++) {
+            if (1 == i % 2) {
+                cout << "--";
+            }
+            else {
+                bool yes = false;
+                for (auto e : lead_monomials){
+                    if ((e.exponent()[0]== j) && (e.exponent()[1]==i/2-1)) yes = true;
+                }
+                if(yes) cout << "|*";
+                else cout << "| ";
+            }
+        }
+        if(1 == i%2) cout << " " << endl;
+        else cout << "|" << endl;
+    }
+}
+
+
 /******************************************************
 *
-*       OTHER MODULES FOR RST IMPLEMENTATION
+*       MODULES FOR RST IMPLEMENTATION
 *
 *******************************************************/
 
@@ -306,10 +341,8 @@ void addDimension(vector< vector<F> >& idMatrix) {
 
 // Functor used in exponentsRow.remove_if for removing all the multiples of alpha
 template<int m>
-class isMultiple {
-private:
+struct isMultiple {
     Monomial<m> alpha;
-public:
     explicit isMultiple(Monomial<m>& e) {alpha = e;}
     bool operator () (const Monomial<m>& e) const {
         return alpha.leq_d(e);
@@ -326,34 +359,13 @@ void printPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
 }
 
 template<typename F, int m>
-vector< Monomial<m> > getPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
+vector< Monomial<m> > get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
     vector< Monomial<m> > poly;
     int n = idMatrix.size()-1;
     for (int i = 0; i < idMatrix[0].size(); i++) {
         if(idMatrix[n][i] != (F)0) poly.push_back(idColumn[i]);
     }
     return poly;
-}
-
-template <int m>
-void printStars(vector< Monomial<m> >& v, vector<int>& period) {
-    for(int i=2*period[1]+1; i>0; i--){
-        for(int j=0; j<period[0]; j++) {
-            if (1 == i % 2) {
-                cout << "--";
-            }
-            else {
-                bool yes = false;
-                for (auto e : v){
-                    if ((e.exponent()[0]== j) && (e.exponent()[1]==i/2-1)) yes = true;
-                }
-                if(yes) cout << "|*";
-                else cout << "| ";
-            }
-        }
-        if(1 == i%2) cout << " " << endl;
-        else cout << "|" << endl;
-    }
 }
 
 
@@ -390,10 +402,6 @@ void MultiDimArray<F,m>::RST() {
     }
 
     vector< vector<F> > matrix, idMatrix;
-    vector< Monomial<m> > leadingMonomials;
-    vector< vector <Monomial<m> > > grobnerBasis;
-
-
     Monomial<m> alpha;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
@@ -425,9 +433,9 @@ void MultiDimArray<F,m>::RST() {
         vector<F> zeroRow(matrix[0].size(), (F)0);
 
         if (matrix[matrix.size()-1] == zeroRow) {
-            leadingMonomials.push_back(alpha);
+            lead_monomials.push_back(alpha);
 //            printPoly(idMatrix, idColumn);
-            grobnerBasis.push_back(getPoly(idMatrix, idColumn));
+            basis.push_back(get_polynomial(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -447,14 +455,13 @@ void MultiDimArray<F,m>::RST() {
         }
 //        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
-//    cout << "Delta size: " <<  delta_size << endl;
 //
 // Printing leading monomials in the array, whom closes the monomials in the delta set
 //    cout << "Leading Monomials " << endl;
-//    printStars(leadingMonomials, period);
+//    printStars(lead_monomials, period);
 //
 //    cout << "\n\n\n Grobner basis" << endl;
-//    for (auto poly : grobnerBasis) {
+//    for (auto poly : basis) {
 //        printStars(poly, period);
 //        cout << endl;
 //    }
