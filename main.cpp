@@ -71,16 +71,14 @@ int main() {
 *
 *******************************************************/
 
-//    cout << "Started" << endl;
-//
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const unsigned int dim = 2;
-//
-//    int p_legendre =    11;
-//    int p_shift =       11;
-//    int root =          5;
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const unsigned int dim = 2;
+
+    int p_legendre =    31;
+    int p_shift =       31;
+    int root =          3;
 
 //    For the vector of shifts
 //    vector<int> shift({0, 1, 3, 1, 0, 3});
@@ -91,7 +89,6 @@ int main() {
 //    for (int i=0; i<p_shift-1; i++)
 //        cout << Poly(i) << " ";
 //    cout << endl;
-//    return 0;
 
 //    cout << "Legendre: ";
 //    for (int i=0; i<p_legendre; i++) cout << LegendreSeq(p_legendre)(i) << " "; cout << endl << endl;
@@ -103,13 +100,18 @@ int main() {
 //    for (int i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
 
 
-//    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
-//
-//    A.RST();
-//
-//    cout << "Delta: " << A.getDeltaSize() << endl;
-//
-//    unsigned int d = A.getDeltaSize();
+    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
+
+    cout << "RST" << endl;
+    auto start = chrono::high_resolution_clock::now();
+    A.RST();
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
+    cout << duration.count() << " s" << endl << endl;
+
+    cout << "Delta: " << A.complexity() << endl;
+
+//    unsigned int d = A.complexity();
 //    int n1 = A.period[0];
 //    int criteria = p_legendre % 8;
 //    int expected = 0;
@@ -137,7 +139,7 @@ int main() {
 //        cout << "p legendre: " << p_legendre << endl;
 //        cout << "p costas: " << p_shift << endl;
 //        cout << "root: " << root << endl;
-
+//
 //        ofstream outfile ("failCases.txt", ios::app) ;
 //        outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
 //            << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
@@ -243,80 +245,80 @@ int main() {
 *
 *******************************************************/
 
-    int primesFrom = 5;
-    int primesUpTo = 20;
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned int dim = 2;
-
-    vector<int> primes;
-    for (int i=primesFrom; i<=primesUpTo; i++){
-        if (isPrime(i)) primes.push_back(i);
-    }
-
-    double testSatisfied = 0;
-    int numTest = 0;
-
-    auto start = chrono::high_resolution_clock::now();
-
-    for(int p_shift : primes) {
-        int root;
-        for(int c=2; c<p_shift; c++){
-            if(isRoot(c,p_shift)) root = c;
-        }
-        for (int p_legendre : primes) {
-            numTest++;
-//            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre),
-                    p_shift - 1, p_legendre);
-            cout << "Test " << numTest << "/" << primes.size()*primes.size() << "\tComplexity: " << A.complexity() << endl;
-
-
-//            A.RST();
-//            unsigned int d = A.complexity();
-//            int n1 = A.period[0];
-//            int criteria = p_legendre % 8;
-//            int expected = 0;
-//            bool satisfied = true;
+//    int primesFrom = 5;
+//    int primesUpTo = 20;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned int dim = 2;
 //
-//            if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-//                satisfied = false;
-//                expected = (p_legendre - 1) / 2 * n1;
-//            }
-//            if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-//                satisfied = false;
-//                expected = n1 * (p_legendre - 1) + 1;
-//            }
-//            if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-//                satisfied = false;
-//                expected = n1 * (p_legendre - 1);
-//            }
-//            if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-//                satisfied = false;
-//                expected = (p_legendre - 1) / 2 * n1 + 1;
-//            }
+//    vector<int> primes;
+//    for (int i=primesFrom; i<=primesUpTo; i++){
+//        if (isPrime(i)) primes.push_back(i);
+//    }
 //
-//            if (!satisfied) {
-//                cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
-//                cout << "p legendre: " << p_legendre << endl;
-//                cout << "p costas: " << p_shift << endl;
-//                cout << "root: " << root << endl;
+//    double testSatisfied = 0;
+//    int numTest = 0;
 //
-//                ofstream outfile ("failCases.txt", ios::app) ;
-//                outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
-//                    << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
-//                outfile.close();
-//            }
-//            else testSatisfied += 1;
-        }
-    }
-    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
-    cout << duration.count() << " s" << endl;
-
-    return 0;
+//    auto start = chrono::high_resolution_clock::now();
+//
+//    for(int p_shift : primes) {
+//        int root;
+//        for(int c=2; c<p_shift; c++){
+//            if(isRoot(c,p_shift)) root = c;
+//        }
+//        for (int p_legendre : primes) {
+//            numTest++;
+////            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
+//            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre),
+//                    p_shift - 1, p_legendre);
+//            cout << "Test " << numTest << "/" << primes.size()*primes.size() << "\tComplexity: " << A.complexity() << endl;
+//
+//
+////            A.RST();
+////            unsigned int d = A.complexity();
+////            int n1 = A.period[0];
+////            int criteria = p_legendre % 8;
+////            int expected = 0;
+////            bool satisfied = true;
+////
+////            if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+////                satisfied = false;
+////                expected = (p_legendre - 1) / 2 * n1;
+////            }
+////            if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+////                satisfied = false;
+////                expected = n1 * (p_legendre - 1) + 1;
+////            }
+////            if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+////                satisfied = false;
+////                expected = n1 * (p_legendre - 1);
+////            }
+////            if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+////                satisfied = false;
+////                expected = (p_legendre - 1) / 2 * n1 + 1;
+////            }
+////
+////            if (!satisfied) {
+////                cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
+////                cout << "p legendre: " << p_legendre << endl;
+////                cout << "p costas: " << p_shift << endl;
+////                cout << "root: " << root << endl;
+////
+////                ofstream outfile ("failCases.txt", ios::app) ;
+////                outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
+////                    << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
+////                outfile.close();
+////            }
+////            else testSatisfied += 1;
+//        }
+//    }
+//    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+//    auto stop = chrono::high_resolution_clock::now();
+//    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
+//    cout << duration.count() << " s" << endl;
+//
+//    return 0;
 
 
 /******************************************************
