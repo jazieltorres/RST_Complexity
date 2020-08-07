@@ -411,18 +411,18 @@ void MultiDimArray<F,m>::RST() {
             *it_skipped += 1;
     }
 
-    cout << endl << endl << "Skipped: ";
-    for (auto x : skipped_monomials) cout << x << " ";
-    cout << endl;
-
-
-    for (auto i : exponentsRow) {
-        for (auto j : exponentsColumn) {
-            cout << i + j << "\t";
-        }
-        cout << endl;
-    }
-    cout << endl;
+//    cout << endl << endl << "Skipped: ";
+//    for (auto x : skipped_monomials) cout << x << " ";
+//    cout << endl;
+//
+//
+//    for (auto i : exponentsRow) {
+//        for (auto j : exponentsColumn) {
+//            cout << i + j << "\t";
+//        }
+//        cout << endl;
+//    }
+//    cout << endl;
 
 
 
