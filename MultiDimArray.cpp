@@ -433,7 +433,7 @@ void MultiDimArray<F,m>::RST() {
     vector< vector<F> > matrix, idMatrix;
     vector< vector <Monomial<m> > > basis;
     Monomial<m> alpha;
-    int up_to_column = exponentsColumn.size();
+    int up_to_column = exponentsColumn.size()+1;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
 
