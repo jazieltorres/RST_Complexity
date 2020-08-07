@@ -256,7 +256,7 @@ int sizeOfDivisors(const Monomial<m> e) {
 
 template<int m>
 bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
-    return (e1.lex_less(e2));
+    return (e1.grlex_less(e2));
 }
 
 template<typename F>
@@ -289,7 +289,7 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
             Id[m][k] = Id[m][k] + lambda * Id[i][k];
         j++;
     }
-} // end reduce
+}
 
 template<typename F>
 void printMatrix (const vector< vector<F> >& M) {
@@ -392,13 +392,44 @@ void MultiDimArray<F,m>::RST() {
     int index = 0;
     Monomial<m> exp;
     Monomial<m> e_period(period);
+    vector<int> skipped_monomials(sizeOfDivisors(e_period), 0);
+
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
 
     sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
 
-    for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
+    auto it_period = exponentsColumn.rbegin();
+    while (!it_period->equal(e_period))
+        it_period++;
+
+    auto it_skipped = skipped_monomials.rbegin()-1;
+    for (auto e = it_period; e != exponentsColumn.rend(); e++) {
+        if (e->leq_d(e_period)) {
+            exponentsRow.push_front(*e);
+            it_skipped++;
+        }
+        else
+            *it_skipped += 1;
     }
+
+    cout << endl << endl << "Skipped: ";
+    for (auto x : skipped_monomials) cout << x << " ";
+    cout << endl;
+
+
+    for (auto i : exponentsRow) {
+        for (auto j : exponentsColumn) {
+            cout << i + j << "\t";
+        }
+        cout << endl;
+    }
+    cout << endl;
+
+
+
+
+
+
 
     vector< vector<F> > matrix, idMatrix;
     vector< vector <Monomial<m> > > basis;

@@ -28,6 +28,7 @@ class Monomial {
         void operator=(const Monomial&) ; // Overload assignment
         Monomial operator+(const Monomial&) const ; // add two exponents
         Monomial mod(const Monomial&) const ; // component wise mod
+        bool equal(const Monomial&) const ;
 
         // MONOMIAL COMPARISONS
         bool lex_less(const Monomial&) const ; // compare by lex Y<X
@@ -107,6 +108,16 @@ Monomial<m> Monomial<m>::mod(const Monomial<m>& e) const {
     for(int i = 0; i < exp.length(); i++)
         result[i] = exp[i] % e.exponent()[i] ;
     return Monomial(result) ;
+}
+
+// equal
+template <int m>
+bool Monomial<m>::equal(const Monomial<m>& e) const {
+    for (int i=0; i<m; i++) {
+        if (e.exponent()[i] != exp[i])
+            return false;
+    }
+    return true;
 }
 
 /******************************************************
