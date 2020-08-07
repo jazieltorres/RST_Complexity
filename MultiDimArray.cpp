@@ -267,14 +267,13 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 }
 
 template<typename F>
-void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
+void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int up_to_column) {
     const int m = M.size() - 1 ;
-    const int n = M[0].size() ;
     F lambda ;
     int j = 0 ;
 
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < n) {
+        while (M[i][j] == 0 && j < up_to_column) {
             if (M[m][j] != 0) {
                 insertBefore(M, i, m);
                 insertBefore(Id, i, m);
@@ -283,7 +282,7 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
             j++;
         }
         lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < n; k++)
+        for (int k = j; k < up_to_column; k++)
             M[m][k] = M[m][k] + lambda * M[i][k];
         for (int k = 0; k < Id[0].size(); k++)
             Id[m][k] = Id[m][k] + lambda * Id[i][k];
@@ -434,6 +433,7 @@ void MultiDimArray<F,m>::RST() {
     vector< vector<F> > matrix, idMatrix;
     vector< vector <Monomial<m> > > basis;
     Monomial<m> alpha;
+    int up_to_column = exponentsColumn.size();
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
 
@@ -451,7 +451,7 @@ void MultiDimArray<F,m>::RST() {
 //        cout << endl;
 //        printMatrix(idMatrix);
 
-        reduce(matrix, idMatrix);
+        reduce(matrix, idMatrix, up_to_column);
 
 //        cout << "\nAFTER REDUCE:" << endl;
 //        printMatrix(matrix);
