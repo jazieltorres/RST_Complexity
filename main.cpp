@@ -69,8 +69,6 @@ int main() {
 *
 *******************************************************/
 
-    cout << "Started" << endl;
-
     NTL::ZZ p(2);
     NTL::ZZ_p::init(p);
     typedef NTL::ZZ_p F;
@@ -102,6 +100,7 @@ int main() {
 
     MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
 
+    cout << "RST" << endl;
     auto start = chrono::high_resolution_clock::now();
     A.RST();
     auto stop = chrono::high_resolution_clock::now();

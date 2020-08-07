@@ -31,8 +31,8 @@ class Monomial {
         bool equal(const Monomial&) const ;
 
         // MONOMIAL COMPARISONS
-        bool lex_less(const Monomial&) const ; // compare by lex Y<X
-        bool lex_less2(const Monomial&) const ; // compare by lex X<Y
+        bool lex_less(const Monomial&) const ; // compare by lex X<Y
+        bool lex_less2(const Monomial&) const ; // compare by lex Y<X
         bool grlex_less(const Monomial&) const ; // compare by graded lex
         bool leq_d(const Monomial&) const ; // compare by divisibility
 
