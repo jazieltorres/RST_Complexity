@@ -1,0 +1,675 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="BranchesTreeState">
+    <expand>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="REMOTE_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="GROUP_NODE:origin" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </expand>
+    <select>
+      <path>
+        <item name="ROOT" type="e8cecc67:BranchNodeDescriptor" />
+        <item name="LOCAL_ROOT" type="e8cecc67:BranchNodeDescriptor" />
+      </path>
+    </select>
+  </component>
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated>
+      <config projectName="RST" targetName="RST" />
+    </generated>
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="ExecutionTargetManager" SELECTED_TARGET="CMakeBuildProfile:Debug" />
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="master" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="ProjectId" id="1Qvc7hqJEB3t1p73JR3YfWvYVly" />
+  <component name="ProjectLevelVcsManager">
+    <OptionsSetting value="false" id="Update" />
+    <ConfirmationsSetting value="2" id="Add" />
+  </component>
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="ASKED_ADD_EXTERNAL_FILES" value="true" />
+    <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
+    <property name="nodejs_package_manager_path" value="npm" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="CPPToolchains" />
+  </component>
+  <component name="RunManager" selected="CMake Application.RST">
+    <configuration name="RST" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" PASS_PARENT_ENVS_2="true" PROJECT_NAME="RST" TARGET_NAME="RST" CONFIG_NAME="Debug" RUN_TARGET_PROJECT_NAME="RST" RUN_TARGET_NAME="RST">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="Functions.o" type="MAKEFILE_TARGET_RUN_CONFIGURATION" factoryName="Makefile" temporary="true">
+      <makefile filename="$PROJECT_DIR$/Makefile" target="Functions.o" workingDirectory="" arguments="">
+        <envs />
+      </makefile>
+      <method v="2" />
+    </configuration>
+    <list>
+      <item itemvalue="CMake Application.RST" />
+      <item itemvalue="Makefile.Functions.o" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Makefile.Functions.o" />
+        <item itemvalue="Makefile.Functions.o" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="23fc2fa3-9e9a-45d4-ab36-9fee45a03340" name="Default Changelist" comment="" />
+      <created>1568654345032</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1568654345032</updated>
+      <workItem from="1568654350808" duration="1783000" />
+      <workItem from="1569513171076" duration="1204000" />
+      <workItem from="1569850818747" duration="14281000" />
+      <workItem from="1569958322112" duration="5248000" />
+      <workItem from="1570039464790" duration="12677000" />
+      <workItem from="1570107302860" duration="1859000" />
+      <workItem from="1570138876757" duration="2248000" />
+      <workItem from="1570197792171" duration="1706000" />
+      <workItem from="1570562052491" duration="4000" />
+      <workItem from="1570811276072" duration="172000" />
+      <workItem from="1570811538595" duration="8831000" />
+      <workItem from="1570897102477" duration="7681000" />
+      <workItem from="1570933584760" duration="47497000" />
+      <workItem from="1571315228401" duration="1480000" />
+      <workItem from="1571345249159" duration="3206000" />
+      <workItem from="1571578959579" duration="956000" />
+      <workItem from="1571657602041" duration="34576000" />
+      <workItem from="1571778400312" duration="5521000" />
+      <workItem from="1571834875522" duration="2857000" />
+      <workItem from="1571845491459" duration="3974000" />
+      <workItem from="1571927953501" duration="2537000" />
+      <workItem from="1572128635129" duration="2267000" />
+      <workItem from="1572549355098" duration="1770000" />
+      <workItem from="1572661801073" duration="3077000" />
+      <workItem from="1572729115305" duration="3186000" />
+      <workItem from="1572869648623" duration="5866000" />
+      <workItem from="1575315471093" duration="279000" />
+      <workItem from="1575998665411" duration="2762000" />
+      <workItem from="1576095120079" duration="851000" />
+      <workItem from="1576464912896" duration="1903000" />
+      <workItem from="1576471424832" duration="84000" />
+      <workItem from="1576471544479" duration="201000" />
+      <workItem from="1576472081130" duration="178000" />
+      <workItem from="1576510743100" duration="1509000" />
+      <workItem from="1579531142029" duration="14967000" />
+      <workItem from="1580045841998" duration="175000" />
+      <workItem from="1580174593566" duration="1490000" />
+      <workItem from="1580826859081" duration="724000" />
+      <workItem from="1581003759904" duration="884000" />
+      <workItem from="1581515493688" duration="4530000" />
+      <workItem from="1581706817197" duration="780000" />
+      <workItem from="1581873438630" duration="1453000" />
+      <workItem from="1581886296653" duration="3027000" />
+      <workItem from="1582075029012" duration="1338000" />
+      <workItem from="1582159909656" duration="1403000" />
+      <workItem from="1582298632570" duration="32000" />
+      <workItem from="1582298737347" duration="875000" />
+      <workItem from="1582662274667" duration="447000" />
+      <workItem from="1582898372005" duration="4155000" />
+      <workItem from="1583459499386" duration="472000" />
+      <workItem from="1583608241253" duration="7280000" />
+      <workItem from="1583692345394" duration="4000" />
+      <workItem from="1583701251702" duration="3964000" />
+      <workItem from="1583760745918" duration="5719000" />
+      <workItem from="1583854459520" duration="435000" />
+      <workItem from="1584303201195" duration="2554000" />
+      <workItem from="1584460874612" duration="386000" />
+      <workItem from="1590689493097" duration="2598000" />
+      <workItem from="1591129365804" duration="242000" />
+      <workItem from="1591144681937" duration="518000" />
+      <workItem from="1591147930239" duration="253000" />
+      <workItem from="1591303259243" duration="4481000" />
+      <workItem from="1591406620406" duration="3782000" />
+      <workItem from="1591654683887" duration="7631000" />
+      <workItem from="1591731749536" duration="3402000" />
+      <workItem from="1592958976590" duration="722000" />
+      <workItem from="1593036815971" duration="310000" />
+      <workItem from="1593099207197" duration="5078000" />
+      <workItem from="1593733856887" duration="935000" />
+      <workItem from="1596415549626" duration="73000" />
+      <workItem from="1596415699942" duration="1537000" />
+      <workItem from="1596418404444" duration="129000" />
+      <workItem from="1596418912203" duration="9818000" />
+      <workItem from="1596511507054" duration="1272000" />
+      <workItem from="1596556934508" duration="6728000" />
+      <workItem from="1596571588824" duration="3000" />
+      <workItem from="1596571645191" duration="323000" />
+      <workItem from="1596572148089" duration="7932000" />
+      <workItem from="1596759849544" duration="1336000" />
+      <workItem from="1596762354992" duration="3977000" />
+      <workItem from="1596818381665" duration="6859000" />
+    </task>
+    <task id="LOCAL-00009" summary="Added test 3">
+      <created>1570057966317</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1570057966317</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Auxiliary compiling files autogenerated by CLion">
+      <created>1570058012284</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1570058012284</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Deleted unnecessary files and rename MExponent2 to MExponent">
+      <created>1570058768061</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1570058768061</updated>
+    </task>
+    <task id="LOCAL-00012" summary="First commit to Gitlab - Only added a comment">
+      <created>1570113280495</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1570113280495</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Checking git connection">
+      <created>1570139257954</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1570139257954</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Add constructor support series as arguments">
+      <created>1570912304592</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1570912304592</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Add Legendre and Costas series (examples)">
+      <created>1570912378472</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1570912378472</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Performing tests with different primes Costas and Legendre">
+      <created>1571242467128</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1571242467128</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Unimportant changes">
+      <created>1571242509162</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1571242509162</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Copy of MultiDimArray but with NTL's row reduction">
+      <created>1571242580612</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1571242580612</updated>
+    </task>
+    <task id="LOCAL-00019" summary="Other files auto generated by CLion">
+      <created>1571242614271</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1571242614271</updated>
+    </task>
+    <task id="LOCAL-00020" summary="Now tests are independent blocks of comment">
+      <created>1571257239569</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1571257239569</updated>
+    </task>
+    <task id="LOCAL-00021" summary="Unimportant edits">
+      <created>1571258029498</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1571258029498</updated>
+    </task>
+    <task id="LOCAL-00022" summary="Even more tests">
+      <created>1571755159174</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1571755159175</updated>
+    </task>
+    <task id="LOCAL-00023" summary="Test for all the permutations">
+      <created>1571837831899</created>
+      <option name="number" value="00023" />
+      <option name="presentableId" value="LOCAL-00023" />
+      <option name="project" value="LOCAL" />
+      <updated>1571837831899</updated>
+    </task>
+    <task id="LOCAL-00024" summary="New constructor for Cheo's column of zeros and printing arrays">
+      <created>1571837904251</created>
+      <option name="number" value="00024" />
+      <option name="presentableId" value="LOCAL-00024" />
+      <option name="project" value="LOCAL" />
+      <updated>1571837904251</updated>
+    </task>
+    <task id="LOCAL-00025" summary="Other files auto generated by CLion">
+      <created>1571837923554</created>
+      <option name="number" value="00025" />
+      <option name="presentableId" value="LOCAL-00025" />
+      <option name="project" value="LOCAL" />
+      <updated>1571837923554</updated>
+    </task>
+    <task id="LOCAL-00026" summary="Better coding, same functions">
+      <created>1575315627326</created>
+      <option name="number" value="00026" />
+      <option name="presentableId" value="LOCAL-00026" />
+      <option name="project" value="LOCAL" />
+      <updated>1575315627326</updated>
+    </task>
+    <task id="LOCAL-00027" summary="Added Exponential Quadratic shift sequence">
+      <created>1579551272661</created>
+      <option name="number" value="00027" />
+      <option name="presentableId" value="LOCAL-00027" />
+      <option name="project" value="LOCAL" />
+      <updated>1579551272661</updated>
+    </task>
+    <task id="LOCAL-00028" summary="Compile in C++ 17 instead of 14">
+      <created>1596417189158</created>
+      <option name="number" value="00028" />
+      <option name="presentableId" value="LOCAL-00028" />
+      <option name="project" value="LOCAL" />
+      <updated>1596417189158</updated>
+    </task>
+    <task id="LOCAL-00029" summary="A lot of new methods we are now researching">
+      <created>1596417299644</created>
+      <option name="number" value="00029" />
+      <option name="presentableId" value="LOCAL-00029" />
+      <option name="project" value="LOCAL" />
+      <updated>1596417299644</updated>
+    </task>
+    <task id="LOCAL-00030" summary="Lex comparison with X&lt;Y">
+      <created>1596417363402</created>
+      <option name="number" value="00030" />
+      <option name="presentableId" value="LOCAL-00030" />
+      <option name="project" value="LOCAL" />
+      <updated>1596417363402</updated>
+    </task>
+    <task id="LOCAL-00031" summary="Better coding and a new constructor receiving data file">
+      <created>1596417495683</created>
+      <option name="number" value="00031" />
+      <option name="presentableId" value="LOCAL-00031" />
+      <option name="project" value="LOCAL" />
+      <updated>1596417495683</updated>
+    </task>
+    <task id="LOCAL-00032" summary="Better coding, same functions">
+      <created>1596419019353</created>
+      <option name="number" value="00032" />
+      <option name="presentableId" value="LOCAL-00032" />
+      <option name="project" value="LOCAL" />
+      <updated>1596419019353</updated>
+    </task>
+    <task id="LOCAL-00033" summary="Renaming classes">
+      <created>1596463559865</created>
+      <option name="number" value="00033" />
+      <option name="presentableId" value="LOCAL-00033" />
+      <option name="project" value="LOCAL" />
+      <updated>1596463559865</updated>
+    </task>
+    <task id="LOCAL-00034" summary="Separate files for functions">
+      <created>1596472873348</created>
+      <option name="number" value="00034" />
+      <option name="presentableId" value="LOCAL-00034" />
+      <option name="project" value="LOCAL" />
+      <updated>1596472873348</updated>
+    </task>
+    <task id="LOCAL-00035" summary="Commenting code and organizing">
+      <created>1596474043264</created>
+      <option name="number" value="00035" />
+      <option name="presentableId" value="LOCAL-00035" />
+      <option name="project" value="LOCAL" />
+      <updated>1596474043264</updated>
+    </task>
+    <task id="LOCAL-00036" summary="Code separated in more files and renaming">
+      <created>1596488091832</created>
+      <option name="number" value="00036" />
+      <option name="presentableId" value="LOCAL-00036" />
+      <option name="project" value="LOCAL" />
+      <updated>1596488091832</updated>
+    </task>
+    <task id="LOCAL-00037" summary="Unimportant changes">
+      <created>1596513000733</created>
+      <option name="number" value="00037" />
+      <option name="presentableId" value="LOCAL-00037" />
+      <option name="project" value="LOCAL" />
+      <updated>1596513000733</updated>
+    </task>
+    <task id="LOCAL-00038" summary="Branch testing">
+      <created>1596513761199</created>
+      <option name="number" value="00038" />
+      <option name="presentableId" value="LOCAL-00038" />
+      <option name="project" value="LOCAL" />
+      <updated>1596513761199</updated>
+    </task>
+    <task id="LOCAL-00039" summary="Branch testing">
+      <created>1596557000109</created>
+      <option name="number" value="00039" />
+      <option name="presentableId" value="LOCAL-00039" />
+      <option name="project" value="LOCAL" />
+      <updated>1596557000109</updated>
+    </task>
+    <task id="LOCAL-00040" summary="Changed period to TinyVector and longs to ints">
+      <created>1596571550325</created>
+      <option name="number" value="00040" />
+      <option name="presentableId" value="LOCAL-00040" />
+      <option name="project" value="LOCAL" />
+      <updated>1596571550325</updated>
+    </task>
+    <task id="LOCAL-00041" summary="Unimportant changes">
+      <created>1596572166349</created>
+      <option name="number" value="00041" />
+      <option name="presentableId" value="LOCAL-00041" />
+      <option name="project" value="LOCAL" />
+      <updated>1596572166349</updated>
+    </task>
+    <task id="LOCAL-00042" summary="Unimportant changes">
+      <created>1596573089888</created>
+      <option name="number" value="00042" />
+      <option name="presentableId" value="LOCAL-00042" />
+      <option name="project" value="LOCAL" />
+      <updated>1596573089888</updated>
+    </task>
+    <task id="LOCAL-00043" summary="Unimportant changes">
+      <created>1596573677836</created>
+      <option name="number" value="00043" />
+      <option name="presentableId" value="LOCAL-00043" />
+      <option name="project" value="LOCAL" />
+      <updated>1596573677836</updated>
+    </task>
+    <task id="LOCAL-00044" summary="Added complexity and normalized_complexity methods">
+      <created>1596575688284</created>
+      <option name="number" value="00044" />
+      <option name="presentableId" value="LOCAL-00044" />
+      <option name="project" value="LOCAL" />
+      <updated>1596575688284</updated>
+    </task>
+    <task id="LOCAL-00045" summary="Renaming MExponent.cpp to Monomial.cpp">
+      <created>1596582356904</created>
+      <option name="number" value="00045" />
+      <option name="presentableId" value="LOCAL-00045" />
+      <option name="project" value="LOCAL" />
+      <updated>1596582356904</updated>
+    </task>
+    <task id="LOCAL-00046" summary="Renaming MExponent.cpp to Monomial.cpp">
+      <created>1596583199811</created>
+      <option name="number" value="00046" />
+      <option name="presentableId" value="LOCAL-00046" />
+      <option name="project" value="LOCAL" />
+      <updated>1596583199811</updated>
+    </task>
+    <task id="LOCAL-00047" summary="Renaming, cleaning, and organizing :)">
+      <created>1596586832212</created>
+      <option name="number" value="00047" />
+      <option name="presentableId" value="LOCAL-00047" />
+      <option name="project" value="LOCAL" />
+      <updated>1596586832212</updated>
+    </task>
+    <task id="LOCAL-00048" summary="Renaming, cleaning, and organizing :)">
+      <created>1596587128062</created>
+      <option name="number" value="00048" />
+      <option name="presentableId" value="LOCAL-00048" />
+      <option name="project" value="LOCAL" />
+      <updated>1596587128062</updated>
+    </task>
+    <task id="LOCAL-00049" summary="Testing grlex ladder optimization in RST's row reduction">
+      <created>1596775488951</created>
+      <option name="number" value="00049" />
+      <option name="presentableId" value="LOCAL-00049" />
+      <option name="project" value="LOCAL" />
+      <updated>1596775488951</updated>
+    </task>
+    <task id="LOCAL-00050" summary="Testing grlex ladder optimization in RST's row reduction">
+      <created>1596819118947</created>
+      <option name="number" value="00050" />
+      <option name="presentableId" value="LOCAL-00050" />
+      <option name="project" value="LOCAL" />
+      <updated>1596819118948</updated>
+    </task>
+    <task id="LOCAL-00051" summary="New branch for grlex ladder optimization">
+      <created>1596819573117</created>
+      <option name="number" value="00051" />
+      <option name="presentableId" value="LOCAL-00051" />
+      <option name="project" value="LOCAL" />
+      <updated>1596819573117</updated>
+    </task>
+    <task id="LOCAL-00052" summary="New branch for grlex ladder optimization">
+      <created>1596821546268</created>
+      <option name="number" value="00052" />
+      <option name="presentableId" value="LOCAL-00052" />
+      <option name="project" value="LOCAL" />
+      <updated>1596821546268</updated>
+    </task>
+    <task id="LOCAL-00053" summary="Testing vs ladder optimization (ladder branch)">
+      <created>1596822276317</created>
+      <option name="number" value="00053" />
+      <option name="presentableId" value="LOCAL-00053" />
+      <option name="project" value="LOCAL" />
+      <updated>1596822276317</updated>
+    </task>
+    <task id="LOCAL-00054" summary="Testing vs ladder optimization (ladder branch)">
+      <created>1596822572101</created>
+      <option name="number" value="00054" />
+      <option name="presentableId" value="LOCAL-00054" />
+      <option name="project" value="LOCAL" />
+      <updated>1596822572101</updated>
+    </task>
+    <task id="LOCAL-00055" summary="Unimportant edit">
+      <created>1596843236135</created>
+      <option name="number" value="00055" />
+      <option name="presentableId" value="LOCAL-00055" />
+      <option name="project" value="LOCAL" />
+      <updated>1596843236135</updated>
+    </task>
+    <task id="LOCAL-00056" summary="Back to stable version without ladder optimization">
+      <created>1596843269047</created>
+      <option name="number" value="00056" />
+      <option name="presentableId" value="LOCAL-00056" />
+      <option name="project" value="LOCAL" />
+      <updated>1596843269047</updated>
+    </task>
+    <task id="LOCAL-00057" summary="Bug fixed">
+      <created>1596846100438</created>
+      <option name="number" value="00057" />
+      <option name="presentableId" value="LOCAL-00057" />
+      <option name="project" value="LOCAL" />
+      <updated>1596846100438</updated>
+    </task>
+    <option name="localTasksCounter" value="58" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <option name="ADD_EXTERNAL_FILES_SILENTLY" value="true" />
+    <MESSAGE value="Test for all the permutations" />
+    <MESSAGE value="New constructor for Cheo's column of zeros and printing arrays" />
+    <MESSAGE value="Other files auto generated by CLion" />
+    <MESSAGE value="Added Exponential Quadratic shift sequence" />
+    <MESSAGE value="Compile in C++ 17 instead of 14" />
+    <MESSAGE value="A lot of new methods we are now researching" />
+    <MESSAGE value="Lex comparison with X&lt;Y" />
+    <MESSAGE value="Better coding and a new constructor receiving data file" />
+    <MESSAGE value="Better coding, same functions" />
+    <MESSAGE value="Renaming classes" />
+    <MESSAGE value="Separate files for functions" />
+    <MESSAGE value="Commenting code and organizing" />
+    <MESSAGE value="Code separated in more files and renaming" />
+    <MESSAGE value="Branch testing" />
+    <MESSAGE value="Changed period to TinyVector and longs to ints" />
+    <MESSAGE value="Unimportant changes" />
+    <MESSAGE value="Added complexity and normalized_complexity methods" />
+    <MESSAGE value="Renaming MExponent.cpp to Monomial.cpp" />
+    <MESSAGE value="Renaming, cleaning, and organizing :)" />
+    <MESSAGE value="Testing grlex ladder optimization in RST's row reduction" />
+    <MESSAGE value="New branch for grlex ladder optimization" />
+    <MESSAGE value="Testing vs ladder optimization (ladder branch)" />
+    <MESSAGE value="Unimportant edit" />
+    <MESSAGE value="Back to stable version without ladder optimization" />
+    <MESSAGE value="Bug fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="Bug fixed" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="1018" y="474" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1591659559595">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="1018" y="474" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1591659559595" />
+    <state x="465" y="109" width="1583" height="854" key="CommitChangelistDialog2" timestamp="1596846100277">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="465" y="109" width="1583" height="854" key="CommitChangelistDialog2/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846100277" />
+    <state width="2518" height="417" key="GridCell.Tab.0.bottom" timestamp="1596846143257">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="417" key="GridCell.Tab.0.bottom/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846143257" />
+    <state width="2518" height="417" key="GridCell.Tab.0.center" timestamp="1596846143256">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="417" key="GridCell.Tab.0.center/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846143256" />
+    <state width="2518" height="417" key="GridCell.Tab.0.left" timestamp="1596846143255">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="417" key="GridCell.Tab.0.left/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846143255" />
+    <state width="2518" height="417" key="GridCell.Tab.0.right" timestamp="1596846143256">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="2518" height="417" key="GridCell.Tab.0.right/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846143256" />
+    <state width="1259" height="464" key="GridCell.Tab.1.bottom" timestamp="1596762200019">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="1259" height="464" key="GridCell.Tab.1.bottom/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596762200019" />
+    <state width="1259" height="464" key="GridCell.Tab.1.center" timestamp="1596762200018">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="1259" height="464" key="GridCell.Tab.1.center/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596762200018" />
+    <state width="1259" height="464" key="GridCell.Tab.1.left" timestamp="1596762200017">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="1259" height="464" key="GridCell.Tab.1.left/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596762200017" />
+    <state width="1259" height="464" key="GridCell.Tab.1.right" timestamp="1596762200018">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state width="1259" height="464" key="GridCell.Tab.1.right/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596762200018" />
+    <state x="0" y="0" width="2560" height="1440" key="MergeDialog" timestamp="1596845384681">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="0" y="0" width="2560" height="1440" key="MergeDialog/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596845384681" />
+    <state x="921" y="488" key="MultipleFileMergeDialog" timestamp="1596846328190">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="921" y="488" key="MultipleFileMergeDialog/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846328190" />
+    <state x="789" y="359" key="SettingsEditor" timestamp="1591659331790">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="789" y="359" key="SettingsEditor/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1591659331790" />
+    <state x="980" y="485" key="Vcs.Multiple.Commit.Info.Dialog.Key" timestamp="1596845285326">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="980" y="485" key="Vcs.Multiple.Commit.Info.Dialog.Key/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596845285326" />
+    <state x="880" y="460" key="Vcs.Push.Dialog.v2" timestamp="1596846108110">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="880" y="460" key="Vcs.Push.Dialog.v2/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596846108110" />
+    <state x="1348" y="0" width="1117" height="1158" key="dock-window-1" timestamp="1596469379673">
+      <screen x="0" y="23" width="2560" height="1350" />
+    </state>
+    <state x="1348" y="0" width="1117" height="1158" key="dock-window-1/2560.1023.1280.777/0.23.2560.1350@0.23.2560.1350" timestamp="1596469379673" />
+    <state x="945" y="345" key="run.anything.popup" timestamp="1590690188238">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="945" y="345" key="run.anything.popup/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1590690188238" />
+    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup" timestamp="1596767844614">
+      <screen x="0" y="0" width="2560" height="1440" />
+    </state>
+    <state x="945" y="331" width="670" height="676" key="search.everywhere.popup/2560.1000.1280.800/0.0.2560.1440@0.0.2560.1440" timestamp="1596767844614" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <default-breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="CidrExceptionBreakpoint">
+          <dependency master-id="0" />
+        </breakpoint>
+        <breakpoint enabled="true" type="python-exception">
+          <dependency id="0" />
+          <properties notifyOnTerminate="true" exception="BaseException">
+            <option name="notifyOnTerminate" value="true" />
+          </properties>
+        </breakpoint>
+      </default-breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>
