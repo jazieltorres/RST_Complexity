@@ -18,25 +18,25 @@ using namespace std;
 *
 *******************************************************/
 
-bool isQuadratic(const long& n, const long& p){
-    for (long i=0; i<p; i++){
+bool isQuadratic(const int& n, const int& p){
+    for (int i=0; i<p; i++){
         if ((i*i %p) == n) return true;
     }
     return false;
 }
 
-bool isPrime(long& n){
+bool isPrime(int& n){
     if (n<3) return false;
-    long bound = floor(sqrt(n));
-    for (long i=2; i<=bound; i++){
+    int bound = floor(sqrt(n));
+    for (int i=2; i<=bound; i++){
         if (n%i == 0) return false;
     }
     return true;
 }
 
-bool isRoot(long& a, long& p) {
-    long num = a*a;
-    long ord = 1;
+bool isRoot(int& a, int& p) {
+    int num = a*a;
+    int ord = 1;
     while (num % p != a) {
         num = num*a % p;
         ord++;
@@ -45,19 +45,19 @@ bool isRoot(long& a, long& p) {
     return false;
 }
 
-bool isHere(vector<long> differences, long diff){
+bool isHere(vector<int> differences, int diff){
     for (auto d : differences){
         if (d==diff) return true;
     }
     return false;
 }
 
-bool isCostas(vector<long>& shift) {
-    for (long i=1; i<shift.size()-1; i++){
-        vector<long> differences;
-        long first_index(0);
+bool isCostas(vector<int>& shift) {
+    for (int i=1; i<shift.size()-1; i++){
+        vector<int> differences;
+        int first_index(0);
         while (first_index + i < shift.size()) {
-            long diff = shift[first_index + i] - shift[first_index];
+            int diff = shift[first_index + i] - shift[first_index];
             if (isHere(differences, diff)) return false;
             else {
                 differences.push_back(diff);
@@ -74,35 +74,35 @@ bool isCostas(vector<long>& shift) {
 *
 *******************************************************/
 
-unsigned long readDim() {
-    unsigned long dim;
+unsigned int readDim() {
+    unsigned int dim;
     cin >> dim;
     return dim;
 }
 
-bool compare(vector<long>& v1, vector<long>& v2){
+bool compare(vector<int>& v1, vector<int>& v2){
     return lexicographical_compare(v1.begin(), v1.end(), v2.begin(), v2.end());
 }
 
-long powerMod(const long& x, const long& n, const long& mod){
+int powerMod(const int& x, const int& n, const int& mod){
     if (n == 0) return 1;
-    long result = x;
-    for (long i=1; i<n; i++){
+    int result = x;
+    for (int i=1; i<n; i++){
         result = (result * x) % mod;
     }
     return result;
 }
 
 // This is the polynomial (degree 3) that generates the PolynomialSeq
-long f(const long& x, const long& mod, long& a, long& b) {
+int f(const int& x, const int& mod, int& a, int& b) {
     return( a * powerMod(x, 3, mod) +
             b * powerMod(x, 2, mod) +
             x )
           % mod;
 }
 
-long LegendreComplexity(long& p) {
-    long criteria = p % 8;
+int LegendreComplexity(int& p) {
+    int criteria = p % 8;
     if(criteria == 1) return (p-1)/2;
     if(criteria == 3) return p;
     if(criteria == 5) return p-1;
@@ -111,9 +111,9 @@ long LegendreComplexity(long& p) {
 }
 
 
-long LogRootSeq(long i){
+int LogRootSeq(int i){
     return i;
 }
-long noShiftFunc(const long& i){
+int noShiftFunc(const int& i){
     return 0;
 }
