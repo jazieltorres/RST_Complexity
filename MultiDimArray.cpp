@@ -267,14 +267,13 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 }
 
 template<typename F>
-void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
+void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int up_to_column) {
     const int m = M.size() - 1 ;
-    const int n = M[0].size() - 1 ;
     F lambda ;
     int j = 0 ;
 
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < n) {
+        while (M[i][j] == 0 && j < up_to_column) {
             if (M[m][j] != 0) {
                 insertBefore(M, i, m);
                 insertBefore(Id, i, m);
@@ -283,7 +282,7 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
             j++;
         }
         lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < n; k++)
+        for (int k = j; k < up_to_column; k++)
             M[m][k] = M[m][k] + lambda * M[i][k];
         for (int k = 0; k < Id[0].size(); k++)
             Id[m][k] = Id[m][k] + lambda * Id[i][k];
@@ -367,6 +366,17 @@ vector< Monomial<m> > get_polynomial(vector< vector<F> >& idMatrix, vector< Mono
     return poly;
 }
 
+template<typename F>
+bool isZeroRow (vector< vector<F> >& matrix, int up_to_column) {
+    int lastRow = matrix.size()-1;
+    F zero(0);
+    for (int i=0; i<up_to_column; i++) {
+        if (matrix[lastRow][i] != zero)
+            return false;
+    }
+    return true;
+}
+
 
 
 
@@ -401,15 +411,41 @@ void MultiDimArray<F,m>::RST() {
     auto it_period = exponentsColumn.rbegin();
     while (!it_period->equal(e_period))
         it_period++;
+
+    auto it_skipped = skipped_monomials.rbegin()-1;
     for (auto e = it_period; e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period))
+        if (e->leq_d(e_period)) {
             exponentsRow.push_front(*e);
+            it_skipped++;
+        }
+        else
+            *it_skipped += 1;
     }
+
+//    cout << endl << endl << "Skipped: ";
+//    for (auto x : skipped_monomials) cout << x << " ";
+//    cout << endl;
+//
+//
+//    for (auto i : exponentsRow) {
+//        for (auto j : exponentsColumn) {
+//            cout << i + j << "\t";
+//        }
+//        cout << endl;
+//    }
+//    cout << endl;
+
+
+
+
+
+
 
     vector< vector<F> > matrix, idMatrix;
     vector< vector <Monomial<m> > > basis;
     Monomial<m> alpha;
-    int up_to_column = exponentsColumn.size();
+    int up_to_column = exponentsColumn.size()+1;
+    int iteration = 0;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
 
@@ -426,8 +462,8 @@ void MultiDimArray<F,m>::RST() {
 //        printMatrix(matrix);
 //        cout << endl;
 //        printMatrix(idMatrix);
-
-        reduce(matrix, idMatrix);
+        up_to_column = up_to_column-1-skipped_monomials[iteration];
+        reduce(matrix, idMatrix, up_to_column);
 
 //        cout << "\nAFTER REDUCE:" << endl;
 //        printMatrix(matrix);
@@ -437,9 +473,8 @@ void MultiDimArray<F,m>::RST() {
 
 
 
-        vector<F> zeroRow(matrix[0].size(), (F)0);
 
-        if (matrix[matrix.size()-1] == zeroRow) {
+        if (isZeroRow(matrix, up_to_column)) {
             lead_monomials.push_back(alpha);
 //            printPoly(idMatrix, idColumn);
             basis.push_back(get_polynomial(idMatrix, idColumn));
@@ -460,6 +495,7 @@ void MultiDimArray<F,m>::RST() {
             exponentsRow.pop_front();
             delta_size++;
         }
+        iteration++;
 //        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 //

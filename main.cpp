@@ -34,6 +34,8 @@ int main() {
 //
 //    cout << "Delta: " << array.normalized_complexity() << endl;
 //
+//    array.draw_lead_monomials();
+//
 //    return 0;
 
 
@@ -267,48 +269,48 @@ int main() {
 //        }
 //        for (int p_legendre : primes) {
 //            numTest++;
-//            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
+////            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
 //            MultiDimArray<F, dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre),
 //                    p_shift - 1, p_legendre);
-
 //            cout << "Test " << numTest << "/" << primes.size()*primes.size() << "\tComplexity: " << A.complexity() << endl;
-
-//            A.RST();
-//            unsigned int d = A.complexity();
-//            int n1 = A.period[0];
-//            int criteria = p_legendre % 8;
-//            int expected = 0;
-//            bool satisfied = true;
 //
-//            if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-//                satisfied = false;
-//                expected = (p_legendre - 1) / 2 * n1;
-//            }
-//            if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-//                satisfied = false;
-//                expected = n1 * (p_legendre - 1) + 1;
-//            }
-//            if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-//                satisfied = false;
-//                expected = n1 * (p_legendre - 1);
-//            }
-//            if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-//                satisfied = false;
-//                expected = (p_legendre - 1) / 2 * n1 + 1;
-//            }
 //
-//            if (!satisfied) {
-//                cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
-//                cout << "p legendre: " << p_legendre << endl;
-//                cout << "p costas: " << p_shift << endl;
-//                cout << "root: " << root << endl;
-//
-//                ofstream outfile ("failCases.txt", ios::app) ;
-//                outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
-//                    << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
-//                outfile.close();
-//            }
-//            else testSatisfied += 1;
+////            A.RST();
+////            unsigned int d = A.complexity();
+////            int n1 = A.period[0];
+////            int criteria = p_legendre % 8;
+////            int expected = 0;
+////            bool satisfied = true;
+////
+////            if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+////                satisfied = false;
+////                expected = (p_legendre - 1) / 2 * n1;
+////            }
+////            if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+////                satisfied = false;
+////                expected = n1 * (p_legendre - 1) + 1;
+////            }
+////            if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+////                satisfied = false;
+////                expected = n1 * (p_legendre - 1);
+////            }
+////            if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+////                satisfied = false;
+////                expected = (p_legendre - 1) / 2 * n1 + 1;
+////            }
+////
+////            if (!satisfied) {
+////                cout << "Failed case " << criteria/2 + 1 << "\t" << expected << " : " << d << endl;
+////                cout << "p legendre: " << p_legendre << endl;
+////                cout << "p costas: " << p_shift << endl;
+////                cout << "root: " << root << endl;
+////
+////                ofstream outfile ("failCases.txt", ios::app) ;
+////                outfile << p_legendre << '\t' << p_shift << '\t' << root << '\t' << expected - d << "\t\t"
+////                    << "Case " << criteria/2 + 1 << '\t' << expected << " : " << d << '\n';
+////                outfile.close();
+////            }
+////            else testSatisfied += 1;
 //        }
 //    }
 //    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
