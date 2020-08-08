@@ -269,7 +269,7 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 template<typename F>
 void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
     const int m = M.size() - 1 ;
-    const int n = M[0].size() - 1 ;
+    const int n = M[0].size() ;
     F lambda ;
     int j = 0 ;
 
