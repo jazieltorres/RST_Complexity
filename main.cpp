@@ -71,14 +71,14 @@ int main() {
 *
 *******************************************************/
 
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned int dim = 2;
-
-    int p_legendre =    31;
-    int p_shift =       31;
-    int root =          3;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned int dim = 2;
+//
+//    int p_legendre =    31;
+//    int p_shift =       31;
+//    int root =          3;
 
 //    For the vector of shifts
 //    vector<int> shift({0, 1, 3, 1, 0, 3});
@@ -100,16 +100,16 @@ int main() {
 //    for (int i=0; i<p_shift-1; i++) cout << PolynomialSeq(p_shift, root)(i) << " "; cout << endl << endl;
 
 
-    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
-
-    cout << "RST" << endl;
-    auto start = chrono::high_resolution_clock::now();
-    A.RST();
-    auto stop = chrono::high_resolution_clock::now();
-    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
-    cout << duration.count() << " s" << endl << endl;
-
-    cout << "Delta: " << A.complexity() << endl;
+//    MultiDimArray<F,dim> A(ExpQuadraticSeq(p_shift, root, 1), LegendreSeq(p_legendre), p_shift, p_legendre);
+//
+//    cout << "RST" << endl;
+//    auto start = chrono::high_resolution_clock::now();
+//    A.RST();
+//    auto stop = chrono::high_resolution_clock::now();
+//    auto duration = chrono::duration_cast<chrono::seconds>(stop - start);
+//    cout << duration.count() << " s" << endl << endl;
+//
+//    cout << "Delta: " << A.complexity() << endl;
 
 //    unsigned int d = A.complexity();
 //    int n1 = A.period[0];
@@ -768,54 +768,56 @@ int main() {
 *
 *******************************************************/
 
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const unsigned int dim = 2;
-//
-//
-//    string line;
-//    vector<int> v(dim);
-//    int size = 1;
-//    for (int i=0; i<dim; i++) {
-//        cin >> v[i];
-//        size = size * v[i];
-//    }
-//
-////    cout << "Size " << size << endl;
-//
-////    Removing character in buffer after cin
+    int prime = 2;
+
+    NTL::ZZ p(prime);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const unsigned int dim = 2;
+
+
+    string line;
+    blitz::TinyVector<int, dim> v;
+    int size = 1;
+    for (int i=0; i<dim; i++) {
+        cin >> v[i];
+        size = size * v[i];
+    }
+
+//    cout << "Size " << size << endl;
+
+//    Removing character in buffer after cin
+    getline(cin, line);
+
+    int ctr = 0;
+
+    while(ctr < 30 && getline(cin, line)) {
+        ctr++;
+        // Skipping following two lines
+        getline(cin, line); getline(cin, line);
+
+        MultiDimArray<F, dim> A(v);
+        for (int i = 0; i < size; i++) {
+//            cout << i << endl;
+            blitz::TinyVector<int,dim> position;
+            F value;
+
+            getline(cin, line);
+            stringstream ss(line);
+            for (int n=0; n<dim; n++)
+                ss >> position[n];
+            ss >> value;
+            A.setAt(position, value);
+        }
+//        A.print();
+//        cout << endl;
+        A.RST();
+//        cout << ctr << endl;
+        cout << "Delta size: " << A.complexity() << endl;
+    }
+//    cout << "\n\nNext line in buffer:" << endl;
 //    getline(cin, line);
-//
-//    int ctr = 0;
-//
-//    while(ctr < 30 && getline(cin, line)) {
-//        ctr++;
-//        // Skipping following two lines
-//        getline(cin, line); getline(cin, line);
-//
-//        MultiDimArray<F, dim> A(v);
-//        for (int i = 0; i < size; i++) {
-////            cout << i << endl;
-//            blitz::TinyVector<int,dim> position;
-//            F value;
-//
-//            getline(cin, line);
-//            stringstream ss(line);
-//            for (int n=0; n<dim; n++)
-//                ss >> position[n];
-//            ss >> value;
-//            A.setAt(position, value);
-//        }
-////        A.print();
-////        cout << endl;
-//        A.RST();
-////        cout << ctr << endl;
-////        cout << "Delta size: " << A.getDeltaSize() << endl;
-//    }
-////    cout << "\n\nNext line in buffer:" << endl;
-////    getline(cin, line);
-////    cout << line << endl;
+//    cout << line << endl;
 
 
 

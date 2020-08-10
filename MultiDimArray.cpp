@@ -21,7 +21,7 @@ class MultiDimArray {
         explicit MultiDimArray(blitz::Array<F,m>&);
 
 //      Constructor: receives period vector and resizes array
-        explicit MultiDimArray(const blitz::TinyVector<F,m>&);
+        explicit MultiDimArray(const blitz::TinyVector<int,m>&);
 
 //      Constructor: receives shift sequence, column sequence, and their periods, respectively.
         MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
@@ -65,7 +65,7 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
 
 //  Constructor: receives period vector and resizes array
 template<typename F, int m>
-MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<F,m>& period_vector){
+MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector){
     delta_size = -1;
     period = period_vector;
     A.resize(period);
