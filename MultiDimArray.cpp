@@ -21,7 +21,7 @@ class MultiDimArray {
         explicit MultiDimArray(blitz::Array<F,m>&);
 
 //      Constructor: receives period vector and resizes array
-        explicit MultiDimArray(const blitz::TinyVector<F,m>&);
+        explicit MultiDimArray(const blitz::TinyVector<int,m>&);
 
 //      Constructor: receives shift sequence, column sequence, and their periods, respectively.
         MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
@@ -33,9 +33,10 @@ class MultiDimArray {
         
 //      Rubio-Sweedler-Taylor algorithm
         void RST();
+        
         int complexity();
         double normalized_complexity();
-        void setAt(const blitz::TinyVector<int,m>&, F&);
+        void set_at(const blitz::TinyVector<int,m>&, F&);
         void print_array();
         blitz::TinyVector<int, m> period_vector();
         void draw_lead_monomials();
@@ -65,7 +66,7 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
 
 //  Constructor: receives period vector and resizes array
 template<typename F, int m>
-MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<F,m>& period_vector){
+MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector){
     delta_size = -1;
     period = period_vector;
     A.resize(period);
@@ -154,7 +155,7 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
 
 
 template <typename F, int m>
-void MultiDimArray<F,m>::setAt(const blitz::TinyVector<int, m>& coordinates, F& value) {
+void MultiDimArray<F,m>::set_at(const blitz::TinyVector<int, m>& coordinates, F& value) {
     A(coordinates) = value;
 }
 
