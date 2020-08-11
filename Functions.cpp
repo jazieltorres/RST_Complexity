@@ -110,6 +110,15 @@ int LegendreComplexity(int& p) {
     return 0;
 }
 
+int ConjectureComplexity(int& p, int& n1) {
+    if (p%4 == 1) return n1 * LegendreComplexity(p);
+    else return n1 * (LegendreComplexity(p) - 1) + 1;
+}
+
+string satisfied_conjecture(int& d, int& conj) {
+    if (d == conj) return "OK";
+    return "FAILS";
+}
 
 int LogRootSeq(int i){
     return i;

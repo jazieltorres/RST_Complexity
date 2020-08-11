@@ -16,6 +16,7 @@ class MultiDimArray {
         blitz::TinyVector<int, m> period;
         vector< Monomial<m> > lead_monomials;
         int delta_size;
+        int array_size;
     public:
 //      Constructor: receives a blitz array of dimension m, with entries in F.
         explicit MultiDimArray(blitz::Array<F,m>&);
@@ -39,6 +40,7 @@ class MultiDimArray {
         void print_array();
         blitz::TinyVector<int, m> period_vector();
         void draw_lead_monomials();
+        int size();
         
 } ;
 
@@ -83,6 +85,7 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
         period = n1, n2;
         A.resize(period);
         delta_size = -1;
+        array_size = n1*n2;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -221,6 +224,11 @@ void MultiDimArray<F,m>::draw_lead_monomials() {
         if(1 == i%2) cout << " " << endl;
         else cout << "|" << endl;
     }
+}
+
+template <typename F, int m>
+int MultiDimArray<F,m>::size() {
+    return array_size;
 }
 
 

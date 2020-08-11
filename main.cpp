@@ -76,14 +76,14 @@ int main() {
 //    typedef NTL::ZZ_p F;
 //    const unsigned int dim = 2;
 //
-//    int p_legendre =    31;
+//    int p_legendre =    7;
 //    int p_shift =       31;
 //    int root =          3;
 
 //    For the vector of shifts
 //    vector<int> shift({0, 1, 3, 1, 0, 3});
 //    int p_shift = shift.size();
-
+//
 //    PolynomialSeq Poly(p_shift, root, 2, 3);
 
 //    for (int i=0; i<p_shift-1; i++)
@@ -368,7 +368,7 @@ int main() {
 *******************************************************/
 
     int primesFrom = 3;
-    int primesUpTo = 20;
+    int primesUpTo = 19;
     NTL::ZZ p(2);
     NTL::ZZ_p::init(p);
     typedef NTL::ZZ_p F;
@@ -395,43 +395,21 @@ int main() {
             vector<bool> check_root;
             for (int root : roots) {
                 MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
-                                            p_shift - 1, p_legendre);
+                                        p_shift - 1, p_legendre);
                 A.RST();
 
-                unsigned int d = A.complexity();
-                int n1 = p_shift - 1;
-                int criteria = p_legendre % 8;
-                bool satisfied = true;
+                int d(A.complexity());
+                int conj(ConjectureComplexity(p_legendre, A.period_vector()[0]));
 
-                if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-                    satisfied = false;
-                }
-                if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-                    satisfied = false;
-                }
-                if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-                    satisfied = false;
-                }
-                if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-                    satisfied = false;
-                }
-                check_root.push_back(satisfied);
+
+                outfile << p_legendre << ", " << p_shift << ", " << root << ", " << d << ", " <<
+                conj << ", " << A.normalized_complexity() << ", " << conj/(double)A.size() <<
+                ", " << satisfied_conjecture(d, conj) << endl;
+
             }
-
-//            bool check = true;
-//            for (int i=1; i<check_root.size(); i++){
-//                if (check_root[0] != check_root[i]) check = false;
-//            }
-//            if(check) testSatisfied = testSatisfied + 1;
-//            else {
-//                outfile << "p_legendre: " << p_legendre << endl;
-//                outfile << "p_shift: " << p_shift << endl << endl;
-//            }
         }
     }
-
     outfile.close();
-    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
 
 
 

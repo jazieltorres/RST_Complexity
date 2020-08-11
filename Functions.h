@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "NTL/ZZ_p.h"
+#include <string>
 
 using namespace std;
 
@@ -31,6 +32,8 @@ bool compare(vector<int>& v1, vector<int>& v2);
 int powerMod(const int& x, const int& n, const int& mod);
 int f(const int& x, const int& mod, int& a, int& b);
 int LegendreComplexity(int& p);
+int ConjectureComplexity(int& p, int& n1);
+string satisfied_conjecture(int& d, int& conj);
 
 
 /******************************************************
