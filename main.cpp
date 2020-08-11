@@ -367,57 +367,57 @@ int main() {
 *
 *******************************************************/
 
-//    int primesFrom = 3;
-//    int primesUpTo = 20;
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//    const unsigned int dim = 2;
-//
-//    vector<int> primes;
-//    for (int i=primesFrom; i<=primesUpTo; i++){
-//        if (isPrime(i)) primes.push_back(i);
-//    }
-//
-//    double testSatisfied = 0;
-//    int numTest = 0;
-//    ofstream outfile ("failCases.txt", ios::app) ;
-//    for(int p_shift : primes) {
-//        vector<int> roots;
-//        for(int c=2; c<p_shift; c++){
-//            if(isRoot(c,p_shift)) roots.push_back(c);
-//        }
-//
-//        for (int p_legendre : primes) {
-//            numTest++;
-//            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-//
-//            vector<bool> check_root;
-//            for (int root : roots) {
-//                MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
-//                                            p_shift - 1, p_legendre);
-//                A.RST();
-//
-//                unsigned int d = A.getDeltaSize();
-//                int n1 = p_shift - 1;
-//                int criteria = p_legendre % 8;
-//                bool satisfied = true;
-//
-//                if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
-//                    satisfied = false;
-//                }
-//                if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
-//                    satisfied = false;
-//                }
-//                if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
-//                    satisfied = false;
-//                }
-//                if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
-//                    satisfied = false;
-//                }
-//                check_root.push_back(satisfied);
-//            }
-//
+    int primesFrom = 3;
+    int primesUpTo = 20;
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+    const unsigned int dim = 2;
+
+    vector<int> primes;
+    for (int i=primesFrom; i<=primesUpTo; i++){
+        if (isPrime(i)) primes.push_back(i);
+    }
+
+    double testSatisfied = 0;
+    int numTest = 0;
+    ofstream outfile ("failCases.txt", ios::app) ;
+    for(int p_shift : primes) {
+        vector<int> roots;
+        for(int c=2; c<p_shift; c++){
+            if(isRoot(c,p_shift)) roots.push_back(c);
+        }
+
+        for (int p_legendre : primes) {
+            numTest++;
+            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
+
+            vector<bool> check_root;
+            for (int root : roots) {
+                MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
+                                            p_shift - 1, p_legendre);
+                A.RST();
+
+                unsigned int d = A.complexity();
+                int n1 = p_shift - 1;
+                int criteria = p_legendre % 8;
+                bool satisfied = true;
+
+                if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
+                    satisfied = false;
+                }
+                if (criteria == 3 && (n1 * (p_legendre - 1) + 1 != d)) {
+                    satisfied = false;
+                }
+                if (criteria == 5 && (n1 * (p_legendre - 1) != d)) {
+                    satisfied = false;
+                }
+                if (criteria == 7 && ((p_legendre - 1) / 2 * n1 + 1 != d)) {
+                    satisfied = false;
+                }
+                check_root.push_back(satisfied);
+            }
+
 //            bool check = true;
 //            for (int i=1; i<check_root.size(); i++){
 //                if (check_root[0] != check_root[i]) check = false;
@@ -427,11 +427,11 @@ int main() {
 //                outfile << "p_legendre: " << p_legendre << endl;
 //                outfile << "p_shift: " << p_shift << endl << endl;
 //            }
-//        }
-//    }
-//
-//    outfile.close();
-//    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+        }
+    }
+
+    outfile.close();
+    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
 
 
 
@@ -768,53 +768,53 @@ int main() {
 *
 *******************************************************/
 
-    int prime = 2;
-
-    NTL::ZZ p(prime);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned int dim = 2;
-
-
-    string line;
-    blitz::TinyVector<int, dim> v;
-    int size = 1;
-    for (int i=0; i<dim; i++) {
-        cin >> v[i];
-        size = size * v[i];
-    }
+//    int prime = 2;
+//
+//    NTL::ZZ p(prime);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned int dim = 2;
+//
+//
+//    string line;
+//    blitz::TinyVector<int, dim> v;
+//    int size = 1;
+//    for (int i=0; i<dim; i++) {
+//        cin >> v[i];
+//        size = size * v[i];
+//    }
 
 //    cout << "Size " << size << endl;
 
 //    Removing character in buffer after cin
-    getline(cin, line);
-
-    int ctr = 0;
-
-    while(ctr < 30 && getline(cin, line)) {
-        ctr++;
-        // Skipping following two lines
-        getline(cin, line); getline(cin, line);
-
-        MultiDimArray<F, dim> A(v);
-        for (int i = 0; i < size; i++) {
+//    getline(cin, line);
+//
+//    int ctr = 0;
+//
+//    while(ctr < 30 && getline(cin, line)) {
+//        ctr++;
+//        // Skipping following two lines
+//        getline(cin, line); getline(cin, line);
+//
+//        MultiDimArray<F, dim> A(v);
+//        for (int i = 0; i < size; i++) {
 //            cout << i << endl;
-            blitz::TinyVector<int,dim> position;
-            F value;
-
-            getline(cin, line);
-            stringstream ss(line);
-            for (int n=0; n<dim; n++)
-                ss >> position[n];
-            ss >> value;
-            A.setAt(position, value);
-        }
+//            blitz::TinyVector<int,dim> position;
+//            F value;
+//
+//            getline(cin, line);
+//            stringstream ss(line);
+//            for (int n=0; n<dim; n++)
+//                ss >> position[n];
+//            ss >> value;
+//            A.setAt(position, value);
+//        }
 //        A.print();
 //        cout << endl;
-        A.RST();
+//        A.RST();
 //        cout << ctr << endl;
-        cout << "Delta size: " << A.complexity() << endl;
-    }
+//        cout << "Delta size: " << A.complexity() << endl;
+//    }
 //    cout << "\n\nNext line in buffer:" << endl;
 //    getline(cin, line);
 //    cout << line << endl;
