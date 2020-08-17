@@ -257,7 +257,7 @@ int sizeOfDivisors(const Monomial<m> e) {
 
 template<int m>
 bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
-    return (e1.grlex_less(e2));
+    return (e1.lex_less(e2));
 }
 
 template<typename F>
@@ -442,7 +442,7 @@ void MultiDimArray<F,m>::RST() {
 
         if (matrix[matrix.size()-1] == zeroRow) {
             lead_monomials.push_back(alpha);
-//            printPoly(idMatrix, idColumn);
+            printPoly(idMatrix, idColumn);
             basis.push_back(get_polynomial(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
