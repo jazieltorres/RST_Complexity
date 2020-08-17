@@ -26,7 +26,7 @@
 using namespace std;
 
 int main() {
-    const unsigned int dim = 2;
+    const unsigned int dim = 1;
     int prime;
     string line;
     istringstream ss;
