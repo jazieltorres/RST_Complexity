@@ -484,7 +484,7 @@ void MultiDimArray<F,m>::RST() {
 
         if (isZeroRow(matrix, up_to_column)) {
             lead_monomials.push_back(alpha);
-//            printPoly(idMatrix, idColumn);
+            printPoly(idMatrix, idColumn);
             basis.push_back(get_polynomial(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();

@@ -327,36 +327,36 @@ int main() {
 *
 *******************************************************/
 
-//    int primesUpTo = 100;
-//
-//    NTL::ZZ p(2);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-//
-//    vector<int> primes;
-//    for (int i=3; i<=primesUpTo; i++) {
-//        if(isPrime(i)) primes.push_back(i);
-//    }
-//    double testSatisfied = 0;
-//    int numTest = 0;
-//    auto start = chrono::high_resolution_clock::now();
-//    for(int p_legendre : primes) {
-//        numTest++;
-////        cout << "Test " << numTest << " of " << primes.size() << endl;
-//        MultiDimArray<F,2> A(noShiftFunc, LegendreSeq(p_legendre), 1, p_legendre);
-////        A.RST();
-//        int d = A.complexity();
-//        if(d != LegendreComplexity(p_legendre)) {
-//            cout << "Failed with " << p_legendre << endl;
-//        }
-//        else testSatisfied = testSatisfied+1;
-//    }
-//    auto stop = chrono::high_resolution_clock::now();
-//    auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-//    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
-//    cout << duration.count() << " ms" << endl;
-//
-//    return 0;
+    int primesUpTo = 100;
+
+    NTL::ZZ p(2);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+
+    vector<int> primes;
+    for (int i=3; i<=primesUpTo; i++) {
+        if(isPrime(i)) primes.push_back(i);
+    }
+    double testSatisfied = 0;
+    int numTest = 0;
+    auto start = chrono::high_resolution_clock::now();
+    for(int p_legendre : primes) {
+        numTest++;
+//        cout << "Test " << numTest << " of " << primes.size() << endl;
+        MultiDimArray<F,2> A(noShiftFunc, LegendreSeq(p_legendre), 1, p_legendre);
+//        A.RST();
+        int d = A.complexity();
+        if(d != LegendreComplexity(p_legendre)) {
+            cout << "Failed with " << p_legendre << endl;
+        }
+        else testSatisfied = testSatisfied+1;
+    }
+    auto stop = chrono::high_resolution_clock::now();
+    auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+    cout << "\nProportion of successful tests: " << testSatisfied/numTest << endl;
+    cout << duration.count() << " ms" << endl;
+
+    return 0;
 
 
 
@@ -367,49 +367,49 @@ int main() {
 *
 *******************************************************/
 
-    int primesFrom = 3;
-    int primesUpTo = 19;
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-    const unsigned int dim = 2;
-
-    vector<int> primes;
-    for (int i=primesFrom; i<=primesUpTo; i++){
-        if (isPrime(i)) primes.push_back(i);
-    }
-
-    double testSatisfied = 0;
-    int numTest = 0;
-    ofstream outfile ("failCases.txt", ios::app) ;
-    for(int p_shift : primes) {
-        vector<int> roots;
-        for(int c=2; c<p_shift; c++){
-            if(isRoot(c,p_shift)) roots.push_back(c);
-        }
-
-        for (int p_legendre : primes) {
-            numTest++;
-            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
-
-            vector<bool> check_root;
-            for (int root : roots) {
-                MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
-                                        p_shift - 1, p_legendre);
-                A.RST();
-
-                int d(A.complexity());
-                int conj(ConjectureComplexity(p_legendre, A.period_vector()[0]));
-
-
-                outfile << p_legendre << ", " << p_shift << ", " << root << ", " << d << ", " <<
-                conj << ", " << A.normalized_complexity() << ", " << conj/(double)A.size() <<
-                ", " << satisfied_conjecture(d, conj) << endl;
-
-            }
-        }
-    }
-    outfile.close();
+//    int primesFrom = 3;
+//    int primesUpTo = 19;
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+//    const unsigned int dim = 2;
+//
+//    vector<int> primes;
+//    for (int i=primesFrom; i<=primesUpTo; i++){
+//        if (isPrime(i)) primes.push_back(i);
+//    }
+//
+//    double testSatisfied = 0;
+//    int numTest = 0;
+//    ofstream outfile ("failCases.txt", ios::app) ;
+//    for(int p_shift : primes) {
+//        vector<int> roots;
+//        for(int c=2; c<p_shift; c++){
+//            if(isRoot(c,p_shift)) roots.push_back(c);
+//        }
+//
+//        for (int p_legendre : primes) {
+//            numTest++;
+//            cout << "Test " << numTest << " of " << primes.size() * primes.size() << endl;
+//
+//            vector<bool> check_root;
+//            for (int root : roots) {
+//                MultiDimArray<F, dim> A(ExponentialSeq(p_shift, root), LegendreSeq(p_legendre),
+//                                        p_shift - 1, p_legendre);
+//                A.RST();
+//
+//                int d(A.complexity());
+//                int conj(ConjectureComplexity(p_legendre, A.period_vector()[0]));
+//
+//
+//                outfile << p_legendre << ", " << p_shift << ", " << root << ", " << d << ", " <<
+//                conj << ", " << A.normalized_complexity() << ", " << conj/(double)A.size() <<
+//                ", " << satisfied_conjecture(d, conj) << endl;
+//
+//            }
+//        }
+//    }
+//    outfile.close();
 
 
 
