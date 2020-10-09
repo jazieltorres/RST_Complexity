@@ -16,6 +16,7 @@ class MultiDimArray {
         blitz::TinyVector<int, m> period;
         vector< Monomial<m> > lead_monomials;
         int delta_size;
+        // string Ordering;
     public:
 //      Constructor: receives a blitz array of dimension m, with entries in F.
         explicit MultiDimArray(blitz::Array<F,m>&);
@@ -255,10 +256,37 @@ int sizeOfDivisors(const Monomial<m> e) {
     return size;
 }
 
+
+/******************************************************
+*
+*       CARLOS:   FUNCIONES NUEVASSSSSSS
+*
+*******************************************************/
+
 template<int m>
-bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
+bool lex_less_X1lessXn(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.lex_less(e2));
 }
+
+template<int m>
+bool lex_less_X1greaterXn(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.lex_less2(e2));
+}
+
+template<int m>
+bool grlex_less(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.grlex_less(e2));
+}
+
+
+
+
+
+
+
+
+
+
 
 template<typename F>
 void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
@@ -397,7 +425,14 @@ void MultiDimArray<F,m>::RST() {
 
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
 
-    sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
+
+//    Aquí sería añadir unos if-else para correr el sort con el
+//    orden de monomios que se identifique con el string que hablamos
+//    que se le pasa al constructor.
+    sort(exponentsColumn.begin(), exponentsColumn.end(), lex_less_X1lessXn<m>);
+
+
+
 
     auto it_period = exponentsColumn.rbegin();
     while (!it_period->equal(e_period))
