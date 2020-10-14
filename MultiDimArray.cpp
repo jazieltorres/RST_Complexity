@@ -16,7 +16,7 @@ class MultiDimArray {
         blitz::TinyVector<int, m> period;
         vector< Monomial<m> > lead_monomials;
         int delta_size;
-        // string Ordering;
+        string ordering;
     public:
 //      Constructor: receives a blitz array of dimension m, with entries in F.
         explicit MultiDimArray(blitz::Array<F,m>&);
@@ -25,10 +25,10 @@ class MultiDimArray {
         explicit MultiDimArray(const blitz::TinyVector<int,m>&);
 
 //      Constructor: receives shift sequence, column sequence, and their periods, respectively.
-        MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
+        MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int, const string &);
 
 //      Constructor: same as above but shift sequence is a vector.
-        MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
+        MultiDimArray(const vector<int>&, const function<F (int)>&, int, int, const string &);
 
         static const int dimension = m;
         
@@ -41,7 +41,11 @@ class MultiDimArray {
         void print_array();
         blitz::TinyVector<int, m> period_vector();
         void draw_lead_monomials();
-        
+
+//      Funciones nuevas
+        static bool lex_less_X1lessXn(const Monomial<m> &, const Monomial<m> &);
+        static bool lex_less_X1greaterXn(const Monomial<m> &, const Monomial<m> &);
+        static bool grlex_less(const Monomial<m> &, const Monomial<m> &);
 } ;
 
 #endif
@@ -77,7 +81,7 @@ MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector)
 // MultiDimArray(Shift seq, column seq, horizontal period, column period)
 template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const function<F(int)>& func2,
-        int n1, int n2) {
+        int n1, int n2, const string &_ordering) {
     if (m != 2) {
         cout << "ERROR: Allowed dimension for this constructor: 2" << endl;
     }
@@ -86,6 +90,7 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
         A.resize(period);
         delta_size = -1;
         blitz::TinyVector<int, 2> index;
+        ordering = _ordering;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
                 index = i, j;
@@ -105,12 +110,13 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
 // Constructor for permutations
 template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int)>& func2,
-                                  int n1, int n2) {
+                                  int n1, int n2, const string &_ordering ) {
     if (m != 2) {
         period = n1, n2;
         A.resize(period);
         delta_size = -1;
         blitz::TinyVector<int, 2> index;
+        ordering = _ordering;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
                 index = i, j;
@@ -263,18 +269,18 @@ int sizeOfDivisors(const Monomial<m> e) {
 *
 *******************************************************/
 
-template<int m>
-bool lex_less_X1lessXn(const Monomial<m>& e1, const Monomial<m>& e2) {
+template <typename F, int m>
+bool MultiDimArray<F, m>::lex_less_X1lessXn(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.lex_less(e2));
 }
 
-template<int m>
-bool lex_less_X1greaterXn(const Monomial<m>& e1, const Monomial<m>& e2) {
+template <typename F, int m>
+bool MultiDimArray<F, m>::lex_less_X1greaterXn(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.lex_less2(e2));
 }
 
-template<int m>
-bool grlex_less(const Monomial<m>& e1, const Monomial<m>& e2) {
+template <typename F, int m>
+bool MultiDimArray<F, m>::grlex_less(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.grlex_less(e2));
 }
 
@@ -429,8 +435,15 @@ void MultiDimArray<F,m>::RST() {
 //    Aquí sería añadir unos if-else para correr el sort con el
 //    orden de monomios que se identifique con el string que hablamos
 //    que se le pasa al constructor.
-    sort(exponentsColumn.begin(), exponentsColumn.end(), lex_less_X1lessXn<m>);
-
+    if (ordering == "Lex less than X1 greater than Xn") {
+        sort(exponentsColumn.begin(), exponentsColumn.end(), lex_less_X1greaterXn);
+    }
+    else if (ordering == "Lex less than X1 greater than Xn") {
+        sort(exponentsColumn.begin(), exponentsColumn.end(), lex_less_X1greaterXn);
+    }
+    else if (ordering == "Greater Lex less") {
+        sort(exponentsColumn.begin(), exponentsColumn.end(), grlex_less);
+    }
 
 
 

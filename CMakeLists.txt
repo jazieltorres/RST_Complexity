@@ -6,18 +6,22 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 
 include_directories(.)
 
-add_executable(RST
-        main.cpp Functions.cpp Functions.h)
+add_executable(RST main.cpp Functions.cpp Functions.h)
 
 include_directories(/usr/local/Cellar/ntl/11.4.3/include)
 link_directories(/usr/local/Cellar/ntl/11.4.3/lib)
+include_directories(/usr/local/include/NTL)
 
 include_directories(/usr/local/Cellar/blitz/1.0.2/include)
 link_directories(/usr/local/Cellar/blitz/1.0.2/lib)
+include_directories(/usr/local/include/blitz)
 
+find_library(NTL_LIBRARY ntl HINTS /usr/local/lib)
+find_library(BLITZ_LIBRARY blitz HINTS /usr/local/lib)
+find_library(GMP_LIBRARY gmp HINTS /usr/local/lib)
 
 file(GLOB LIBRARIES "/usr/local/Cellar/ntl/11.4.3/lib/*.dylib")
 message("LIBRARIES = ${LIBRARIES}")
 
-TARGET_LINK_LIBRARIES(RST  ${LIBRARIES})
+TARGET_LINK_LIBRARIES(RST  ${LIBRARIES} ${NTL_LIBRARY} ${BLITZ_LIBRARY} ${GMP_LIBRARY})
 
