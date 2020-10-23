@@ -129,6 +129,7 @@ int main() {
     }
     Array.RST();
     cout << "Complexity: " << Array.complexity() << endl;
+    cout << "Normalized Complexity" << Array.normalized_complexity() << endl;
     return 0;
 }
 
