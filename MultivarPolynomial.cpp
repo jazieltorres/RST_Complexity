@@ -33,8 +33,17 @@ void MultivarPolynomial<F,m>::add_term(Monomial<m> exponent, F coefficient) {
 
 template <typename F, int m>
 void MultivarPolynomial<F,m>::print() {
-    for(int i=0; i<length; i++) {
-        cout << coefficients[i] << "x" << exponents[i] << '\t';
+    if(m==1){
+        for(int i=0; i<length; i++){
+            cout << coefficients[i] << "X^" << exponents[i];
+            if (i < length - 1) cout << " + ";
+        }
+        cout << endl;
     }
-    cout << endl;
+    else {
+        for (int i = 0; i < length; i++) {
+            cout << coefficients[i] << "x" << exponents[i] << '\t';
+        }
+        cout << endl;
+    }
 }
