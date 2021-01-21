@@ -5,45 +5,49 @@
 #include <vector>
 #include <string>
 #include <forward_list>
-#include "Monomial.cpp"
+//#include "Monomial.cpp"
+#include "MultivarPolynomial.cpp"
 #include <algorithm> //sort
 using namespace std;
 
 template <typename F, int m>
 class MultiDimArray {
-    private:
-        blitz::Array<F, m> A;
-        blitz::TinyVector<int, m> period;
-        vector< Monomial<m> > lead_monomials;
-        int delta_size;
-        int array_size;
-    public:
-//      Constructor: receives a blitz array of dimension m, with entries in F.
-        explicit MultiDimArray(blitz::Array<F,m>&);
+private:
+    blitz::Array<F, m> A;
+    blitz::TinyVector<int, m> period;
+    vector< Monomial<m> > lead_monomials;
+    vector< MultivarPolynomial<F,m> > grobner_basis;
+    int size;
+    int delta_size;
 
-//      Constructor: receives period vector and resizes array
-        explicit MultiDimArray(const blitz::TinyVector<int,m>&);
+public:
+//  Constructor: receives a blitz array of dimension m, with entries in F.
+    explicit MultiDimArray(blitz::Array<F,m>&);
 
-//      Constructor: receives shift sequence, column sequence, and their periods, respectively.
-        MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
+//  Constructor: receives period vector and resizes array
+    explicit MultiDimArray(const blitz::TinyVector<int,m>&);
 
-//      Constructor: same as above but shift sequence is a vector.
-        MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
+//  Constructor: receives shift sequence, column sequence, and their periods, respectively.
+    MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
 
-        static const int dimension = m;
-        
-//      Rubio-Sweedler-Taylor algorithm
-        void RST();
+//  Constructor: same as above but shift sequence is a vector.
+    MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
 
-//      Getters
-        int complexity();
-        double normalized_complexity();
-        blitz::TinyVector<int, m> period_vector();
-        int size();
+//  Getters
+    int dimension();
+    int complexity();
+    double normalized_complexity();
+    int period_size();
+    blitz::TinyVector<int, m> period_vector();
 
-        void setAt(const blitz::TinyVector<int,m>&, F&);
-        void print_array();
-        void draw_lead_monomials();
+
+    void set_at(const blitz::TinyVector<int,m>&, F&);
+    void print_array();
+    void print_basis();
+    void draw_lead_monomials();
+
+//  Rubio-Sweedler-Taylor algorithm for computing the linear complexity
+    void RST();
 } ;
 
 #endif
@@ -61,18 +65,25 @@ class MultiDimArray {
 template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
     A.reference(array);
+    size = 1;
     for (int i=0; i<m; i++){
         period[i] = A.extent(i);
+        size = size * period[i];
     }
     delta_size = -1;
+
 }
 
 //  Constructor: receives period vector and resizes array
 template<typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector){
-    delta_size = -1;
     period = period_vector;
     A.resize(period);
+    size = 1;
+    for (int i=0; i<m; i++){
+        size = size * period[i];
+    }
+    delta_size = -1;
 }
 
 
@@ -81,13 +92,13 @@ template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const function<F(int)>& func2,
         int n1, int n2) {
     if (m != 2) {
-        cout << "ERROR: Allowed dimension for this constructor: 2" << endl;
+        cout << "ERROR. Allowed dimension for this constructor: 2" << endl;
     }
     else {
         period = n1, n2;
         A.resize(period);
+        size = n1*n2;
         delta_size = -1;
-        array_size = n1*n2;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -112,6 +123,7 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
     if (m != 2) {
         period = n1, n2;
         A.resize(period);
+        size = n1*n2;
         delta_size = -1;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
@@ -130,13 +142,54 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
 
 /******************************************************
 *
-*       CLASS METHODS
+*       GETTERS
+*
+*******************************************************/
+template <typename F, int m>
+int MultiDimArray<F,m>::dimension() {
+    return m;
+}
+
+template <typename F, int m>
+int MultiDimArray<F,m>::complexity() {
+    if (delta_size == -1) {
+        this->RST();
+        return delta_size;
+    }
+    else
+        return delta_size;
+}
+
+template <typename F, int m>
+double MultiDimArray<F,m>::normalized_complexity() {
+    if (delta_size == -1) {
+        this->RST();
+        return static_cast<double>(delta_size)/size;
+    }
+    else
+        return static_cast<double>(delta_size)/size;
+}
+
+template <typename F, int m>
+int MultiDimArray<F,m>::period_size() {
+    return size;
+}
+
+template <typename F, int m>
+blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
+    return period;
+}
+
+
+
+/******************************************************
+*
+*       OTHER CLASS METHODS
 *
 *******************************************************/
 
-
 template <typename F, int m>
-void MultiDimArray<F,m>::setAt(const blitz::TinyVector<int, m>& coordinates, F& value) {
+void MultiDimArray<F,m>::set_at(const blitz::TinyVector<int, m>& coordinates, F& value) {
     A(coordinates) = value;
 }
 
@@ -153,36 +206,10 @@ void MultiDimArray<F, m>::print_array() {
 }
 
 template <typename F, int m>
-blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
-    return period;
+void MultiDimArray<F, m>::print_basis() {
+    for (auto poly : grobner_basis)
+        poly.print();
 }
-
-
-template <typename F, int m>
-int MultiDimArray<F,m>::complexity() {
-    if (delta_size == -1) {
-        this->RST();
-        return delta_size;
-    }
-    else
-        return delta_size;
-}
-
-
-template <typename F, int m>
-double MultiDimArray<F,m>::normalized_complexity() {
-    double size(1);
-    for (auto x : period)
-        size = size * x;
-
-    if (delta_size == -1) {
-        this->RST();
-        return delta_size/size;
-    }
-    else
-        return delta_size/size;
-}
-
 
 template <typename F, int m>
 void MultiDimArray<F,m>::draw_lead_monomials() {
@@ -203,11 +230,6 @@ void MultiDimArray<F,m>::draw_lead_monomials() {
         if(1 == i%2) cout << " " << endl;
         else cout << "|" << endl;
     }
-}
-
-template <typename F, int m>
-int MultiDimArray<F,m>::size() {
-    return array_size;
 }
 
 
@@ -344,11 +366,11 @@ void printPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
 }
 
 template<typename F, int m>
-vector< Monomial<m> > get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
-    vector< Monomial<m> > poly;
+MultivarPolynomial<F,m> get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
+    MultivarPolynomial<F,m> poly;
     int n = idMatrix.size()-1;
     for (int i = 0; i < idMatrix[0].size(); i++) {
-        if(idMatrix[n][i] != (F)0) poly.push_back(idColumn[i]);
+        if(idMatrix[n][i] != (F)0) poly.add_term(idColumn[i], idMatrix[n][i]);
     }
     return poly;
 }
@@ -464,7 +486,7 @@ void MultiDimArray<F,m>::RST() {
         if (isZeroRow(matrix, up_to_column)) {
             lead_monomials.push_back(alpha);
             printPoly(idMatrix, idColumn);
-            basis.push_back(get_polynomial(idMatrix, idColumn));
+            grobner_basis.push_back(get_polynomial(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
