@@ -34,14 +34,16 @@ class MultiDimArray {
         
 //      Rubio-Sweedler-Taylor algorithm
         void RST();
+
+//      Getters
         int complexity();
         double normalized_complexity();
+        blitz::TinyVector<int, m> period_vector();
+        int size();
+
         void setAt(const blitz::TinyVector<int,m>&, F&);
         void print_array();
-        blitz::TinyVector<int, m> period_vector();
         void draw_lead_monomials();
-        int size();
-        
 } ;
 
 #endif
@@ -123,29 +125,6 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
         cout << "ERROR: Allowed dimension for this constructor: 2" << endl;
     }
 }
-
-
-// Constructor for logWelch with column of zeros at the end
-//template <typename F, int m>
-//MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const function<F(int)>& func2,
-//                                  int n1, int n2) {
-//
-//    period = {(int)n1+1, (int)n2};
-//    cout << "period " << period[0] << " " << period[1] << endl;
-//    delta_size = 0;
-//    A.resize(n1+1, n2);
-//    blitz::TinyVector<int, 2> index;
-//    for (int i = 0; i < n1; i++) {
-//        for (int j = 0; j < n2; j++) {
-//            index = i,j;
-//            A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
-//        }
-//        for (int j=0; j<n2; j++){
-//            index = n1, j;
-//            A(index) = 0;
-//        }
-//    }
-//}
 
 
 
@@ -516,5 +495,4 @@ void MultiDimArray<F,m>::RST() {
 //        printStars(poly, period);
 //        cout << endl;
 //    }
-
 }
