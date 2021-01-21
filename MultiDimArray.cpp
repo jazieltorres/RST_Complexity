@@ -5,43 +5,49 @@
 #include <vector>
 #include <string>
 #include <forward_list>
-#include "Monomial.cpp"
+//#include "Monomial.cpp"
+#include "MultivarPolynomial.cpp"
 #include <algorithm> //sort
 using namespace std;
 
 template <typename F, int m>
 class MultiDimArray {
-    private:
-        blitz::Array<F, m> A;
-        blitz::TinyVector<int, m> period;
-        vector< Monomial<m> > lead_monomials;
-        int delta_size;
-        // string Ordering;
-    public:
-//      Constructor: receives a blitz array of dimension m, with entries in F.
-        explicit MultiDimArray(blitz::Array<F,m>&);
+private:
+    blitz::Array<F, m> A;
+    blitz::TinyVector<int, m> period;
+    vector< Monomial<m> > lead_monomials;
+    vector< MultivarPolynomial<F,m> > grobner_basis;
+    int size;
+    int delta_size;
 
-//      Constructor: receives period vector and resizes array
-        explicit MultiDimArray(const blitz::TinyVector<int,m>&);
+public:
+//  Constructor: receives a blitz array of dimension m, with entries in F.
+    explicit MultiDimArray(blitz::Array<F,m>&);
 
-//      Constructor: receives shift sequence, column sequence, and their periods, respectively.
-        MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
+//  Constructor: receives period vector and resizes array
+    explicit MultiDimArray(const blitz::TinyVector<int,m>&);
 
-//      Constructor: same as above but shift sequence is a vector.
-        MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
+//  Constructor: receives shift sequence, column sequence, and their periods, respectively.
+    MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
 
-        static const int dimension = m;
-        
-//      Rubio-Sweedler-Taylor algorithm
-        void RST();
-        
-        int complexity();
-        double normalized_complexity();
-        void set_at(const blitz::TinyVector<int,m>&, F&);
-        void print_array();
-        blitz::TinyVector<int, m> period_vector();
-        void draw_lead_monomials();
-        
+//  Constructor: same as above but shift sequence is a vector.
+    MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
+
+//  Getters
+    int dimension();
+    int complexity();
+    double normalized_complexity();
+    int period_size();
+    blitz::TinyVector<int, m> period_vector();
+
+
+    void set_at(const blitz::TinyVector<int,m>&, F&);
+    void print_array();
+    void print_basis();
+    void draw_lead_monomials();
+
+//  Rubio-Sweedler-Taylor algorithm for computing the linear complexity
+    void RST();
 } ;
 
 #endif
@@ -59,18 +65,25 @@ class MultiDimArray {
 template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
     A.reference(array);
+    size = 1;
     for (int i=0; i<m; i++){
         period[i] = A.extent(i);
+        size = size * period[i];
     }
     delta_size = -1;
+
 }
 
 //  Constructor: receives period vector and resizes array
 template<typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector){
-    delta_size = -1;
     period = period_vector;
     A.resize(period);
+    size = 1;
+    for (int i=0; i<m; i++){
+        size = size * period[i];
+    }
+    delta_size = -1;
 }
 
 
@@ -79,11 +92,12 @@ template <typename F, int m>
 MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const function<F(int)>& func2,
         int n1, int n2) {
     if (m != 2) {
-        cout << "ERROR: Allowed dimension for this constructor: 2" << endl;
+        cout << "ERROR. Allowed dimension for this constructor: 2" << endl;
     }
     else {
         period = n1, n2;
         A.resize(period);
+        size = n1*n2;
         delta_size = -1;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
@@ -109,6 +123,7 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
     if (m != 2) {
         period = n1, n2;
         A.resize(period);
+        size = n1*n2;
         delta_size = -1;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
@@ -124,36 +139,54 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
 }
 
 
-// Constructor for logWelch with column of zeros at the end
-//template <typename F, int m>
-//MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const function<F(int)>& func2,
-//                                  int n1, int n2) {
-//
-//    period = {(int)n1+1, (int)n2};
-//    cout << "period " << period[0] << " " << period[1] << endl;
-//    delta_size = 0;
-//    A.resize(n1+1, n2);
-//    blitz::TinyVector<int, 2> index;
-//    for (int i = 0; i < n1; i++) {
-//        for (int j = 0; j < n2; j++) {
-//            index = i,j;
-//            A(index) = func2(((j-func1(i)) % n2 + n2) % n2);
-//        }
-//        for (int j=0; j<n2; j++){
-//            index = n1, j;
-//            A(index) = 0;
-//        }
-//    }
-//}
+
+/******************************************************
+*
+*       GETTERS
+*
+*******************************************************/
+template <typename F, int m>
+int MultiDimArray<F,m>::dimension() {
+    return m;
+}
+
+template <typename F, int m>
+int MultiDimArray<F,m>::complexity() {
+    if (delta_size == -1) {
+        this->RST();
+        return delta_size;
+    }
+    else
+        return delta_size;
+}
+
+template <typename F, int m>
+double MultiDimArray<F,m>::normalized_complexity() {
+    if (delta_size == -1) {
+        this->RST();
+        return static_cast<double>(delta_size)/size;
+    }
+    else
+        return static_cast<double>(delta_size)/size;
+}
+
+template <typename F, int m>
+int MultiDimArray<F,m>::period_size() {
+    return size;
+}
+
+template <typename F, int m>
+blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
+    return period;
+}
 
 
 
 /******************************************************
 *
-*       CLASS METHODS
+*       OTHER CLASS METHODS
 *
 *******************************************************/
-
 
 template <typename F, int m>
 void MultiDimArray<F,m>::set_at(const blitz::TinyVector<int, m>& coordinates, F& value) {
@@ -173,36 +206,10 @@ void MultiDimArray<F, m>::print_array() {
 }
 
 template <typename F, int m>
-blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
-    return period;
+void MultiDimArray<F, m>::print_basis() {
+    for (auto poly : grobner_basis)
+        poly.print();
 }
-
-
-template <typename F, int m>
-int MultiDimArray<F,m>::complexity() {
-    if (delta_size == -1) {
-        this->RST();
-        return delta_size;
-    }
-    else
-        return delta_size;
-}
-
-
-template <typename F, int m>
-double MultiDimArray<F,m>::normalized_complexity() {
-    double size(1);
-    for (auto x : period)
-        size = size * x;
-
-    if (delta_size == -1) {
-        this->RST();
-        return delta_size/size;
-    }
-    else
-        return delta_size/size;
-}
-
 
 template <typename F, int m>
 void MultiDimArray<F,m>::draw_lead_monomials() {
@@ -256,37 +263,10 @@ int sizeOfDivisors(const Monomial<m> e) {
     return size;
 }
 
-
-/******************************************************
-*
-*       CARLOS:   FUNCIONES NUEVASSSSSSS
-*
-*******************************************************/
-
 template<int m>
-bool lex_less_X1lessXn(const Monomial<m>& e1, const Monomial<m>& e2) {
-    return (e1.lex_less(e2));
-}
-
-template<int m>
-bool lex_less_X1greaterXn(const Monomial<m>& e1, const Monomial<m>& e2) {
-    return (e1.lex_less2(e2));
-}
-
-template<int m>
-bool grlex_less(const Monomial<m>& e1, const Monomial<m>& e2) {
+bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.grlex_less(e2));
 }
-
-
-
-
-
-
-
-
-
-
 
 template<typename F>
 void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
@@ -296,14 +276,13 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 }
 
 template<typename F>
-void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
+void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int up_to_column) {
     const int m = M.size() - 1 ;
-    const int n = M[0].size() ;
     F lambda ;
     int j = 0 ;
 
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < n) {
+        while (M[i][j] == 0 && j < up_to_column) {
             if (M[m][j] != 0) {
                 insertBefore(M, i, m);
                 insertBefore(Id, i, m);
@@ -312,7 +291,7 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id) {
             j++;
         }
         lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < n; k++)
+        for (int k = j; k < up_to_column; k++)
             M[m][k] = M[m][k] + lambda * M[i][k];
         for (int k = 0; k < Id[0].size(); k++)
             Id[m][k] = Id[m][k] + lambda * Id[i][k];
@@ -387,13 +366,24 @@ void printPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
 }
 
 template<typename F, int m>
-vector< Monomial<m> > get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
-    vector< Monomial<m> > poly;
+MultivarPolynomial<F,m> get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
+    MultivarPolynomial<F,m> poly;
     int n = idMatrix.size()-1;
     for (int i = 0; i < idMatrix[0].size(); i++) {
-        if(idMatrix[n][i] != (F)0) poly.push_back(idColumn[i]);
+        if(idMatrix[n][i] != (F)0) poly.add_term(idColumn[i], idMatrix[n][i]);
     }
     return poly;
+}
+
+template<typename F>
+bool isZeroRow (vector< vector<F> >& matrix, int up_to_column) {
+    int lastRow = matrix.size()-1;
+    F zero(0);
+    for (int i=0; i<up_to_column; i++) {
+        if (matrix[lastRow][i] != zero)
+            return false;
+    }
+    return true;
 }
 
 
@@ -425,27 +415,46 @@ void MultiDimArray<F,m>::RST() {
 
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
 
-
-//    Aquí sería añadir unos if-else para correr el sort con el
-//    orden de monomios que se identifique con el string que hablamos
-//    que se le pasa al constructor.
-    sort(exponentsColumn.begin(), exponentsColumn.end(), lex_less_X1lessXn<m>);
-
-
-
+    sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
 
     auto it_period = exponentsColumn.rbegin();
     while (!it_period->equal(e_period))
         it_period++;
+
+    auto it_skipped = skipped_monomials.rbegin()-1;
     for (auto e = it_period; e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period))
+        if (e->leq_d(e_period)) {
             exponentsRow.push_front(*e);
+            it_skipped++;
+        }
+        else
+            *it_skipped += 1;
     }
+
+//    cout << endl << endl << "Skipped: ";
+//    for (auto x : skipped_monomials) cout << x << " ";
+//    cout << endl;
+//
+//
+//    for (auto i : exponentsRow) {
+//        for (auto j : exponentsColumn) {
+//            cout << i + j << "\t";
+//        }
+//        cout << endl;
+//    }
+//    cout << endl;
+
+
+
+
+
+
 
     vector< vector<F> > matrix, idMatrix;
     vector< vector <Monomial<m> > > basis;
     Monomial<m> alpha;
-    int up_to_column = exponentsColumn.size();
+    int up_to_column = exponentsColumn.size()+1;
+    int iteration = 0;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
 
@@ -462,8 +471,8 @@ void MultiDimArray<F,m>::RST() {
 //        printMatrix(matrix);
 //        cout << endl;
 //        printMatrix(idMatrix);
-
-        reduce(matrix, idMatrix);
+        up_to_column = up_to_column-1-skipped_monomials[iteration];
+        reduce(matrix, idMatrix, up_to_column);
 
 //        cout << "\nAFTER REDUCE:" << endl;
 //        printMatrix(matrix);
@@ -473,12 +482,11 @@ void MultiDimArray<F,m>::RST() {
 
 
 
-        vector<F> zeroRow(matrix[0].size(), (F)0);
 
-        if (matrix[matrix.size()-1] == zeroRow) {
+        if (isZeroRow(matrix, up_to_column)) {
             lead_monomials.push_back(alpha);
             printPoly(idMatrix, idColumn);
-            basis.push_back(get_polynomial(idMatrix, idColumn));
+            grobner_basis.push_back(get_polynomial(idMatrix, idColumn));
             matrix.pop_back();
             idMatrix.pop_back();
 
@@ -496,6 +504,7 @@ void MultiDimArray<F,m>::RST() {
             exponentsRow.pop_front();
             delta_size++;
         }
+        iteration++;
 //        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 //
@@ -508,5 +517,4 @@ void MultiDimArray<F,m>::RST() {
 //        printStars(poly, period);
 //        cout << endl;
 //    }
-
 }
