@@ -11,7 +11,7 @@ MultiDimArray.o: MultiDimArray.cpp MultivarPolynomial.o
 	$(CXX) $(CXXFLAGS) -c MultiDimArray.cpp
 
 MultivarPolynomial.o: MultivarPolynomial.cpp Monomial.o
-    $(CXX) $(CXXFLAGS) -c MultivarPolynomial.cpp
+	$(CXX) $(CXXFLAGS) -c MultivarPolynomial.cpp
 
 Monomial.o: Monomial.cpp
 	$(CXX) $(CXXFLAGS) -c Monomial.cpp
