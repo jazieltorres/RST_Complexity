@@ -11,8 +11,6 @@ using namespace std;
 *******************************************************/
 
 int main() {
-    cout << "Aqui" << endl;
-
     NTL::ZZ p(11);
     NTL::ZZ_p::init(p);
 
