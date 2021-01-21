@@ -27,8 +27,7 @@ int main() {
     array.RST();
 
     cout << "Period vector: " << array.period_vector() << endl;
-
-    cout << "Delta: " << array.normalized_complexity() << endl;
+    cout << "Normalized complexity: " << array.normalized_complexity() << endl;
 
     array.draw_lead_monomials();
 

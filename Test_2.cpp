@@ -28,5 +28,6 @@ int main() {
     MultiDimArray<F,m> array(A);
     array.RST();
     cout << "Complexity: " << array.complexity() << endl;
+
     return 0;
 }

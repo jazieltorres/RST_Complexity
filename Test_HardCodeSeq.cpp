@@ -114,7 +114,7 @@ int main() {
     if (!satisfied) {
         cout << "CONJECTURE FAILED." << endl;
         cout << "Expected complexity:\t" << expected;
-        cout << "Expected normalized:\t" << static_cast<double>(expected)/A.size() << endl;
+        cout << "Expected normalized:\t" << static_cast<double>(expected)/A.period_size() << endl;
     }
     else {
         cout << "Conjecture satisfied" << endl;
