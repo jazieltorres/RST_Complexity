@@ -24,7 +24,7 @@
 using namespace std;
 
 int main() {
-    const unsigned int dim = 1;
+    const unsigned int dim = 2;
     int prime;
     string line;
     istringstream ss;
@@ -128,8 +128,6 @@ int main() {
     Array.RST();
     cout << "Complexity: " << Array.complexity() << endl;
     cout << "Normalized Complexity" << Array.normalized_complexity() << endl;
+    Array.print_basis();
     return 0;
 }
-
-
-
