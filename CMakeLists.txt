@@ -7,7 +7,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -pthread")
 include_directories(.)
 
 add_executable(RST
-        main.cpp Functions.cpp Functions.h)
+        Test_1.cpp Functions.cpp Functions.h)
 
 include_directories(/usr/local/Cellar/ntl/11.4.3/include)
 link_directories(/usr/local/Cellar/ntl/11.4.3/lib)

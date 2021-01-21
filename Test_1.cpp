@@ -28,6 +28,7 @@ int main() {
     cout << "Normalized complexity: " << array.normalized_complexity() << endl;
 
     array.draw_lead_monomials();
+    array.print_basis();
 
     return 0;
 }
