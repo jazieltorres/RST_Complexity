@@ -5,7 +5,6 @@
 #include <vector>
 #include <string>
 #include <forward_list>
-//#include "Monomial.cpp"
 #include "MultivarPolynomial.cpp"
 #include <algorithm> //sort
 using namespace std;
