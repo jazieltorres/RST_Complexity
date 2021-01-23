@@ -2,6 +2,7 @@
 #define MULTIDIMARRAY_H
 
 #include <iostream>
+#include <functional>
 #include <vector>
 #include <string>
 #include <forward_list>
