@@ -22,10 +22,11 @@ int main() {
         (F) 1, (F) 8;
     MultiDimArray<F, m> array(A);
 
-    array.RST_ladder();
+    array.RST(1);
 
     cout << "Period vector: " << array.period_vector() << endl;
     cout << "Normalized complexity: " << array.normalized_complexity() << endl;
+    cout << array.ordering_used() << endl;
 
     array.draw_lead_monomials();
     array.print_basis();

@@ -54,6 +54,7 @@ int main() {
 //    PolynomialSeq shift_seq(p_shift, root, 2, 3);
     ExpQuadraticSeq shift_seq(p_shift, root, coeff);
 
+
 /******************************************************
 * Printing the sequences
 *******************************************************/
@@ -64,6 +65,7 @@ int main() {
     cout << "Shift sequence:\n\t";
     for (int i = 0; i < p_shift - 1; i++) cout << shift_seq(i) << " ";
     cout << endl << endl;
+
 
 /******************************************************
 * Creating the array
@@ -76,7 +78,7 @@ int main() {
 *******************************************************/
     cout << "Computing the complexity" << endl;
     auto start = chrono::high_resolution_clock::now();
-    A.RST_ladder();
+    A.RST();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
     cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
