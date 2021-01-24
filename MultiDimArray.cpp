@@ -19,6 +19,10 @@ private:
     vector< MultivarPolynomial<F,m> > grobner_basis;
     int size;
     int delta_size;
+    int ordering_number;
+    void RST_general(int);
+    void RST_optimized(int);
+
 
 public:
 //  Constructor: receives a blitz array of dimension m, with entries in F.
@@ -39,6 +43,7 @@ public:
     double normalized_complexity();
     int period_size();
     blitz::TinyVector<int, m> period_vector();
+    string ordering_used();
 
 
     void set_at(const blitz::TinyVector<int,m>&, F&);
@@ -47,8 +52,7 @@ public:
     void draw_lead_monomials();
 
 //  Rubio-Sweedler-Taylor algorithm for computing the linear complexity
-    void RST();
-    void RST_optimized();
+    void RST(int ordering = 1);
 } ;
 
 #endif
@@ -72,7 +76,7 @@ MultiDimArray<F,m>::MultiDimArray(blitz::Array<F,m>& array){
         size = size * period[i];
     }
     delta_size = -1;
-
+    ordering_number = 0;
 }
 
 //  Constructor: receives period vector and resizes array
@@ -85,6 +89,7 @@ MultiDimArray<F,m>::MultiDimArray(const blitz::TinyVector<int,m>& period_vector)
         size = size * period[i];
     }
     delta_size = -1;
+    ordering_number = 0;
 }
 
 
@@ -100,6 +105,7 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
         A.resize(period);
         size = n1*n2;
         delta_size = -1;
+        ordering_number = 0;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -126,6 +132,7 @@ MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int
         A.resize(period);
         size = n1*n2;
         delta_size = -1;
+        ordering_number = 0;
         blitz::TinyVector<int, 2> index;
         for (int i = 0; i < n1; i++) {
             for (int j = 0; j < n2; j++) {
@@ -154,7 +161,7 @@ int MultiDimArray<F,m>::dimension() {
 template <typename F, int m>
 int MultiDimArray<F,m>::complexity() {
     if (delta_size == -1) {
-        this->RST();
+        this->RST_optimized(1);
         return delta_size;
     }
     else
@@ -164,7 +171,7 @@ int MultiDimArray<F,m>::complexity() {
 template <typename F, int m>
 double MultiDimArray<F,m>::normalized_complexity() {
     if (delta_size == -1) {
-        this->RST();
+        this->RST_optimized(1);
         return static_cast<double>(delta_size)/size;
     }
     else
@@ -179,6 +186,40 @@ int MultiDimArray<F,m>::period_size() {
 template <typename F, int m>
 blitz::TinyVector<int, m> MultiDimArray<F,m>::period_vector() {
     return period;
+}
+
+template <typename F, int m>
+string MultiDimArray<F,m>::ordering_used() {
+    if (m == 1)
+        return "The only monomial ordering in F[X]";
+    switch (ordering_number) {
+        case 1 :
+            if (m == 2)       return "Graded lexicographic X > Y.";
+            else if (m == 3)  return "Graded lexicographic X > Y > Z.";
+            else              return "Graded lexicographic X1 > X2 > ... > Xn.";
+        case 2 :
+            if (m == 2)       return "Graded lexicographic X < Y.";
+            else if (m == 3)  return "Graded lexicographic X < Y < Z.";
+            else              return "Graded lexicographic X1 < X2 < ... < Xn.";
+        case 3 :
+            if (m == 2)       return "Lexicographic X > Y.";
+            else if (m == 3)  return "Lexicographic X > Y > Z.";
+            else              return "Lexicographic X1 > X2 > ... > Xn.";
+        case 4:
+            if (m == 2)       return "Lexicographic X < Y.";
+            else if (m == 3)  return "Lexicographic X < Y < Z.";
+            else              return "Lexicographic X1 < X2 < ... < Xn.";
+        case 5 :
+            if (m == 2)       return "Graded lexicographic X > Y.";
+            else if (m == 3)  return "Graded lexicographic X > Y > Z.";
+            else              return "Graded lexicographic X1 > X2 > ... > Xn.";
+        case 6 :
+            if (m == 2)       return "Graded lexicographic X < Y.";
+            else if (m == 3)  return "Graded lexicographic X < Y < Z.";
+            else              return "Graded lexicographic X1 < X2 < ... < Xn.";
+        default:
+            return "No ordering used yet.";
+    }
 }
 
 
@@ -262,11 +303,6 @@ int sizeOfDivisors(const Monomial<m> e) {
         size = size * (x + 1);
     }
     return size;
-}
-
-template<int m>
-bool comp(const Monomial<m>& e1, const Monomial<m>& e2) {
-    return (e1.grlex_less(e2));
 }
 
 template<typename F>
@@ -387,15 +423,47 @@ bool isZeroRow (vector< vector<F> >& matrix, int column_bound) {
     return true;
 }
 
+/******************************************************
+*
+*               MONOMIAL ORDERINGS
+*
+*******************************************************/
+// Graded lexicographic X1 > X2 > ... > Xn
+template<int m>
+bool ordering_1(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.grlex_less(e2));
+}
+
+// Graded lexicographic X1 < X2 < ... < Xn
+template<int m>
+bool ordering_2(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.grlex_less(e2));
+}
+
+// Lexicographic with X1 > X2 > ... > Xn
+template<int m>
+bool ordering_3(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.lex_less(e2));
+}
+
+// Lexicographic with X1 < X2 < ... < Xn
+template<int m>
+bool ordering_4(const Monomial<m>& e1, const Monomial<m>& e2) {
+    return (e1.lex_less2(e2));
+}
+
 
 /******************************************************
 *
-*       THE ONE AND ONLY: RST
+*             THE ONE AND ONLY: RST
 *
 *******************************************************/
 template<typename F, int m>
-void MultiDimArray<F,m>::RST() {
+void MultiDimArray<F,m>::RST_general(int ordering) {
     delta_size = 0;
+    lead_monomials.empty();
+    grobner_basis.empty();
+
     Monomial<m>  alpha; //dummy container
     Monomial<m>  e_period(period);
     Monomial<m>  bound;
@@ -408,8 +476,30 @@ void MultiDimArray<F,m>::RST() {
     forward_list< Monomial<m> >  exponentsRow;
 
     int index = 0;
-    generateDivisors<m>(m, index, exp, bound, exponentsColumn);
-    sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
+    generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
+
+    switch (ordering) {
+        case 3 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_3<m>);
+            break;
+        case 4 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_4<m>);
+            break;
+        case 5 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
+            break;
+        case 6 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
+            break;
+        default:
+            cerr << "Invalid ordering argument in RST." << endl;
+            delta_size = -1;
+            return;
+    }
+
+    for (auto e : exponentsColumn) cout << e << " ";
+    cout << endl;
+
     for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
         if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
     }
@@ -446,8 +536,11 @@ void MultiDimArray<F,m>::RST() {
 *
 *******************************************************/
 template<typename F, int m>
-void MultiDimArray<F,m>::RST_optimized() {
+void MultiDimArray<F,m>::RST_optimized(int ordering) {
     delta_size = 0;
+    lead_monomials.empty();
+    grobner_basis.empty();
+
     Monomial<m>  alpha; //dummy container
     Monomial<m>  e_period(period);
     Monomial<m>  bound;
@@ -461,8 +554,20 @@ void MultiDimArray<F,m>::RST_optimized() {
 
     int index = 0;
     generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
-    sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
-    
+
+    switch (ordering) {
+        case 1 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
+            break;
+        case 2 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
+            break;
+        default:
+            cerr << "Invalid ordering argument in RST." << endl;
+            delta_size = -1;
+            return;
+    }
+
 //    After each iteration using grlex, we have to check up to (1 + the number of monomials that are in 
 //    exponentColumn but are jumped in exponentRow) less in row reduction.
 //    Hence, we count the number of monomials that are jumped and, in the same loop, fill the list
@@ -522,4 +627,31 @@ void MultiDimArray<F,m>::RST_optimized() {
 //        printStars(poly, period);
 //        cout << endl;
 //    }
+}
+
+
+/****************************************************************************
+*
+*           RST GATEWAY FUNCTION
+*
+* Calls RST with respect to a monomial ordering:
+*   1. Graded lexicographic X1 > X2 > ... > Xn with ladder optimization
+*   2. Graded lexicographic X1 < X2 < ... < Xn with ladder optimization
+*   3. Lexicographic X1 > X2 > ... > Xn
+*   4. Lexicographic X1 < X2 < ... < Xn
+*   5. Graded lexicographic X1 > X2 > ... > Xn
+*   6. Graded lexicographic X1 < X2 < ... < Xn
+****************************************************************************/
+template<typename F, int m>
+void MultiDimArray<F,m>::RST(int ordering) {
+    if (ordering < 1 or ordering > 6) {
+        cerr << "Invalid argument." << endl;
+        return;
+    }
+    ordering_number = ordering;
+    if (ordering <= 2)
+        RST_optimized(ordering);
+    else if (ordering <= 6)
+        RST_general(ordering);
+
 }
