@@ -31,9 +31,10 @@ class Monomial {
         bool equal(const Monomial&) const ;
 
         // MONOMIAL COMPARISONS
-        bool lex_less(const Monomial&) const ; // compare by lex X<Y
-        bool lex_less2(const Monomial&) const ; // compare by lex Y<X
-        bool grlex_less(const Monomial&) const ; // compare by graded lex
+        bool lex_less(const Monomial&) const ; // compare by lex X1 > X2 > ... > Xn
+        bool lex_less2(const Monomial&) const ; // compare by lex X1 < X2 < ... < Xn
+        bool grlex_less(const Monomial&) const ; // compare by graded lex with lex_less
+        bool grlex_less2(const Monomial&) const ; // compare by graded lex with lex_less2
         bool leq_d(const Monomial&) const ; // compare by divisibility
 
         // Overload << to print vector of exponents
@@ -126,13 +127,13 @@ bool Monomial<m>::equal(const Monomial<m>& e) const {
 *
 *******************************************************/
 
-// lexicographic (lex) X<Y
+// Lexicographic (lex) with X1 > X2 > ... > Xn
 template <int m>
 bool Monomial<m>::lex_less(const Monomial<m>& e) const {
     return lexicographical_compare(exp.begin(), exp.end(), e.exponent().begin(), e.exponent().end());
 }
 
-//
+// Lexicographic (lex) with X1 < X2 < ... < Xn
 template <int m>
 bool Monomial<m>::lex_less2(const Monomial<m>& e) const {
     auto first1 = exp.end()-1;
@@ -148,7 +149,7 @@ bool Monomial<m>::lex_less2(const Monomial<m>& e) const {
     return (first2!=last2);
 }
 
-// graded lexicographic (grlex)
+// Graded lexicographic (grlex) with X1 > X2 > ... > Xn
 template <int m>
 bool Monomial<m>::grlex_less(const Monomial<m>& e) const {
     int sum1 = sum(exp) ;
@@ -158,7 +159,17 @@ bool Monomial<m>::grlex_less(const Monomial<m>& e) const {
     else return lex_less(e);
 }
 
-// divisibility
+// Graded lexicographic (grlex) with X1 < X2 < ... < Xn
+template <int m>
+bool Monomial<m>::grlex_less2(const Monomial<m>& e) const {
+    int sum1 = sum(exp) ;
+    int sum2 = sum(e.exponent()) ;
+    if (sum1 > sum2) return false;
+    else if (sum1 < sum2) return true;
+    else return lex_less2(e);
+}
+
+// Divisibility partial ordering
 template <int m>
 bool Monomial<m>::leq_d(const Monomial<m>& e) const {
     for(int i = 0; i < exp.length(); i++) {
