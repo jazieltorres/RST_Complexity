@@ -1,18 +1,19 @@
 
-#ifndef RST_FUNCTIONS_H
-#define RST_FUNCTIONS_H
+#ifndef RST_SEQUENCES_H
+#define RST_SEQUENCES_H
 
 #include <vector>
 #include "NTL/ZZ_p.h"
 #include <string>
+#include <iostream>
 
 using namespace std;
 
 /******************************************************
-*
-*       CHECKS
-*
-*******************************************************/
+ *
+ *       CHECKS
+ *
+ ******************************************************/
 
 bool isQuadratic(const int& n, const int& p);
 bool isPrime(int& n);
@@ -22,10 +23,10 @@ bool isCostas(vector<int>& shift);
 
 
 /******************************************************
-*
-*       MISCELLANY
-*
-*******************************************************/
+ *
+ *       MISCELLANY
+ *
+ ******************************************************/
 
 unsigned int readDim();
 bool compare(vector<int>& v1, vector<int>& v2);
@@ -37,10 +38,10 @@ string satisfied_conjecture(int& d, int& conj);
 
 
 /******************************************************
-*
-*       SEQUENCES
-*
-*******************************************************/
+ *
+ *       SEQUENCES
+ *
+ ******************************************************/
 
 
 struct MSeq {
@@ -164,4 +165,4 @@ void printSeq(Func func1, int period){
 int LogRootSeq(int i);
 int noShiftFunc(const int& i);
 
-#endif //RST_FUNCTIONS_H
+#endif //RST_SEQUENCES_H

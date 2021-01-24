@@ -1,8 +1,4 @@
-//
-// Created by Jaziel Torres Fuentes on 8/3/20.
-//
-
-#include "Functions.h"
+#include "Sequences.h"
 #include <iostream>
 #include <vector>
 #include <algorithm>

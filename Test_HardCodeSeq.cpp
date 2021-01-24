@@ -7,7 +7,7 @@
 ******************************************************************************************/
 
 #include "MultiDimArray.cpp"
-#include "Functions.h"
+#include "Sequences.h"
 #include "NTL/ZZ_p.h"
 #include <chrono>
 #include <iostream>
