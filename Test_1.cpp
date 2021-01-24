@@ -19,10 +19,10 @@ int main() {
 
     blitz::Array<F, m> A(2, 2);
     A = (F) 3, (F) 10,
-            (F) 1, (F) 8;
+        (F) 1, (F) 8;
     MultiDimArray<F, m> array(A);
 
-    array.RST();
+    array.RST_ladder();
 
     cout << "Period vector: " << array.period_vector() << endl;
     cout << "Normalized complexity: " << array.normalized_complexity() << endl;

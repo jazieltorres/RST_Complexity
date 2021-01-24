@@ -26,7 +26,7 @@ int main() {
         (F)1, (F)0, (F)1, (F)0, (F)0, (F)0, (F)1;
 
     MultiDimArray<F,m> array(A);
-    array.RST();
+    array.RST_ladder();
     cout << "Complexity: " << array.complexity() << endl;
 
     return 0;

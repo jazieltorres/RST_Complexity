@@ -76,7 +76,7 @@ int main() {
 *******************************************************/
     cout << "Computing the complexity" << endl;
     auto start = chrono::high_resolution_clock::now();
-    A.RST();
+    A.RST_ladder();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
     cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
@@ -117,8 +117,10 @@ int main() {
         cout << "Expected normalized:\t" << static_cast<double>(expected)/A.period_size() << endl;
     }
     else {
-        cout << "Conjecture satisfied" << endl;
+        cout << "Conjecture satisfied" << endl << endl;
     }
 
+    cout << "Grobner basis:" << endl;
+    A.print_basis();
     return 0;
 }
