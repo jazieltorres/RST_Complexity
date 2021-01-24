@@ -1,3 +1,14 @@
+/******************************************************************************************
+*
+*               CLASS FOR MULTIVARIATE POLYNOMIALS
+*
+* This class is used to store the polynomials in the Grobner basis of the ideal of
+* polynomials satisfying the recurrence relation in the multidimensional array.
+*
+* The class assumes the monomials are added in ascending order, with respect to some
+* monomial ordering. That is, coefficient[0] contains the constant term.
+******************************************************************************************/
+
 #ifndef RST_MULTIVARPOLYNOMIAL_H
 #define RST_MULTIVARPOLYNOMIAL_H
 #include "Monomial.cpp"
@@ -33,54 +44,38 @@ void MultivarPolynomial<F,m>::add_term(Monomial<m> exponent, F coefficient) {
 
 template <typename F, int m>
 void MultivarPolynomial<F,m>::print() {
-    if(m == 1) {
-        for(int i=0; i<length-1; i++) {
-            if (coefficients[i] != (F)1)
-                cout << coefficients[i];
-            cout << "X^{" << exponents[i] << "} + ";
-        }
-        if (coefficients[length-1] != (F)1)
-            cout << coefficients[length-1];
-        cout << "X^{" << exponents[length-1] << "} + ";
+    if(length == 0) {
+        cout << "Empty polynomial." << endl;
+        return;
     }
-    else if (m == 2) {
-        for (int i=0; i<length-1; i++) {
-            if (coefficients[i] != (F)1)
-                cout << coefficients[i];
-            if (exponents[i].exponent()[0] != 0)
-                cout << "X^{" << exponents[i].exponent()[0] << "}";
-            if (exponents[i].exponent()[1] != 0)
-                cout << "Y^{" << exponents[i].exponent()[1] << "}";
-            cout << " + ";
+
+    if (m<4) {
+//        Verifying if polynomial has constant term
+        bool constant_term = true;
+        for (int i=0; i<m; i++){
+            if (exponents[0].exponent()[i] != 0)    constant_term = false;
         }
-        if (coefficients[length-1] != (F)1)
-            cout << coefficients[length-1];
-        if (exponents[length-1].exponent()[0] != 0)
-            cout << "X^{" << exponents[length-1].exponent()[0] << "}";
-        if (exponents[length-1].exponent()[1] != 0)
-            cout << "Y^{" << exponents[length-1].exponent()[1] << "}";
-        cout << endl;
-    }
-    else if (m == 3) {
-        for (int i=0; i<length-1; i++) {
-            if (coefficients[i] != (F)1)
-                cout << coefficients[i];
-            if (exponents[i].exponent()[0] != 0)
-                cout << "X^{" << exponents[i].exponent()[0] << "}";
-            if (exponents[i].exponent()[1] != 0)
-                cout << "Y^{" << exponents[i].exponent()[1] << "}";
-            if (exponents[i].exponent()[2] != 0)
-                cout << "Z^{" << exponents[i].exponent()[2] << "}";
-            cout << " + ";
+//        Printing constant term (if there is one)
+        if (constant_term)  {
+            cout << coefficients[0];
+            if (length > 1) cout << " + ";
         }
-        if (coefficients[length-1] != (F)1)
-            cout << coefficients[length-1];
-        if (exponents[length-1].exponent()[0] != 0)
-            cout << "X^{" << exponents[length-1].exponent()[0] << "}";
-        if (exponents[length-1].exponent()[1] != 0)
-            cout << "Y^{" << exponents[length-1].exponent()[1] << "}";
-        if (exponents[length-1].exponent()[2] != 0)
-            cout << "Z^{" << exponents[length-1].exponent()[2] << "}";
+
+
+        char variables[] = {'X', 'Y', 'Z'};
+//        if no constant term, start from 0, otherwise, start from 1
+        for (int i = constant_term; i < length; i++) {
+            if (coefficients[i] != (F) 1)   cout << coefficients[i];
+            for (int j = 0; j < m; j++) {
+                int power = exponents[i].exponent()[j];
+                if (power != 0) {
+                    cout << variables[j];
+                    if (power != 1)
+                        cout << "^{" << power << "}";
+                }
+            }
+            if (i != length - 1)   cout << " + ";
+        }
         cout << endl;
     }
     else {
