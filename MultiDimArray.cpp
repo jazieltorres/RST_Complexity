@@ -48,6 +48,7 @@ public:
 
 //  Rubio-Sweedler-Taylor algorithm for computing the linear complexity
     void RST();
+    void RST_optimized();
 } ;
 
 #endif
@@ -276,13 +277,13 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 }
 
 template<typename F>
-void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int up_to_column) {
+void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int column_bound) {
     const int m = M.size() - 1 ;
     F lambda ;
     int j = 0 ;
 
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < up_to_column) {
+        while (M[i][j] == 0 && j < column_bound) {
             if (M[m][j] != 0) {
                 insertBefore(M, i, m);
                 insertBefore(Id, i, m);
@@ -291,7 +292,7 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int up_to_column) {
             j++;
         }
         lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < up_to_column; k++)
+        for (int k = j; k < column_bound; k++)
             M[m][k] = M[m][k] + lambda * M[i][k];
         for (int k = 0; k < Id[0].size(); k++)
             Id[m][k] = Id[m][k] + lambda * Id[i][k];
@@ -328,25 +329,25 @@ vector<F> rowPiAlpha(const Monomial<m>& alpha, const blitz::Array<F,m>& A,
 }
 
 template<typename F>
-void addDimension(vector< vector<F> >& idMatrix) {
+void addDimension(vector< vector<F> >& id_matrix) {
     int n, m;
-    m = idMatrix.size();
+    m = id_matrix.size();
     if (m == 0) {
         n = 0;
     }
     else {
-        n = idMatrix[0].size();
+        n = id_matrix[0].size();
     }
 
     vector<F> lastRow(n+1, (F)0);
     lastRow[n] = (F)1;
     for (int i = 0; i < m ; i++){
-        idMatrix[i].push_back((F)0);
+        id_matrix[i].push_back((F)0);
     }
-    idMatrix.push_back(lastRow);
+    id_matrix.push_back(lastRow);
 }
 
-// Functor used in exponentsRow.remove_if for removing all the multiples of alpha
+// Functor used in exponentsRow.remove_if() for removing all the multiples of alpha
 template<int m>
 struct isMultiple {
     Monomial<m> alpha;
@@ -357,36 +358,34 @@ struct isMultiple {
 };
 
 template<typename F, int m>
-void printPoly(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
-    int n = idMatrix.size()-1;
-    for (int i = 0; i < idMatrix[0].size(); i++) {
-        if(idMatrix[n][i] != (F)0) cout << idMatrix[n][i] << "x" << idColumn[i] << "\t";
+void printPoly(vector< vector<F> >& id_matrix, vector< Monomial<m> >& id_column) {
+    int n = id_matrix.size()-1;
+    for (int i = 0; i < id_matrix[0].size(); i++) {
+        if(id_matrix[n][i] != (F)0) cout << id_matrix[n][i] << "x" << id_column[i] << "\t";
     }
     cout << endl;
 }
 
 template<typename F, int m>
-MultivarPolynomial<F,m> get_polynomial(vector< vector<F> >& idMatrix, vector< Monomial<m> >& idColumn) {
+MultivarPolynomial<F,m> get_polynomial(vector< vector<F> >& id_matrix, vector< Monomial<m> >& id_column) {
     MultivarPolynomial<F,m> poly;
-    int n = idMatrix.size()-1;
-    for (int i = 0; i < idMatrix[0].size(); i++) {
-        if(idMatrix[n][i] != (F)0) poly.add_term(idColumn[i], idMatrix[n][i]);
+    int n = id_matrix.size()-1;
+    for (int i = 0; i < id_matrix[0].size(); i++) {
+        if(id_matrix[n][i] != (F)0) poly.add_term(id_column[i], id_matrix[n][i]);
     }
     return poly;
 }
 
 template<typename F>
-bool isZeroRow (vector< vector<F> >& matrix, int up_to_column) {
+bool isZeroRow (vector< vector<F> >& matrix, int column_bound) {
     int lastRow = matrix.size()-1;
     F zero(0);
-    for (int i=0; i<up_to_column; i++) {
+    for (int i=0; i<column_bound; i++) {
         if (matrix[lastRow][i] != zero)
             return false;
     }
     return true;
 }
-
-
 
 
 /******************************************************
@@ -397,31 +396,86 @@ bool isZeroRow (vector< vector<F> >& matrix, int up_to_column) {
 template<typename F, int m>
 void MultiDimArray<F,m>::RST() {
     delta_size = 0;
-
-    Monomial<m> bound;
+    Monomial<m>  alpha; //dummy container
+    Monomial<m>  e_period(period);
+    Monomial<m>  bound;
     for (int i = 0; i < m; i++) {
         bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound)),
-                            idColumn;
-    forward_list< Monomial<m> > exponentsRow;
-
+    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound));
+    vector< Monomial<m> >  id_column;
+    forward_list< Monomial<m> >  exponentsRow;
 
     int index = 0;
-    Monomial<m> exp;
-    Monomial<m> e_period(period);
-    vector<int> skipped_monomials(sizeOfDivisors(e_period), 0);
-
     generateDivisors<m>(m, index, exp, bound, exponentsColumn);
-
     sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
+    for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
+        if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
+    }
 
+    vector< vector<F> >  matrix;
+    vector< vector<F> >  id_matrix;
+    vector< vector <Monomial<m> > >  basis;
+    while (!exponentsRow.empty()) {
+        alpha = exponentsRow.front();
+        matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
+        addDimension(id_matrix);
+        id_column.push_back(alpha);
+        reduce(matrix, id_matrix, exponentsColumn.size());
+        if (isZeroRow(matrix, exponentsColumn.size())) {
+            lead_monomials.push_back(alpha);
+//            printPoly(id_matrix, id_column);
+            grobner_basis.push_back(get_polynomial(id_matrix, id_column));
+            matrix.pop_back();
+            id_matrix.pop_back();
+            exponentsRow.remove_if(isMultiple<m>(alpha));
+        }
+        else {
+            exponentsRow.pop_front();
+            delta_size++;
+        }
+//        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
+    }
+}
+
+
+/******************************************************
+*
+*           RST OPTIMIZED FOR GRLEX
+*
+*******************************************************/
+template<typename F, int m>
+void MultiDimArray<F,m>::RST_optimized() {
+    delta_size = 0;
+    Monomial<m>  alpha; //dummy container
+    Monomial<m>  e_period(period);
+    Monomial<m>  bound;
+    for (int i = 0; i < m; i++) {
+        bound.get_exponent()[i] = 2 * period[i] - 1;
+    }
+
+    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound));
+    vector< Monomial<m> >  id_column;
+    forward_list< Monomial<m> >  exponentsRow;
+
+    int index = 0;
+    generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
+    sort(exponentsColumn.begin(), exponentsColumn.end(), comp<m>);
+    
+//    After each iteration using grlex, we have to check up to (1 + the number of monomials that are in 
+//    exponentColumn but are jumped in exponentRow) less in row reduction.
+//    Hence, we count the number of monomials that are jumped and, in the same loop, fill the list
+//    exponentRow in sorted order.
+
+//    skipped_monomials[i] will contain the number of monomials between exponentRow[i] and 
+//    exponentRow[i+1] (excluding both) that are in exponentColumn.
+    vector<int> skipped_monomials(sizeOfDivisors(e_period), 0);
+    
     auto it_period = exponentsColumn.rbegin();
-    while (!it_period->equal(e_period))
-        it_period++;
-
     auto it_skipped = skipped_monomials.rbegin()-1;
+    while (!it_period->equal(e_period)) //Skip all monomials greater than e_period
+        it_period++;
     for (auto e = it_period; e != exponentsColumn.rend(); e++) {
         if (e->leq_d(e_period)) {
             exponentsRow.push_front(*e);
@@ -431,74 +485,25 @@ void MultiDimArray<F,m>::RST() {
             *it_skipped += 1;
     }
 
-//    cout << endl << endl << "Skipped: ";
-//    for (auto x : skipped_monomials) cout << x << " ";
-//    cout << endl;
-//
-//
-//    for (auto i : exponentsRow) {
-//        for (auto j : exponentsColumn) {
-//            cout << i + j << "\t";
-//        }
-//        cout << endl;
-//    }
-//    cout << endl;
-
-
-
-
-
-
-
-    vector< vector<F> > matrix, idMatrix;
-    vector< vector <Monomial<m> > > basis;
-    Monomial<m> alpha;
-    int up_to_column = exponentsColumn.size()+1;
+    vector< vector<F> >  matrix;
+    vector< vector<F> >  id_matrix;
+    vector< vector <Monomial<m> > >  basis;
+    int column_bound = exponentsColumn.size()+1;
     int iteration = 0;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
-
-//        cout << "ALPHA:\t" << alpha << endl;
-
         matrix.push_back(rowPiAlpha<F,m>(alpha, A, exponentsColumn, e_period));
-        addDimension(idMatrix);
-        idColumn.push_back(alpha);
-
-
-
-
-//        cout << "BEFORE REDUCE:" << endl;
-//        printMatrix(matrix);
-//        cout << endl;
-//        printMatrix(idMatrix);
-        up_to_column = up_to_column-1-skipped_monomials[iteration];
-        reduce(matrix, idMatrix, up_to_column);
-
-//        cout << "\nAFTER REDUCE:" << endl;
-//        printMatrix(matrix);
-//        cout << endl;
-//        printMatrix(idMatrix);
-//        cout << "\n" << endl;
-
-
-
-
-        if (isZeroRow(matrix, up_to_column)) {
+        addDimension(id_matrix);
+        id_column.push_back(alpha);
+        column_bound = column_bound - 1 - skipped_monomials[iteration];
+        reduce(matrix, id_matrix, column_bound);
+        if (isZeroRow(matrix, column_bound)) {
             lead_monomials.push_back(alpha);
-//            printPoly(idMatrix, idColumn);
-            grobner_basis.push_back(get_polynomial(idMatrix, idColumn));
+//            printPoly(id_matrix, id_column);
+            grobner_basis.push_back(get_polynomial(id_matrix, id_column));
             matrix.pop_back();
-            idMatrix.pop_back();
-
-//            cout << "BEFORE REMOVE" << endl;
-//            for (auto i=exponentsRow.begin(); i!=exponentsRow.end(); i++) cout << *i << " ";
-//            cout << endl;
-
+            id_matrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
-
-//            cout << "AFTER REMOVE" << endl;
-//            for (auto i=exponentsRow.begin(); i!=exponentsRow.end(); i++) cout << *i << " ";
-//            cout << endl;
         }
         else {
             exponentsRow.pop_front();
