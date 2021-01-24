@@ -121,7 +121,6 @@ int main() {
     else {
         cout << "Conjecture satisfied" << endl << endl;
     }
-
     cout << "Grobner basis:" << endl;
     A.print_basis();
     return 0;
