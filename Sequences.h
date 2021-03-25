@@ -4,6 +4,7 @@
 
 #include <vector>
 #include "NTL/ZZ_p.h"
+#include "NTL/GF2.h"
 #include <string>
 #include <iostream>
 
@@ -59,13 +60,13 @@ struct LegendreSeq {
     explicit LegendreSeq(int p) {
         mod = p;
     }
-    NTL::ZZ_p operator () (const int& i) const {
+    NTL::GF2 operator () (const int& i) const {
         bool result;
         if ((i % mod) == 0)
             result = false;
         else
             result = isQuadratic(i,mod);
-        return (NTL::ZZ_p) result;
+        return (NTL::GF2) result;
     }
 };
 
@@ -117,8 +118,8 @@ struct LogQuadraticSeq {
 struct ExponentialSeq {
     int mod;
     int root;
-    explicit ExponentialSeq(int m, int r){
-        mod = m; root = r;
+    explicit ExponentialSeq(int mod, int root){
+        this->mod = mod; this->root = root;
     }
     int operator () (const int& i) const {
         return powerMod(root, i, mod);
