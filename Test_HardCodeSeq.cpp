@@ -8,7 +8,8 @@
 
 #include "MultiDimArray.cpp"
 #include "Sequences.h"
-#include "NTL/ZZ_p.h"
+//#include "NTL/ZZ_p.h"
+#include "NTL/GF2.h"
 #include <chrono>
 #include <iostream>
 
@@ -18,9 +19,11 @@ int main() {
 /******************************************************
 * Array with entries in the field F
 *******************************************************/
-    NTL::ZZ p(2);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
+    typedef NTL::GF2 F;
+
+//    NTL::ZZ p(2);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
 
 
 /******************************************************
@@ -32,10 +35,13 @@ int main() {
 /******************************************************
 * Parameters
 *******************************************************/
-    int p_legendre = 11;
+    int p_legendre = 3;
     int p_shift = 11;
-    int root = 2;
-    int coeff = 1; // Coefficient for ExpQuadraticSeq
+    int root = 7;
+
+//    while(!isRoot(root, p_shift)) root++;
+
+    int coeff = 4; // Coefficient for ExpQuadraticSeq
 
 
 /******************************************************
@@ -53,6 +59,8 @@ int main() {
 *******************************************************/
 //    PolynomialSeq shift_seq(p_shift, root, 2, 3);
     ExpQuadraticSeq shift_seq(p_shift, root, coeff);
+//    ExponentialSeq shift_seq(p_shift, root);
+//    vector<int> shift_seq = {1,6,3,5,4,2};
 
 
 /******************************************************
@@ -78,7 +86,7 @@ int main() {
 *******************************************************/
     cout << "Computing the complexity" << endl;
     auto start = chrono::high_resolution_clock::now();
-    A.RST();
+    A.RST(3);
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
     cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
@@ -115,13 +123,21 @@ int main() {
 
     if (!satisfied) {
         cout << "CONJECTURE FAILED." << endl;
-        cout << "Expected complexity:\t" << expected;
+        cout << "Expected complexity:\t" << expected << endl;
         cout << "Expected normalized:\t" << static_cast<double>(expected)/A.period_size() << endl;
     }
     else {
+        expected = A.complexity();
         cout << "Conjecture satisfied" << endl << endl;
     }
     cout << "Grobner basis:" << endl;
     A.print_basis();
+
+/******************************************************
+* This line is for the google sheet:
+*******************************************************/
+//    cout << p_legendre << ',' << p_legendre << ',' << root << ',' << p_legendre << ',' << p_legendre-1 << ','
+//         << A.period_size() << ',' << A.complexity() << ',' << expected << endl;
+
     return 0;
 }
