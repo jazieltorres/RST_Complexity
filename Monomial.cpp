@@ -57,6 +57,8 @@ class Monomial {
 
 template <int m>
 Monomial<m>::Monomial(const vector<int>& e) {
+    if (e.size() != m)
+        cerr << "Vector of incorrect size. Has to be of size " << m << "." << endl;
     for (int i = 0; i < exp.length(); i++) exp[i] = e[i] ;
 }
 
