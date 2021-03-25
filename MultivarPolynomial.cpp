@@ -24,7 +24,9 @@ private:
 public:
     MultivarPolynomial();
     void add_term(Monomial<m>, F coefficient = 1);
+    int terms();
     void print();
+
 };
 
 #endif //RST_MULTIVARPOLYNOMIAL_H
@@ -40,6 +42,11 @@ void MultivarPolynomial<F,m>::add_term(Monomial<m> exponent, F coefficient) {
     coefficients.push_back(coefficient);
     exponents.push_back(exponent);
     length++;
+}
+
+template <typename F, int m>
+int MultivarPolynomial<F,m>::terms() {
+    return length;
 }
 
 template <typename F, int m>
