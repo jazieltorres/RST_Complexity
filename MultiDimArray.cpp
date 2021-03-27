@@ -543,7 +543,7 @@ void MultiDimArray<F,m>::RST_simple() {
             delta_size++;
         }
         iteration++;
-//        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
+        if ((delta_size%100)==0) cerr << "Going through... " << delta_size << endl;
     }
 }
 
