@@ -35,9 +35,9 @@ int main() {
 /******************************************************
 * Parameters
 *******************************************************/
-    int p_legendre = 7;
-    int p_shift = 7;
-    int root = 3;
+    int p_legendre = 97;
+    int p_shift = 97;
+    int root = 5;
 
 //    while(!isRoot(root, p_shift)) root++;
 
