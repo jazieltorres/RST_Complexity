@@ -35,13 +35,13 @@ int main() {
 /******************************************************
 * Parameters
 *******************************************************/
-    int p_legendre = 3;
-    int p_shift = 11;
-    int root = 7;
+    int p_legendre = 7;
+    int p_shift = 7;
+    int root = 3;
 
 //    while(!isRoot(root, p_shift)) root++;
 
-    int coeff = 4; // Coefficient for ExpQuadraticSeq
+    int coeff = 1; // Coefficient for ExpQuadraticSeq
 
 
 /******************************************************
@@ -84,9 +84,9 @@ int main() {
 /******************************************************
 * Computing complexity
 *******************************************************/
-    cout << "Computing the complexity" << endl;
+//    cout << "Computing the complexity" << endl;
     auto start = chrono::high_resolution_clock::now();
-    A.RST(3);
+    A.RST();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
     cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
@@ -130,8 +130,10 @@ int main() {
         expected = A.complexity();
         cout << "Conjecture satisfied" << endl << endl;
     }
-    cout << "Grobner basis:" << endl;
-    A.print_basis();
+//    cout << "Grobner basis:" << endl;
+//    A.print_basis();
+    cout << endl;
+//    A.print_array();
 
 /******************************************************
 * This line is for the google sheet:
