@@ -1,11 +1,11 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -pthread -march=native
 
-Test_HardCodeSeq: Test_HardCodeSeq.o MultiDimArray.o Sequences.o
-	$(CXX) $(CXXFLAGS) -o Test_HardCodeSeq Test_HardCodeSeq.o MultiDimArray.o Sequences.o -lntl -lblitz -lgmp
+main_RationalShift: main_RationalShift.o MultiDimArray.o Sequences.o
+	$(CXX) $(CXXFLAGS) -o main_RationalShift main_RationalShift.o MultiDimArray.o Sequences.o -lntl -lblitz -lgmp
 
-Test_HardCodeSeq.o: Test_HardCodeSeq.cpp MultiDimArray.cpp Sequences.h
-	$(CXX) $(CXXFLAGS) -c Test_HardCodeSeq.cpp
+main_RationalShift.o: main_RationalShift.cpp MultiDimArray.cpp Sequences.h
+	$(CXX) $(CXXFLAGS) -c main_RationalShift.cpp
 
 MultiDimArray.o: MultiDimArray.cpp MultivarPolynomial.o
 	$(CXX) $(CXXFLAGS) -c MultiDimArray.cpp
