@@ -16,8 +16,8 @@ private:
     blitz::Array<F, m> A;
     blitz::TinyVector<int, m> period;
     vector< Monomial<m> > lead_monomials;
-    vector< MultivarPolynomial<F,m> > grobner_basis;
-    int size;
+    vector< MultivarPolynomial<F,m> > groebner_basis;
+    unsigned int size;
     int delta_size;
     int ordering_number;
     void RST_general(int);
@@ -35,7 +35,7 @@ public:
     MultiDimArray(const function<int (int)>&, const function<F (int)>&, int, int);
 
 //  Constructor: same as above but shift sequence is a vector.
-    MultiDimArray(const vector<int>&, const function<F (int)>&, int, int);
+    MultiDimArray(const vector<int>&, F, const function<F (int)>&, int);
 
 //  Getters
     int dimension();
@@ -124,21 +124,25 @@ MultiDimArray<F,m>::MultiDimArray(const function<int(int)>& func1, const functio
 }
 
 
-// Constructor for permutations
+// Constructor for shift_seq as vector
 template <typename F, int m>
-MultiDimArray<F,m>::MultiDimArray(const vector<int>& func1, const function<F(int)>& func2,
-                                  int n1, int n2) {
+MultiDimArray<F,m>::MultiDimArray(const vector<int>& shift_seq, F constant, 
+                                  const function<F(int)>& column_seq, int vertical_period) {
     if (m == 2) {
-        period = n1, n2;
+        int horizontal_period = shift_seq.size();
+        period = horizontal_period, vertical_period;
         A.resize(period);
-        size = n1*n2;
+        size = shift_seq.size() * vertical_period;
         delta_size = -1;
         ordering_number = 0;
         blitz::TinyVector<int, 2> index;
-        for (int i = 0; i < n1; i++) {
-            for (int j = 0; j < n2; j++) {
+        for (int i = 0; i < horizontal_period; i++) {
+            for (int j = 0; j < vertical_period; j++) {
                 index = i, j;
-                A(index) = func2(((j - func1[i]) % n2 + n2) % n2);
+                if (shift_seq[i] != -1) //shift not infinity
+                    A(index) = column_seq(((j - shift_seq[i]) % vertical_period + vertical_period) % vertical_period);
+                else
+                    A(index) = constant;
             }
         }
     }
@@ -250,7 +254,7 @@ void MultiDimArray<F, m>::print_array() {
 
 template <typename F, int m>
 void MultiDimArray<F, m>::print_basis() {
-    for (auto poly : grobner_basis)
+    for (auto poly : groebner_basis)
         poly.print();
 }
 
@@ -487,7 +491,7 @@ template<typename F, int m>
 void MultiDimArray<F,m>::RST_simple() {
     delta_size = 0;
     lead_monomials.empty();
-    grobner_basis.empty();
+    groebner_basis.empty();
 
     Monomial<m> alpha; //dummy container
     Monomial<m> e_period(period);
@@ -556,7 +560,7 @@ template<typename F, int m>
 void MultiDimArray<F,m>::RST_general(int ordering) {
     delta_size = 0;
     lead_monomials.empty();
-    grobner_basis.empty();
+    groebner_basis.empty();
 
     Monomial<m>  alpha; //dummy container
     Monomial<m>  e_period(period);
@@ -607,7 +611,7 @@ void MultiDimArray<F,m>::RST_general(int ordering) {
         if (isZeroRow(matrix, exponentsColumn.size())) {
             lead_monomials.push_back(alpha);
 //            printPoly(id_matrix, id_column);
-            grobner_basis.push_back(get_polynomial(id_matrix, id_column));
+            groebner_basis.push_back(get_polynomial(id_matrix, id_column));
             matrix.pop_back();
             id_matrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
@@ -630,7 +634,7 @@ template<typename F, int m>
 void MultiDimArray<F,m>::RST_optimized(int ordering) {
     delta_size = 0;
     lead_monomials.empty();
-    grobner_basis.empty();
+    groebner_basis.empty();
 
     Monomial<m>  alpha; //dummy container
     Monomial<m>  e_period(period);
@@ -696,7 +700,7 @@ void MultiDimArray<F,m>::RST_optimized(int ordering) {
         if (isZeroRow(matrix, column_bound)) {
             lead_monomials.push_back(alpha);
 //            printPoly(id_matrix, id_column);
-            grobner_basis.push_back(get_polynomial(id_matrix, id_column));
+            groebner_basis.push_back(get_polynomial(id_matrix, id_column));
             matrix.pop_back();
             id_matrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
@@ -713,7 +717,7 @@ void MultiDimArray<F,m>::RST_optimized(int ordering) {
 //    cout << "Leading Monomials " << endl;
 //    printStars(lead_monomials, period);
 //
-//    cout << "\n\n\n Grobner basis" << endl;
+//    cout << "\n\n\n groebner basis" << endl;
 //    for (auto poly : basis) {
 //        printStars(poly, period);
 //        cout << endl;
