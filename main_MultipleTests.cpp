@@ -48,10 +48,10 @@ using namespace std;
 
 int main() {
 /** Change desired field **/
-    NTL::ZZ p(3);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-//    typedef NTL::GF2 F;
+//    NTL::ZZ p(3);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+    typedef NTL::GF2 F;
 
 /** Change desired dimension **/
     const unsigned int dim = 3;
@@ -100,7 +100,7 @@ int main() {
         }
 
         auto start = chrono::high_resolution_clock::now();
-        A.RST();
+        A.RST_simple();
         auto stop = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
         cout << "Duration:  " << duration.count() << " ms" << endl;
