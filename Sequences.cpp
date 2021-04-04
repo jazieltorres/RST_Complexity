@@ -41,6 +41,17 @@ bool isRoot(int& a, int& p) {
     return false;
 }
 
+bool isRoot(long& a, long& p) {
+    int num = a*a;
+    int ord = 1;
+    while (num % p != a) {
+        num = num*a % p;
+        ord++;
+    }
+    if (ord == p-1) return true;
+    return false;
+}
+
 bool isHere(vector<int> differences, int diff){
     for (auto d : differences){
         if (d==diff) return true;
