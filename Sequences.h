@@ -19,6 +19,7 @@ using namespace std;
 bool isQuadratic(const int& n, const int& p);
 bool isPrime(int& n);
 bool isRoot(int& a, int& p);
+bool isRoot(long& a, long& p);
 bool isHere(vector<int> differences, int diff);
 bool isCostas(vector<int>& shift);
 
