@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     LegendreSeq column_seq(vertical_period);
     while (getline(cin, line)) {
         ctr++;
-        cout << "Test " << ctr << " -----------------------------" << endl;
+//        cout << "Test " << ctr << " -----------------------------" << endl;
 //        cout << "Prime " << vertical_period << endl;
         vector<int> shift_seq(horizontal_period);
         istringstream ss(line);
@@ -93,15 +93,15 @@ int main(int argc, char *argv[]) {
         A.RST_simple();
         auto stop = chrono::high_resolution_clock::now();
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-        cout << "Duration:  " << duration.count() << " ms" << endl;
-        cout << "Complexity:  " << A.complexity() << endl;
-        cout << "Period size: " << A.period_size() << endl;
-        cout << "Normalized:  " << A.normalized_complexity() << endl;
+//        cout << "Duration:  " << duration.count() << " ms" << endl;
+//        cout << "Complexity:  " << A.complexity() << endl;
+//        cout << "Period size: " << A.period_size() << endl;
+//        cout << "Normalized:  " << A.normalized_complexity() << endl;
 //        cout << "Groebner Basis:" << endl;
 //        A.print_basis();
-        cout << endl;
+//        cout << endl;
 
-        cerr << A.complexity() << endl;
+        cout << A.complexity() << endl;
     }
 
     return 0;
