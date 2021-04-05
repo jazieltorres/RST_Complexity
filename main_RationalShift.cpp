@@ -80,8 +80,8 @@ int main(int argc, char *argv[]) {
     LegendreSeq column_seq(vertical_period);
     while (getline(cin, line)) {
         ctr++;
-//        cout << "Test " << ctr << " -----------------------------" << endl;
-        cout << "Prime " << vertical_period << endl;
+        cout << "Test " << ctr << " -----------------------------" << endl;
+//        cout << "Prime " << vertical_period << endl;
         vector<int> shift_seq(horizontal_period);
         istringstream ss(line);
         for (int i=0; i<horizontal_period; i++) {
@@ -99,9 +99,9 @@ int main(int argc, char *argv[]) {
         cout << "Normalized:  " << A.normalized_complexity() << endl;
 //        cout << "Groebner Basis:" << endl;
 //        A.print_basis();
-//        cout << endl;
-//        A.print_array();
-        cout << endl << endl;
+        cout << endl;
+
+        cerr << A.complexity() << endl;
     }
 
     return 0;
