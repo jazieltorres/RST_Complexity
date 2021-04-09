@@ -48,13 +48,13 @@ using namespace std;
 
 int main() {
 /** Change desired field **/
-    NTL::ZZ p(3);
-    NTL::ZZ_p::init(p);
-    typedef NTL::ZZ_p F;
-//    typedef NTL::GF2 F;
+//    NTL::ZZ p(3);
+//    NTL::ZZ_p::init(p);
+//    typedef NTL::ZZ_p F;
+    typedef NTL::GF2 F;
 
 /** Change desired dimension **/
-    const unsigned int dim = 3;
+    const unsigned int dim = 2;
 
 /************************************************
  *  Processing first line:
@@ -102,20 +102,20 @@ int main() {
         auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
         auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-        cout << "Duration:  " << duration.count() << " ms" << endl;
-        cout << "Complexity:  " << A.complexity() << endl;
-        cout << "Period size: " << A.period_size() << endl;
-        cout << "Normalized:  " << A.normalized_complexity() << endl;
+//        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+//        cout << "Duration:  " << duration.count() << " ms" << endl;
+//        cout << "Complexity:  " << A.complexity() << endl;
+//        cout << "Period size: " << A.period_size() << endl;
+//        cout << "Normalized:  " << A.normalized_complexity() << endl;
 //        cout << "Groebner Basis:" << endl;
 //        A.print_basis();
 //        cout << endl;
 //        A.print_array();
-        cout << endl << endl;
+//        cout << endl << endl;
 
 
-/**  Print just the complexities **/
-//        cout << A.complexity() << '\t' << A.normalized_complexity() << endl;
+/**  Print just the complexity **/
+        cout << A.complexity() <<  endl;
     }
 
     return 0;
