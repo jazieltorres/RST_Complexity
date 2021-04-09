@@ -135,8 +135,8 @@ int main(int argc, char *argv[]) {
 //        A.print_basis();
 //        cout << endl << endl;
 
-//        cerr << prime << ',' << prime << ',' << root << ',' << 1 << ','
-//             << A.complexity() << ',' << expected << endl;
+        cerr << prime << ',' << prime << ',' << root << ',' << 1 << ','
+             << A.complexity() << ',' << expected << endl;
         prime = NTL::NextPrime(prime+1);
     }
 
