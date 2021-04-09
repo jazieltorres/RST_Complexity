@@ -79,12 +79,12 @@ int main() {
  ************************************************/
     while (getline(cin, line)) { // Skipping line with counter number
         ctr++;
-        cout << "Test " << ctr << " -----------------------------" << endl;
+//        cout << "Test " << ctr << " -----------------------------" << endl;
         // Printing following two lines
         getline(cin, line); // First line of information
-        cout << line << endl;
+//        cout << line << endl;
         getline(cin, line); // Second line of information
-        cout << line << endl;
+//        cout << line << endl;
 
         MultiDimArray<F, dim> A(v);
         for (int i = 0; i < size; i++) {
