@@ -9,7 +9,7 @@
  * This program receives a command line argument: the prime.
  ********************************************************************/
 
-#include "MultiDimArray.cpp"
+#include "MultiDimArray_GF2.cpp"
 #include "Sequences.h"
 #include "NTL/GF2.h"
 #include "NTL/ZZ.h"
@@ -69,7 +69,7 @@ int main(int argc, char *argv[]) {
         up_bound = prime;
     }
 
-    prime = low_bound;
+    prime = NTL::NextPrime(low_bound);
 
     while (prime <= up_bound) {
         LegendreSeq column_seq(prime);
@@ -77,9 +77,10 @@ int main(int argc, char *argv[]) {
         long root = 2;
         while (!isRoot(root, prime))
             root++;
+
         ExpQuadraticSeq shift_seq(prime, root, 1);
 
-        MultiDimArray<F,dim> A(shift_seq, column_seq, prime-1, prime);
+        MultiDimArray_GF2<dim> A(shift_seq, column_seq, prime-1, prime);
 
     /******************************************************
     * Computing complexity
@@ -131,8 +132,11 @@ int main(int argc, char *argv[]) {
             cout << "Conjecture satisfied" << endl << endl;
         }
 
-        cerr << prime << ',' << prime << ',' << root << ',' << 1 << ','
-             << A.complexity() << ',' << expected << endl;
+//        A.print_basis();
+//        cout << endl << endl;
+
+//        cerr << prime << ',' << prime << ',' << root << ',' << 1 << ','
+//             << A.complexity() << ',' << expected << endl;
         prime = NTL::NextPrime(prime+1);
     }
 
