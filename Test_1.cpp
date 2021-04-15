@@ -1,5 +1,7 @@
-#include "MultiDimArray.cpp"
+//#include "MultiDimArray.cpp"
 #include "NTL/ZZ_p.h"
+#include "MultiDimArray_GF2.cpp"
+#include "NTL/GF2.h"
 #include <iostream>
 
 using namespace std;
@@ -11,25 +13,26 @@ using namespace std;
 *******************************************************/
 
 int main() {
-    NTL::ZZ p(11);
-    NTL::ZZ_p::init(p);
+    vector<int> seq = {1,0,0,0,1,1,1,1,0,1,0,0,0,0,1,1,0,1,1,1,1,0,1,0,0,0,1,0,1,0,0};
+    const unsigned int dim = 1;
+    cout << "Length: " << seq.size() << endl;
+    typedef NTL::GF2 F;
+    F zero(0);
+    F one(1);
+    blitz::TinyVector<int,1> v(seq.size());
+    MultiDimArray_GF2<dim> A(v);
+    for (int i=0; i<seq.size(); i++) {
+        blitz::TinyVector<int,1> position(i);
+        if (seq[i] == 1)
+            A.set_at(position, one);
+        else
+            A.set_at(position, zero);
+    }
 
-    typedef NTL::ZZ_p F;
-    const int m = 2;
+    A.RST_simple();
 
-    blitz::Array<F, m> A(2, 2);
-    A = (F) 3, (F) 10,
-        (F) 1, (F) 8;
-    MultiDimArray<F, m> array(A);
-
-    array.RST(1);
-
-    cout << "Period vector: " << array.period_vector() << endl;
-    cout << "Normalized complexity: " << array.normalized_complexity() << endl;
-    cout << array.ordering_used() << endl;
-
-    array.draw_lead_monomials();
-    array.print_basis();
+    cout << endl << endl;
+    cout << A.complexity() << endl;
 
     return 0;
 }
