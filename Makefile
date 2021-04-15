@@ -1,11 +1,11 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -pthread -march=native
 
-Test_1: Test_1.cpp.o MultiDimArray_GF2.o Sequences.o
-	$(CXX) $(CXXFLAGS) -o ExpQuadratic_simple Test_1.cpp.o MultiDimArray_GF2.o Sequences.o -lntl -lblitz -lgmp
+Test_1: Test_1.o MultiDimArray_GF2.o Sequences.o
+	$(CXX) $(CXXFLAGS) -o ExpQuadratic_simple Test_1.o MultiDimArray_GF2.o Sequences.o -lntl -lblitz -lgmp
 
-Test_1.cpp.o: Test_1.cpp.cpp MultiDimArray_GF2.cpp Sequences.h
-	$(CXX) $(CXXFLAGS) -c Test_1.cpp.cpp
+Test_1.o: Test_1.cpp MultiDimArray_GF2.cpp Sequences.h
+	$(CXX) $(CXXFLAGS) -c Test_1.cpp
 
 MultiDimArray_GF2.o: MultiDimArray_GF2.cpp MultivarPolynomial.o
 	$(CXX) $(CXXFLAGS) -c MultiDimArray_GF2.cpp
