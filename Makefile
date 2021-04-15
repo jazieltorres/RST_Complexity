@@ -1,14 +1,14 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -pthread -march=native
 
-ExpQuadratic_simple: main_ExpQuadratic.o MultiDimArray.o Sequences.o
-	$(CXX) $(CXXFLAGS) -o ExpQuadratic_simple main_ExpQuadratic.o MultiDimArray.o Sequences.o -lntl -lblitz -lgmp
+Test_1: Test_1.cpp.o MultiDimArray_GF2.o Sequences.o
+	$(CXX) $(CXXFLAGS) -o ExpQuadratic_simple Test_1.cpp.o MultiDimArray_GF2.o Sequences.o -lntl -lblitz -lgmp
 
-main_ExpQuadratic.o: main_ExpQuadratic.cpp MultiDimArray.cpp Sequences.h
-	$(CXX) $(CXXFLAGS) -c main_ExpQuadratic.cpp
+Test_1.cpp.o: Test_1.cpp.cpp MultiDimArray_GF2.cpp Sequences.h
+	$(CXX) $(CXXFLAGS) -c Test_1.cpp.cpp
 
-MultiDimArray.o: MultiDimArray.cpp MultivarPolynomial.o
-	$(CXX) $(CXXFLAGS) -c MultiDimArray.cpp
+MultiDimArray_GF2.o: MultiDimArray_GF2.cpp MultivarPolynomial.o
+	$(CXX) $(CXXFLAGS) -c MultiDimArray_GF2.cpp
 
 MultivarPolynomial.o: MultivarPolynomial.cpp Monomial.o
 	$(CXX) $(CXXFLAGS) -c MultivarPolynomial.cpp
