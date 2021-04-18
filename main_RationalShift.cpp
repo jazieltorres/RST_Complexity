@@ -88,7 +88,7 @@ int main(int argc, char *argv[]) {
             ss >> shift_seq[i];
         }
 
-        MultiDimArray<dim> A(shift_seq, constant, column_seq, vertical_period);
+        MultiDimArray_GF2<dim> A(shift_seq, constant, column_seq, vertical_period);
 //        auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
 //        auto stop = chrono::high_resolution_clock::now();
