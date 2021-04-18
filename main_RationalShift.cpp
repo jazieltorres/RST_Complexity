@@ -23,7 +23,7 @@
  *          indicating the shift. The value -1 represents infinity.
  ********************************************************************/
 
-#include "MultiDimArray.cpp"
+#include "MultiDimArray_GF2.cpp"
 #include "Sequences.h"
 #include "NTL/GF2.h"
 //#include "NTL/ZZ_p.h"
@@ -88,11 +88,11 @@ int main(int argc, char *argv[]) {
             ss >> shift_seq[i];
         }
 
-        MultiDimArray<F, dim> A(shift_seq, constant, column_seq, vertical_period);
-        auto start = chrono::high_resolution_clock::now();
+        MultiDimArray<dim> A(shift_seq, constant, column_seq, vertical_period);
+//        auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+//        auto stop = chrono::high_resolution_clock::now();
+//        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 //        cout << "Duration:  " << duration.count() << " ms" << endl;
 //        cout << "Complexity:  " << A.complexity() << endl;
 //        cout << "Period size: " << A.period_size() << endl;
