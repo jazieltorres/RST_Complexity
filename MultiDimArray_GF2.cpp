@@ -4,12 +4,12 @@
 #include <iostream>
 #include <functional>
 #include <vector>
-#include <string>
 #include <forward_list>
+#include <unordered_map>
 #include "MultivarPolynomial.cpp"
 #include <algorithm> //sort
 #include "NTL/GF2.h"
-#include "NTL/mat_GF2.h"
+#include "boost/dynamic_bitset.hpp"
 using namespace std;
 
 typedef NTL::GF2 GF2;
@@ -24,10 +24,6 @@ private:
     unsigned int size;
     int delta_size;
     int ordering_number;
-    void RST_general(int);
-    void RST_optimized(int);
-
-
 public:
 //  Constructor: receives a blitz array of dimension m, with entries in GF2.
     explicit MultiDimArray_GF2(blitz::Array<GF2,m>&);
@@ -57,10 +53,15 @@ public:
 
 //  Rubio-Sweedler-Taylor algorithm for computing the linear complexity
     void RST(int ordering = 1);
+    void RST_NEW(int ordering = 1);
     void RST_simple();
+    void RST_simpleNEW();
 } ;
 
+//void insertBefore(vector< vector<GF2> >&, int&, const int&);
+
 #endif
+
 
 
 
@@ -170,7 +171,7 @@ int MultiDimArray_GF2<m>::dimension() {
 template <int m>
 int MultiDimArray_GF2<m>::complexity() {
     if (delta_size == -1) {
-        this->RST_optimized(1);
+        this->RST();
         return delta_size;
     }
     else
@@ -180,7 +181,7 @@ int MultiDimArray_GF2<m>::complexity() {
 template <int m>
 double MultiDimArray_GF2<m>::normalized_complexity() {
     if (delta_size == -1) {
-        this->RST_optimized(1);
+        this->RST();
         return static_cast<double>(delta_size)/size;
     }
     else
@@ -306,66 +307,92 @@ void generateDivisors(int depth, int& index, Monomial<m>& e,
 }
 
 template<int m>
-int sizeOfDivisors(const Monomial<m> e) {
-    int size(1);
+unsigned long sizeOfDivisors(const Monomial<m> e) {
+    unsigned long size(1);
     for (auto x : e.exponent()) {
         size = size * (x + 1);
     }
     return size;
 }
 
-void insertBefore(vector< vector<GF2> >& M, int& index, const int& m) {
-    for (int i = 0; i < (m - index); i++) {
-        M[m-i].swap(M[m-i-1]) ;
-    }
-}
-
 // Row reduction with the identity matrix to obtain polynomial in the basis
-void reduce(vector< vector<GF2> >& M, vector< vector<GF2> >& Id, int column_bound) {
-    const int m = M.size() - 1 ;
-    GF2 lambda ;
-    int j = 0 ;
+static void reduce(vector< boost::dynamic_bitset<> >& M, vector< boost::dynamic_bitset<> >& Id) {
+    if (M.empty())
+        return;
 
+    const unsigned int m = M.size() - 1;
+    const unsigned int width = M[0].size();
+    unsigned  int j = 0;
+
+    boost::dynamic_bitset<> *mm = &(M[m]);
+    boost::dynamic_bitset<> *idm = &(Id[m]);
+
+    boost::dynamic_bitset<> *mi, *idi;
+
+    mi = &(M[0]);
+    idi = &(Id[0]);
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < column_bound) {
-            if (M[m][j] != 0) {
-                insertBefore(M, i, m);
-                insertBefore(Id, i, m);
+        while ((*mi)[j] == 0 && j < width) {
+            if ((*mm)[j] != 0) { // insert last row before row i
+                for (int n = 0; n < (m - i); n++) {
+                    M[m-n].swap(M[m-n-1]) ;
+                }
+                for (int n = 0; n < (m - i); n++) {
+                    Id[m-n].swap(Id[m-n-1]) ;
+                }
                 return;
             }
             j++;
         }
-        lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < column_bound; k++)
-            M[m][k] = M[m][k] + lambda * M[i][k];
-        for (int k = 0; k < Id[0].size(); k++)
-            Id[m][k] = Id[m][k] + lambda * Id[i][k];
+        if (j == width) // implies matrix has row of zeros: ERROR
+            return;
+
+        if ((*mm)[j]) { //add row i to eliminate the one in M[m][j]
+                (*mm) ^= (*mi);
+                (*idm) ^= (*idi);
+        }
+
         j++;
+        mi++;
+        idi++;
     }
 }
 
 // Row reduction just for computing the complexity
-void reduce(vector< vector<GF2> >& M, int column_bound) {
-    const int m = M.size() - 1 ;
-    GF2 lambda ;
-    int j = 0 ;
+static void reduce(vector< boost::dynamic_bitset<> >& M) {
+    if (M.empty())
+        return;
 
+    const unsigned int m = M.size() - 1;
+    const unsigned int width = M[0].size();
+    unsigned  int j = 0;
+
+    boost::dynamic_bitset<> *mm = &(M[m]);
+    boost::dynamic_bitset<> *mi;
+
+    mi = &(M[0]);
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < column_bound) {
-            if (M[m][j] != 0) {
-                insertBefore(M, i, m);
+        while ((*mi)[j] == 0 && j < width) {
+            if ((*mm)[j] != 0) { // insert last row before row i
+                for (int n = 0; n < (m - i); n++)
+                    M[m-n].swap(M[m-n-1]) ;
                 return;
             }
             j++;
         }
-        lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < column_bound; k++)
-            M[m][k] = M[m][k] + lambda * M[i][k];
+        if (j == width) // implies matrix has row of zeros: ERROR
+            return;
+
+        if ((*mm)[j]) { //add row i to eliminate the one in M[m][j]
+            (*mm) ^= (*mi);
+        }
         j++;
+        mi++;
     }
 }
 
-void printMatrix (const vector< vector<GF2> >& M) {
+static void printMatrix (const vector< boost::dynamic_bitset<> >& M) {
+    if (M.empty()) return;
     int m = M.size();
     int n = M[0].size();
 
@@ -377,37 +404,25 @@ void printMatrix (const vector< vector<GF2> >& M) {
         }
         cout << endl;
     }
+    cout << endl;
 }
 
 template<int m>
-vector<GF2> rowPiAlpha(const Monomial<m>& alpha, const blitz::Array<GF2,m>& A,
+boost::dynamic_bitset<> rowPiAlpha(const Monomial<m>& alpha, const blitz::Array<GF2,m>& A,
                      vector< Monomial<m> >& exponentsColumn, Monomial<m> period) {
-    int n = exponentsColumn.size();
-    vector<GF2> piAlpha;
-    piAlpha.resize(n);
-    for (int i = 0; i < n; i++) {
+    unsigned long n = exponentsColumn.size();
+    GF2 one(1);
+    boost::dynamic_bitset<> row(n);
+    for (unsigned int i = 0; i < n; i++) {
         Monomial<m> index = exponentsColumn[i]+alpha;
-        piAlpha[i] = A(index.mod(period).exponent());
+        if (A(index.mod(period).exponent()) == one)
+            row[i] = true;
     }
-    return piAlpha;
-}
-
-void addDimension(vector< vector<GF2> >& id_matrix) {
-    int n, m;
-    m = id_matrix.size();
-    if (m == 0) {
-        n = 0;
-    }
-    else {
-        n = id_matrix[0].size();
-    }
-
-    vector<GF2> lastRow(n+1, (GF2)0);
-    lastRow[n] = (GF2)1;
-    for (int i = 0; i < m ; i++){
-        id_matrix[i].push_back((GF2)0);
-    }
-    id_matrix.push_back(lastRow);
+//    cout << "Row PI(" << alpha << "):" << endl;
+//    for(int i=0; i<n; i++) {
+//        cout << row[i] << " ";
+//    } cout << endl << endl;
+    return row;
 }
 
 // Functor used in exponentsRow.remove_if() for removing all the multiples of alpha
@@ -421,32 +436,14 @@ struct isMultiple {
 };
 
 template<int m>
-void printPoly(vector< vector<GF2> >& id_matrix, vector< Monomial<m> >& id_column) {
-    int n = id_matrix.size()-1;
-    for (int i = 0; i < id_matrix[0].size(); i++) {
-        if(id_matrix[n][i] != (GF2)0) cout << id_matrix[n][i] << "x" << id_column[i] << "\t";
-    }
-    cout << endl;
-}
-
-template<int m>
-MultivarPolynomial<GF2,m> get_polynomial(vector< vector<GF2> >& id_matrix, vector< Monomial<m> >& id_column) {
+MultivarPolynomial<GF2,m> get_polynomial(vector< boost::dynamic_bitset<> >& id_matrix, vector< Monomial<m> >& id_column) {
     MultivarPolynomial<GF2,m> poly;
-    int n = id_matrix.size()-1;
+    GF2 one(1);
+    unsigned int n = id_matrix.size()-1;
     for (int i = 0; i < id_matrix[0].size(); i++) {
-        if(id_matrix[n][i] != (GF2)0) poly.add_term(id_column[i], id_matrix[n][i]);
+        if(id_matrix[n][i]) poly.add_term(id_column[i], one);
     }
     return poly;
-}
-
-bool isZeroRow (vector< vector<GF2> >& matrix, int column_bound) {
-    int lastRow = matrix.size()-1;
-    GF2 zero(0);
-    for (int i=0; i<column_bound; i++) {
-        if (matrix[lastRow][i] != zero)
-            return false;
-    }
-    return true;
 }
 
 /******************************************************
@@ -478,6 +475,113 @@ bool ordering_4(const Monomial<m>& e1, const Monomial<m>& e2) {
     return (e1.lex_less2(e2));
 }
 
+
+/****************************************************************************
+*
+*                       THE ONE AND ONLY: RST
+*
+* Calls RST with respect to a monomial ordering:
+*   1. Graded lexicographic X1 > X2 > ... > Xn
+*   2. Graded lexicographic X1 < X2 < ... < Xn
+*   3. Lexicographic X1 > X2 > ... > Xn
+*   4. Lexicographic X1 < X2 < ... < Xn
+****************************************************************************/
+template<int m>
+void MultiDimArray_GF2<m>::RST(int ordering) {
+    delta_size = 0;
+    lead_monomials.empty();
+    groebner_basis.empty();
+
+    Monomial<m>  alpha; //dummy container
+    Monomial<m>  e_period(period);
+    Monomial<m>  bound;
+    for (int i = 0; i < m; i++) {
+        bound.get_exponent()[i] = 2 * period[i] - 1;
+    }
+
+    const unsigned width = sizeOfDivisors(bound);
+
+    vector< Monomial<m> >  exponentsColumn(width);
+    vector< Monomial<m> >  id_column;
+    forward_list< Monomial<m> >  exponentsRow;
+
+    int index = 0;
+    generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
+
+    switch (ordering) {
+        case 1 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
+            break;
+        case 2 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
+            break;
+        case 3 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_3<m>);
+            break;
+        case 4 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_4<m>);
+            break;
+        default:
+            cerr << "Invalid ordering argument in RST." << endl;
+            delta_size = -1;
+            return;
+    }
+
+    for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
+        if (e->leq_d(e_period))
+            exponentsRow.push_front(*e);
+    }
+
+//    cout << "exponent row" << endl;
+//    for (auto e = exponentsRow.begin(); e != exponentsRow.end(); e++) {
+//        cout << *e << " ";
+//    } cout << endl;
+
+    vector< boost::dynamic_bitset<> > matrix;
+    vector< boost::dynamic_bitset<> > id_matrix;
+    unsigned long ctr = 0;
+    unsigned long height;
+    while (!exponentsRow.empty()) {
+        alpha = exponentsRow.front();
+        matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
+
+//        cout << "Row PI" << alpha << endl;
+//        cout << rowPiAlpha<m>(alpha, A, exponentsColumn, e_period) << endl << endl;
+
+//        Adding a row to the identity matrix
+        boost::dynamic_bitset<> id_row(sizeOfDivisors(e_period));
+        id_row[ctr] = true;
+        id_matrix.push_back(id_row);
+
+        id_column.push_back(alpha);
+
+//        cout << "Before reduce" << endl;
+//        printMatrix(matrix);
+
+        reduce(matrix, id_matrix);
+
+
+//        cout << "After reduce" << endl;
+//        printMatrix(matrix);
+//        cout << "\n\n" << endl;
+
+
+        if (matrix[matrix.size()-1].none()) {
+            lead_monomials.push_back(alpha);
+            groebner_basis.push_back(get_polynomial(id_matrix, id_column));
+            matrix.pop_back();
+            id_matrix.pop_back();
+            exponentsRow.remove_if(isMultiple<m>(alpha));
+        }
+        else {
+            exponentsRow.pop_front();
+            delta_size++;
+        }
+        ctr++;
+    }
+}
+
+
 /******************************************************
 *
 *    RST THAT ONLY COMPUTES COMPLEXITY, NOT BASIS
@@ -496,138 +600,124 @@ void MultiDimArray_GF2<m>::RST_simple() {
         bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    vector<Monomial<m> > exponentsColumn(sizeOfDivisors(bound));
+    const unsigned long width = sizeOfDivisors(bound);
+
+    vector<Monomial<m> > exponentsColumn(width);
     vector<Monomial<m> > id_column;
     forward_list<Monomial<m> > exponentsRow;
 
     int index = 0;
     generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
-
     sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
-
-//    After each iteration using grlex, we have to check up to (1 + the number of monomials that are in
-//    exponentColumn but are jumped in exponentRow) less in row reduction.
-//    Hence, we count the number of monomials that are jumped and, in the same loop, fill the list
-//    exponentRow in sorted order.
-
-//    skipped_monomials[i] will contain the number of monomials between exponentRow[i] and
-//    exponentRow[i+1] (excluding both) that are in exponentColumn.
-    vector<int> skipped_monomials(sizeOfDivisors(e_period), 0);
-
-    auto it_period = exponentsColumn.rbegin();
-    auto it_skipped = skipped_monomials.rbegin() - 1;
-    while (!it_period->equal(e_period)) //Skip all monomials greater than e_period
-        it_period++;
-    for (auto e = it_period; e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period)) {
-            exponentsRow.push_front(*e);
-            it_skipped++;
-        } else
-            *it_skipped += 1;
-    }
-
-    vector<vector<GF2> > matrix;
-    int column_bound = exponentsColumn.size() + 1;
-    int iteration = 0;
-    while (!exponentsRow.empty()) {
-        alpha = exponentsRow.front();
-        matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
-        id_column.push_back(alpha);
-        column_bound = column_bound - 1 - skipped_monomials[iteration];
-        reduce(matrix, column_bound);
-        if (isZeroRow(matrix, column_bound)) {
-            matrix.pop_back();
-            exponentsRow.remove_if(isMultiple<m>(alpha));
-        } else {
-            exponentsRow.pop_front();
-            delta_size++;
-        }
-        iteration++;
-//        if ((delta_size%100)==0) cerr << "Going through... " << delta_size << endl;
-    }
-}
-
-/******************************************************
-*
-*             THE ONE AND ONLY: RST
-*
-*******************************************************/
-template<int m>
-void MultiDimArray_GF2<m>::RST_general(int ordering) {
-    delta_size = 0;
-    lead_monomials.empty();
-    groebner_basis.empty();
-
-    Monomial<m>  alpha; //dummy container
-    Monomial<m>  e_period(period);
-    Monomial<m>  bound;
-    for (int i = 0; i < m; i++) {
-        bound.get_exponent()[i] = 2 * period[i] - 1;
-    }
-
-    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound));
-    vector< Monomial<m> >  id_column;
-    forward_list< Monomial<m> >  exponentsRow;
-
-    int index = 0;
-    generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
-
-    switch (ordering) {
-        case 3 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_3<m>);
-            break;
-        case 4 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_4<m>);
-            break;
-        case 5 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
-            break;
-        case 6 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
-            break;
-        default:
-            cerr << "Invalid ordering argument in RST." << endl;
-            delta_size = -1;
-            return;
-    }
-
     for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period)) {exponentsRow.push_front (*e);}
+        if (e->leq_d(e_period))
+            exponentsRow.push_front(*e);
     }
 
-    vector< vector<GF2> >  matrix;
-    vector< vector<GF2> >  id_matrix;
-    vector< vector <Monomial<m> > >  basis;
+//    cout << "exponent row" << endl;
+//    for (auto e = exponentsRow.begin(); e != exponentsRow.end(); e++) {
+//        cout << *e << " ";
+//    } cout << endl;
+
+    vector< boost::dynamic_bitset<> > matrix;
+
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
         matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
-        addDimension(id_matrix);
-        id_column.push_back(alpha);
-        reduce(matrix, id_matrix, exponentsColumn.size());
-        if (isZeroRow(matrix, exponentsColumn.size())) {
-            lead_monomials.push_back(alpha);
-//            printPoly(id_matrix, id_column);
-            groebner_basis.push_back(get_polynomial(id_matrix, id_column));
+
+//        cout << "Row PI" << alpha << endl;
+//        cout << rowPiAlpha<m>(alpha, A, exponentsColumn, e_period) << endl << endl;
+
+//        cout << "Before reduce" << endl;
+//        printMatrix(matrix);
+        reduce(matrix);
+//        cout << "After reduce" << endl;
+//        printMatrix(matrix);
+//        cout << "\n\n" << endl;
+
+        if (matrix[matrix.size()-1].none()) {
             matrix.pop_back();
-            id_matrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
         }
         else {
             exponentsRow.pop_front();
             delta_size++;
         }
-//        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
     }
 }
 
 
 /******************************************************
 *
-*           RST OPTIMIZED FOR GRLEX
+*    RST SIMPLE EXPERIMENT
 *
 *******************************************************/
 template<int m>
-void MultiDimArray_GF2<m>::RST_optimized(int ordering) {
+void MultiDimArray_GF2<m>::RST_simpleNEW() {
+    delta_size = 0;
+    lead_monomials.empty();
+    groebner_basis.empty();
+
+    Monomial<m> alpha; //dummy container
+    Monomial<m> e_period(period);
+    Monomial<m> bound;
+    for (int i = 0; i < m; i++) {
+        bound.get_exponent()[i] = 2 * period[i] - 1;
+    }
+
+    const unsigned long width = sizeOfDivisors(bound);
+
+    vector<Monomial<m> > exponentsColumn(width);
+    vector<Monomial<m> > id_column;
+    forward_list<Monomial<m> > exponentsRow;
+
+    int index = 0;
+    generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
+    sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
+    for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
+        if (e->leq_d(e_period))
+            exponentsRow.push_front(*e);
+    }
+
+    vector< boost::dynamic_bitset<> > matrix;
+    map<unsigned long, unsigned long> pivot;
+
+    while (!exponentsRow.empty()) {
+        alpha = exponentsRow.front();
+        matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
+
+        if (matrix.empty())
+            return;
+
+        const unsigned long height = matrix.size() - 1;
+
+        boost::dynamic_bitset<> *last_row = &(matrix[height]);
+        boost::dynamic_bitset<>::size_type j = last_row->find_first();
+        bool new_pivot = false;
+        while (!new_pivot and j != boost::dynamic_bitset<>::npos) {
+            if (pivot.count(j)) {
+                (*last_row) ^= matrix[pivot[j]];
+                j = last_row->find_next(j);
+            }
+            else {
+                pivot[j] = height;
+                new_pivot = true;
+            }
+        }
+        if (j == boost::dynamic_bitset<>::npos) { // implies last row is of all zeros
+            matrix.pop_back();
+            exponentsRow.remove_if(isMultiple<m>(alpha));
+        }
+        else {
+            exponentsRow.pop_front();
+            delta_size++;
+        }
+    }
+}
+
+
+template<int m>
+void MultiDimArray_GF2<m>::RST_NEW(int ordering) {
     delta_size = 0;
     lead_monomials.empty();
     groebner_basis.empty();
@@ -639,7 +729,9 @@ void MultiDimArray_GF2<m>::RST_optimized(int ordering) {
         bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    vector< Monomial<m> >  exponentsColumn(sizeOfDivisors(bound));
+    const unsigned width = sizeOfDivisors(bound);
+
+    vector< Monomial<m> >  exponentsColumn(width);
     vector< Monomial<m> >  id_column;
     forward_list< Monomial<m> >  exponentsRow;
 
@@ -653,49 +745,92 @@ void MultiDimArray_GF2<m>::RST_optimized(int ordering) {
         case 2 :
             sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
             break;
+        case 3 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_3<m>);
+            break;
+        case 4 :
+            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_4<m>);
+            break;
         default:
             cerr << "Invalid ordering argument in RST." << endl;
             delta_size = -1;
             return;
     }
 
-//    After each iteration using grlex, we have to check up to (1 + the number of monomials that are in 
-//    exponentColumn but are jumped in exponentRow) less in row reduction.
-//    Hence, we count the number of monomials that are jumped and, in the same loop, fill the list
-//    exponentRow in sorted order.
-
-//    skipped_monomials[i] will contain the number of monomials between exponentRow[i] and 
-//    exponentRow[i+1] (excluding both) that are in exponentColumn.
-    vector<int> skipped_monomials(sizeOfDivisors(e_period), 0);
-
-    auto it_period = exponentsColumn.rbegin();
-    auto it_skipped = skipped_monomials.rbegin()-1;
-    while (!it_period->equal(e_period)) //Skip all monomials greater than e_period
-        it_period++;
-    for (auto e = it_period; e != exponentsColumn.rend(); e++) {
-        if (e->leq_d(e_period)) {
+    for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
+        if (e->leq_d(e_period))
             exponentsRow.push_front(*e);
-            it_skipped++;
-        }
-        else
-            *it_skipped += 1;
     }
 
-    vector< vector<GF2> >  matrix;
-    vector< vector<GF2> >  id_matrix;
-    vector< vector <Monomial<m> > >  basis;
-    int column_bound = exponentsColumn.size()+1;
-    int iteration = 0;
+//    cout << "exponent row" << endl;
+//    for (auto e = exponentsRow.begin(); e != exponentsRow.end(); e++) {
+//        cout << *e << " ";
+//    } cout << endl;
+
+    vector< boost::dynamic_bitset<> > matrix;
+    vector< boost::dynamic_bitset<> > id_matrix;
+    unsigned long ctr = 0;
+    unsigned long height;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
         matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
-        addDimension(id_matrix);
+
+//        cout << "Row PI" << alpha << endl;
+//        cout << rowPiAlpha<m>(alpha, A, exponentsColumn, e_period) << endl << endl;
+
+//        Adding a row to the identity matrix
+        boost::dynamic_bitset<> id_row(sizeOfDivisors(e_period));
+        id_row[ctr] = true;
+        id_matrix.push_back(id_row);
+
         id_column.push_back(alpha);
-        column_bound = column_bound - 1 - skipped_monomials[iteration];
-        reduce(matrix, id_matrix, column_bound);
-        if (isZeroRow(matrix, column_bound)) {
+
+        cout << "Before reduce" << endl;
+        printMatrix(matrix);
+
+        height = matrix.size() - 1;
+        unsigned long j = 0;
+
+        boost::dynamic_bitset<> *last_row = &(matrix[height]);
+        boost::dynamic_bitset<> *id_last_row = &(id_matrix[height]);
+
+        boost::dynamic_bitset<> *mi, *idi;
+
+        mi = &(matrix[0]);
+        idi = &(id_matrix[0]);
+        for (int i = 0; i < height; i++) {
+            while ((*mi)[j] == 0 && j < width) {
+                if ((*last_row)[j] != 0) { // insert last row before row i
+                    for (int n = 0; n < (height - i); n++) {
+                        matrix[height-n].swap(matrix[height-n-1]) ;
+                    }
+                    for (int n = 0; n < (height - i); n++) {
+                        id_matrix[height-n].swap(id_matrix[height-n-1]) ;
+                    }
+                    return;
+                }
+                j++;
+            }
+            if (j == width) // implies matrix has row of zeros: ERROR
+                return;
+
+            if ((*last_row)[j]) { //add row i to eliminate the one in M[m][j]
+                (*last_row) ^= (*mi);
+                (*id_last_row) ^= (*idi);
+            }
+            j++;
+            mi++;
+            idi++;
+        }
+
+
+        cout << "After reduce" << endl;
+        printMatrix(matrix);
+        cout << "\n\n" << endl;
+
+
+        if (matrix[height].none()) {
             lead_monomials.push_back(alpha);
-//            printPoly(id_matrix, id_column);
             groebner_basis.push_back(get_polynomial(id_matrix, id_column));
             matrix.pop_back();
             id_matrix.pop_back();
@@ -705,44 +840,6 @@ void MultiDimArray_GF2<m>::RST_optimized(int ordering) {
             exponentsRow.pop_front();
             delta_size++;
         }
-        iteration++;
-//        if ((delta_size%100)==0) cout << "Going through... " << delta_size << endl;
+        ctr++;
     }
-//
-// Printing leading monomials in the array, whom closes the monomials in the delta set
-//    cout << "Leading Monomials " << endl;
-//    printStars(lead_monomials, period);
-//
-//    cout << "\n\n\n groebner basis" << endl;
-//    for (auto poly : basis) {
-//        printStars(poly, period);
-//        cout << endl;
-//    }
-}
-
-
-/****************************************************************************
-*
-*           RST GATEWAY FUNCTION
-*
-* Calls RST with respect to a monomial ordering:
-*   1. Graded lexicographic X1 > X2 > ... > Xn with ladder optimization
-*   2. Graded lexicographic X1 < X2 < ... < Xn with ladder optimization
-*   3. Lexicographic X1 > X2 > ... > Xn
-*   4. Lexicographic X1 < X2 < ... < Xn
-*   5. Graded lexicographic X1 > X2 > ... > Xn
-*   6. Graded lexicographic X1 < X2 < ... < Xn
-****************************************************************************/
-template<int m>
-void MultiDimArray_GF2<m>::RST(int ordering) {
-    if (ordering < 1 or ordering > 6) {
-        cerr << "Invalid argument." << endl;
-        return;
-    }
-    ordering_number = ordering;
-    if (ordering <= 2)
-        RST_optimized(ordering);
-    else if (ordering <= 6)
-        RST_general(ordering);
-
 }
