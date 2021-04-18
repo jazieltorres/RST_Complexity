@@ -37,9 +37,10 @@
  *              by a blank space.
  ********************************************************************/
 
-#include "MultiDimArray.cpp"
+//#include "MultiDimArray.cpp"
+#include "MultiDimArray_GF2.cpp"
 #include "NTL/GF2.h"
-#include "NTL/ZZ_p.h"
+//#include "NTL/ZZ_p.h"
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -54,7 +55,7 @@ int main() {
     typedef NTL::GF2 F;
 
 /** Change desired dimension **/
-    const unsigned int dim = 2;
+    const unsigned int dim = 3;
 
 /************************************************
  *  Processing first line:
@@ -86,7 +87,7 @@ int main() {
         getline(cin, line); // Second line of information
 //        cout << line << endl;
 
-        MultiDimArray<F, dim> A(v);
+        MultiDimArray_GF2<dim> A(v);
         for (int i = 0; i < size; i++) {
             blitz::TinyVector<int, dim> position;
             F value;
@@ -102,20 +103,20 @@ int main() {
         auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
         auto stop = chrono::high_resolution_clock::now();
-//        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-//        cout << "Duration:  " << duration.count() << " ms" << endl;
-//        cout << "Complexity:  " << A.complexity() << endl;
-//        cout << "Period size: " << A.period_size() << endl;
-//        cout << "Normalized:  " << A.normalized_complexity() << endl;
-//        cout << "Groebner Basis:" << endl;
-//        A.print_basis();
+        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+        cout << "Duration:  " << duration.count() << " ms" << endl;
+        cout << "Complexity:  " << A.complexity() << endl;
+        cout << "Period size: " << A.period_size() << endl;
+        cout << "Normalized:  " << A.normalized_complexity() << endl;
+        cout << "Groebner Basis:" << endl;
+        A.print_basis();
 //        cout << endl;
 //        A.print_array();
 //        cout << endl << endl;
 
 
 /**  Print just the complexity **/
-        cout << A.complexity() <<  endl;
+//        cout << A.complexity() <<  endl;
     }
 
     return 0;
