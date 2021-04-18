@@ -1,5 +1,6 @@
 CXX = g++
 CXXFLAGS = -g -std=c++11 -pthread -march=native
+INC=-I /usr/include/boost/dynamic_bitset
 
 Test_1: Test_1.o MultiDimArray_GF2.o Sequences.o
 	$(CXX) $(CXXFLAGS) -o Test_1 Test_1.o MultiDimArray_GF2.o Sequences.o -lntl -lblitz -lgmp
@@ -17,3 +18,6 @@ Monomial.o: Monomial.cpp
 	$(CXX) $(CXXFLAGS) -c Monomial.cpp
 
 Sequences.o: Sequences.h
+
+clean :
+	-rm *.o $(objects)
