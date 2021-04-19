@@ -80,7 +80,7 @@ int main(int argc, char *argv[]) {
     LegendreSeq column_seq(vertical_period);
     while (getline(cin, line)) {
         ctr++;
-//        cout << "Test " << ctr << " -----------------------------" << endl;
+        cerr << "Test " << ctr << " -----------------------------" << endl;
 //        cout << "Prime " << vertical_period << endl;
         vector<int> shift_seq(horizontal_period);
         istringstream ss(line);
@@ -89,11 +89,11 @@ int main(int argc, char *argv[]) {
         }
 
         MultiDimArray_GF2<dim> A(shift_seq, constant, column_seq, vertical_period);
-//        auto start = chrono::high_resolution_clock::now();
+        auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
-//        auto stop = chrono::high_resolution_clock::now();
-//        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-//        cout << "Duration:  " << duration.count() << " ms" << endl;
+        auto stop = chrono::high_resolution_clock::now();
+        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+        cerr << "Duration:  " << duration.count() << " ms" << endl;
 //        cout << "Complexity:  " << A.complexity() << endl;
 //        cout << "Period size: " << A.period_size() << endl;
 //        cout << "Normalized:  " << A.normalized_complexity() << endl;
