@@ -55,7 +55,7 @@ int main() {
     typedef NTL::GF2 F;
 
 /** Change desired dimension **/
-    const unsigned int dim = 3;
+    const unsigned int dim = 2;
 
 /************************************************
  *  Processing first line:
