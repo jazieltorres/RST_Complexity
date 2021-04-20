@@ -31,11 +31,17 @@ public:
 //  Constructor: receives period vector and resizes array
     explicit MultiDimArray_GF2(const blitz::TinyVector<int,m>&);
 
+//    Constructor: receives a sequence as vector (for one dimension only)
+    explicit MultiDimArray_GF2(const vector<GF2>&);
+
 //  Constructor: receives shift sequence, column sequence, and their periods, respectively.
     MultiDimArray_GF2(const function<int (int)>&, const function<GF2 (int)>&, int, int);
 
 //  Constructor: same as above but shift sequence is a vector.
     MultiDimArray_GF2(const vector<int>&, GF2, const function<GF2 (int)>&, int);
+
+//  Constructor: same as above but both sequences are vectors.
+    MultiDimArray_GF2(const vector<int>&, const vector<GF2>&, const GF2);
 
 //  Getters
     int dimension();
@@ -99,6 +105,26 @@ MultiDimArray_GF2<m>::MultiDimArray_GF2(const blitz::TinyVector<int,m>& period_v
 }
 
 
+template <int m>
+MultiDimArray_GF2<m>::MultiDimArray_GF2(const vector<GF2>& seq){
+    if (m != 1) {
+        cout << "ERROR. Allowed dimension for this constructor: 1" << endl;
+    }
+    else {
+        period = seq.size();
+        size = seq.size();
+        A.resize(period);
+        delta_size = -1;
+        ordering_number = 0;
+        blitz::TinyVector<int, 1> index;
+        for (int i = 0; i < size; i++) {
+            index = i;
+            A(index) = seq[i];
+        }
+    }
+}
+
+
 // MultiDimArray_GF2(Shift seq, column seq, horizontal period, column period)
 template <int m>
 MultiDimArray_GF2<m>::MultiDimArray_GF2(const function<int(int)>& func1, const function<GF2(int)>& func2,
@@ -146,6 +172,34 @@ MultiDimArray_GF2<m>::MultiDimArray_GF2(const vector<int>& shift_seq, GF2 consta
                 index = i, j;
                 if (shift_seq[i] != -1) //shift not infinity
                     A(index) = column_seq(((j - shift_seq[i]) % vertical_period + vertical_period) % vertical_period);
+                else
+                    A(index) = constant;
+            }
+        }
+    }
+    else {
+        cout << "ERROR: Allowed dimension for this constructor: 2" << endl;
+    }
+}
+
+
+// Constructor for both sequences as vector
+template <int m>
+MultiDimArray_GF2<m>::MultiDimArray_GF2(const vector<int>& shift_seq, const vector<GF2>& column_seq, const GF2 constant) {
+    if (m == 2) {
+        int horizontal_period = shift_seq.size();
+        int vertical_period = column_seq.size();
+        period = horizontal_period, vertical_period;
+        A.resize(period);
+        size = horizontal_period * vertical_period;
+        delta_size = -1;
+        ordering_number = 0;
+        blitz::TinyVector<int, 2> index;
+        for (int i = 0; i < horizontal_period; i++) {
+            for (int j = 0; j < vertical_period; j++) {
+                index = i, j;
+                if (shift_seq[i] != -1) //shift not infinity
+                    A(index) = column_seq[((j - shift_seq[i]) % vertical_period + vertical_period) % vertical_period];
                 else
                     A(index) = constant;
             }
