@@ -100,23 +100,23 @@ int main() {
             A.set_at(position, value);
         }
 
-        auto start = chrono::high_resolution_clock::now();
+//        auto start = chrono::high_resolution_clock::now();
         A.RST_simple();
-        auto stop = chrono::high_resolution_clock::now();
-        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-        cout << "Duration:  " << duration.count() << " ms" << endl;
-        cout << "Complexity:  " << A.complexity() << endl;
-        cout << "Period size: " << A.period_size() << endl;
-        cout << "Normalized:  " << A.normalized_complexity() << endl;
-        cout << "Groebner Basis:" << endl;
-        A.print_basis();
+//        auto stop = chrono::high_resolution_clock::now();
+//        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
+//        cout << "Duration:  " << duration.count() << " ms" << endl;
+//        cout << "Complexity:  " << A.complexity() << endl;
+//        cout << "Period size: " << A.period_size() << endl;
+//        cout << "Normalized:  " << A.normalized_complexity() << endl;
+//        cout << "Groebner Basis:" << endl;
+//        A.print_basis();
 //        cout << endl;
 //        A.print_array();
 //        cout << endl << endl;
 
 
 /**  Print just the complexity **/
-//        cout << A.complexity() <<  endl;
+        cout << A.complexity() <<  endl;
     }
 
     return 0;
