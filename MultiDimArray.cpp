@@ -321,24 +321,47 @@ void insertBefore(vector< vector<F> >& M, int& index, const int& m) {
 template<typename F>
 void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int column_bound) {
     const int m = M.size() - 1 ;
+
     F lambda ;
     int j = 0 ;
 
+    vector<F> *mm = &(M[m]);
+    vector<F> *idm = &(Id[m]);
+
+    vector<F> *mi, *idi;
+
+    mi = &(M[0]);
+    idi = &(Id[0]);
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < column_bound) {
-            if (M[m][j] != 0) {
+        while ((*mi)[j] == 0 && j < column_bound) {
+            if ((*mm)[j] != 0) {
                 insertBefore(M, i, m);
                 insertBefore(Id, i, m);
                 return;
             }
             j++;
         }
-        lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < column_bound; k++)
-            M[m][k] = M[m][k] + lambda * M[i][k];
-        for (int k = 0; k < Id[0].size(); k++)
-            Id[m][k] = Id[m][k] + lambda * Id[i][k];
+        lambda = -(*mm)[j] / (*mi)[j];
+
+
+        // cout << (*mm)[j] << " " <<  (*mi)[j] << " " << lambda << endl;
+        if (lambda == 1) {
+            for (int k = j; k < column_bound; k++)
+                (*mm)[k] += (*mi)[k];
+
+            for (int k = 0; k < Id[0].size(); k++)
+                (*idm)[k] += (*idi)[k];
+        } else if (lambda != 0) {
+            for (int k = j; k < column_bound; k++)
+                (*mm)[k] += (lambda * (*mi)[k]);
+
+            for (int k = 0; k < Id[0].size(); k++)
+                (*idm)[k] += (lambda * (*idi)[k]);
+        }
+
         j++;
+        mi++;
+        idi++;
     }
 }
 
@@ -346,21 +369,34 @@ void reduce(vector< vector<F> >& M, vector< vector<F> >& Id, int column_bound) {
 template<typename F>
 void reduce(vector< vector<F> >& M, int column_bound) {
     const int m = M.size() - 1 ;
+
     F lambda ;
     int j = 0 ;
 
+    vector<F> *mm = &(M[m]);
+    vector<F> *mi;
+
+    mi = &(M[0]);
     for (int i = 0; i < m; i++) {
-        while (M[i][j] == 0 && j < column_bound) {
-            if (M[m][j] != 0) {
+        while ((*mi)[j] == 0 && j < column_bound) {
+            if ((*mm)[j] != 0) {
                 insertBefore(M, i, m);
                 return;
             }
             j++;
         }
-        lambda = -M[m][j]/M[i][j];
-        for (int k = j; k < column_bound; k++)
-            M[m][k] = M[m][k] + lambda * M[i][k];
+        lambda = -(*mm)[j] / (*mi)[j];
+
+        if (lambda == 1) {
+            for (int k = j; k < column_bound; k++)
+                (*mm)[k] += (*mi)[k];
+        }
+        else if (lambda != 0) {
+            for (int k = j; k < column_bound; k++)
+                (*mm)[k] += (lambda * (*mi)[k]);
+        }
         j++;
+        mi++;
     }
 }
 
@@ -453,6 +489,18 @@ bool isZeroRow (vector< vector<F> >& matrix, int column_bound) {
     return true;
 }
 
+template<typename F>
+int numZero (vector< vector<F> >& matrix, int column_bound) {
+    int lastRow = matrix.size()-1;
+    F zero(0);
+    int n = 0;
+    while (matrix[lastRow][n] == zero && n<column_bound) {
+        n++ ;
+    }
+    return n;
+}
+
+
 /******************************************************
 *
 *               MONOMIAL ORDERINGS
@@ -530,16 +578,37 @@ void MultiDimArray<F,m>::RST_simple() {
             *it_skipped += 1;
     }
 
+//    vector<vector<F> > matrix;
+//    int column_bound = exponentsColumn.size() + 1;
+//    int iteration = 0;
+//    while (!exponentsRow.empty()) {
+//        alpha = exponentsRow.front();
+//        matrix.push_back(rowPiAlpha<F, m>(alpha, A, exponentsColumn, e_period));
+//        id_column.push_back(alpha);
+//        column_bound = column_bound - 1 - skipped_monomials[iteration];
+//        reduce(matrix, column_bound);
+//        if (isZeroRow(matrix, column_bound)) {
+//            matrix.pop_back();
+//            exponentsRow.remove_if(isMultiple<m>(alpha));
+//        } else {
+//            exponentsRow.pop_front();
+//            delta_size++;
+//        }
+//        iteration++;
+////        if ((delta_size%100)==0) cerr << "Going through... " << delta_size << endl;
+//    }
+
     vector<vector<F> > matrix;
     int column_bound = exponentsColumn.size() + 1;
     int iteration = 0;
+    int num_of_zeros;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
         matrix.push_back(rowPiAlpha<F, m>(alpha, A, exponentsColumn, e_period));
-        id_column.push_back(alpha);
         column_bound = column_bound - 1 - skipped_monomials[iteration];
         reduce(matrix, column_bound);
-        if (isZeroRow(matrix, column_bound)) {
+        num_of_zeros = numZero(matrix, column_bound);
+        if (num_of_zeros == column_bound) {
             matrix.pop_back();
             exponentsRow.remove_if(isMultiple<m>(alpha));
         } else {
@@ -547,6 +616,7 @@ void MultiDimArray<F,m>::RST_simple() {
             delta_size++;
         }
         iteration++;
+//        cout << iteration << " " << column_bound<< endl;
 //        if ((delta_size%100)==0) cerr << "Going through... " << delta_size << endl;
     }
 }
