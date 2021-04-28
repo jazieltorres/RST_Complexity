@@ -2,14 +2,14 @@ CXX = g++
 CXXFLAGS = -g -std=c++11 -pthread -march=native
 INC=-I /usr/include/boost/dynamic_bitset
 
-multiTest_binarySimple3D: main_MultipleTests.o MultiDimArray_GF2.o Sequences.o
-	$(CXX) $(CXXFLAGS) -o multiTest_binarySimple3D main_MultipleTests.o MultiDimArray_GF2.o Sequences.o -lntl -lblitz -lgmp
+multiTest_ternarySimple2D: main_MultipleTests.o MultiDimArray.o Sequences.o
+	$(CXX) $(CXXFLAGS) -o multiTest_ternarySimple2D main_MultipleTests.o MultiDimArray.o Sequences.o -lntl -lblitz -lgmp
 
-main_MultipleTests.o: main_MultipleTests.cpp MultiDimArray_GF2.cpp Sequences.h
+main_MultipleTests.o: main_MultipleTests.cpp MultiDimArray.cpp Sequences.h
 	$(CXX) $(CXXFLAGS) -c main_MultipleTests.cpp
 
-MultiDimArray_GF2.o: MultiDimArray_GF2.cpp MultivarPolynomial.o
-	$(CXX) $(CXXFLAGS) -c MultiDimArray_GF2.cpp
+MultiDimArray.o: MultiDimArray.cpp MultivarPolynomial.o
+	$(CXX) $(CXXFLAGS) -c MultiDimArray.cpp
 
 MultivarPolynomial.o: MultivarPolynomial.cpp Monomial.o
 	$(CXX) $(CXXFLAGS) -c MultivarPolynomial.cpp
