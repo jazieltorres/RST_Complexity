@@ -37,10 +37,10 @@
  *              by a blank space.
  ********************************************************************/
 
-//#include "MultiDimArray.cpp"
-#include "MultiDimArray_GF2.cpp"
-#include "NTL/GF2.h"
-//#include "NTL/ZZ_p.h"
+#include "MultiDimArray.cpp"
+//#include "MultiDimArray_GF2.cpp"
+//#include "NTL/GF2.h"
+#include "NTL/ZZ_p.h"
 #include <iostream>
 #include <string>
 #include <chrono>
@@ -49,13 +49,13 @@ using namespace std;
 
 int main() {
 /** Change desired field **/
-//    NTL::ZZ p(3);
-//    NTL::ZZ_p::init(p);
-//    typedef NTL::ZZ_p F;
-    typedef NTL::GF2 F;
+    NTL::ZZ p(3);
+    NTL::ZZ_p::init(p);
+    typedef NTL::ZZ_p F;
+//    typedef NTL::GF2 F;
 
 /** Change desired dimension **/
-    const unsigned int dim = 3;
+    const unsigned int dim = 2;
 
 /************************************************
  *  Processing first line:
@@ -87,7 +87,7 @@ int main() {
         getline(cin, line); // Second line of information
 //        cout << line << endl;
 
-        MultiDimArray_GF2<dim> A(v);
+        MultiDimArray<F,dim> A(v);
         for (int i = 0; i < size; i++) {
             blitz::TinyVector<int, dim> position;
             F value;
