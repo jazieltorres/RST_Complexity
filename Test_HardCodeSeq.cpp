@@ -6,7 +6,8 @@
 * method, specifying (hard-coded) every parameter for each sequence.
 ******************************************************************************************/
 
-#include "MultiDimArray.cpp"
+#include "MultiDimArray_GF2.cpp"
+//#include "MultiDimArray.cpp"
 #include "Sequences.h"
 //#include "NTL/ZZ_p.h"
 #include "NTL/GF2.h"
@@ -36,10 +37,10 @@ int main() {
 * Parameters
 *******************************************************/
     int p_legendre = 97;
-    int p_shift = 97;
-    int root = 5;
+    int p_shift = p_legendre;
+    int root = 2;
 
-//    while(!isRoot(root, p_shift)) root++;
+    while(!isRoot(root, p_shift)) root++;
 
     int coeff = 1; // Coefficient for ExpQuadraticSeq
 
@@ -58,27 +59,27 @@ int main() {
 * Uncomment desired sequence
 *******************************************************/
 //    PolynomialSeq shift_seq(p_shift, root, 2, 3);
-    ExpQuadraticSeq shift_seq(p_shift, root, coeff);
-//    ExponentialSeq shift_seq(p_shift, root);
+//    ExpQuadraticSeq shift_seq(p_shift, root, coeff);
+    ExponentialSeq shift_seq(p_shift, root);
 //    vector<int> shift_seq = {1,6,3,5,4,2};
 
 
 /******************************************************
 * Printing the sequences
 *******************************************************/
-    cout << "Column sequence:\n\t";
-    for (int i = 0; i < p_legendre; i++) cout << column_seq(i) << " ";
-    cout << endl;
-
-    cout << "Shift sequence:\n\t";
-    for (int i = 0; i < p_shift - 1; i++) cout << shift_seq(i) << " ";
-    cout << endl << endl;
+//    cout << "Column sequence:\n\t";
+//    for (int i = 0; i < p_legendre; i++) cout << column_seq(i) << " ";
+//    cout << endl;
+//
+//    cout << "Shift sequence:\n\t";
+//    for (int i = 0; i < p_shift - 1; i++) cout << shift_seq(i) << " ";
+//    cout << endl << endl;
 
 
 /******************************************************
 * Creating the array
 *******************************************************/
-    MultiDimArray<F, dim> A(shift_seq, column_seq, p_shift - 1, p_legendre);
+    MultiDimArray_GF2<dim> A(shift_seq, column_seq, p_shift - 1, p_legendre);
 
 
 /******************************************************
@@ -86,13 +87,13 @@ int main() {
 *******************************************************/
 //    cout << "Computing the complexity" << endl;
     auto start = chrono::high_resolution_clock::now();
-    A.RST();
+    A.RST_simple();
     auto stop = chrono::high_resolution_clock::now();
     auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
-    cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
-
-    cout << "Complexity:\t" << A.complexity() << endl;
-    cout << "Normalized:\t" << A.normalized_complexity() << endl << endl;
+//    cout << "Computation time:\t" << duration.count() << " ms" << endl << endl;
+//
+//    cout << "Complexity:\t" << A.complexity() << endl;
+//    cout << "Normalized:\t" << A.normalized_complexity() << endl << endl;
 
 
 /******************************************************
@@ -101,7 +102,7 @@ int main() {
     unsigned int d = A.complexity();
     int n1 = A.period_vector()[0];
     int criteria = p_legendre % 8;
-    int expected;
+    unsigned long expected;
     bool satisfied = true;
 
     if (criteria == 1 && ((p_legendre - 1) / 2 * n1 != d)) {
@@ -122,24 +123,24 @@ int main() {
     }
 
     if (!satisfied) {
-        cout << "CONJECTURE FAILED." << endl;
-        cout << "Expected complexity:\t" << expected << endl;
-        cout << "Expected normalized:\t" << static_cast<double>(expected)/A.period_size() << endl;
+//        cout << "CONJECTURE FAILED." << endl;
+//        cout << "Expected complexity:\t" << expected << endl;
+//        cout << "Expected normalized:\t" << static_cast<double>(expected)/A.period_size() << endl;
     }
     else {
         expected = A.complexity();
-        cout << "Conjecture satisfied" << endl << endl;
+//        cout << "Conjecture satisfied" << endl << endl;
     }
 //    cout << "Grobner basis:" << endl;
 //    A.print_basis();
-    cout << endl;
+//    cout << endl;
 //    A.print_array();
 
 /******************************************************
 * This line is for the google sheet:
 *******************************************************/
-//    cout << p_legendre << ',' << p_legendre << ',' << root << ',' << p_legendre << ',' << p_legendre-1 << ','
-//         << A.period_size() << ',' << A.complexity() << ',' << expected << endl;
+    cout << p_legendre << ',' << p_shift << ',' << root << ',' << p_legendre << ',' << p_legendre-1 << ','
+         << A.period_size() << ',' << A.complexity() << ',' << expected << endl;
 
     return 0;
 }
