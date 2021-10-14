@@ -10,7 +10,7 @@ int main(int argc, char *argv[]) {
     typedef NTL::GF2 F;
     const unsigned int dim = 2;
 
-    int p_legendre = 7;
+    int p_legendre = 13;
     int shift_len = p_legendre-1;
 
     LegendreSeq column_seq(p_legendre);
