@@ -36,9 +36,9 @@ int main(int argc, char *argv[]) {
         shift[2] = 1;
     }
 
-    cout << "Original shift:" << endl;
-    for (auto x : shift) cout << x << " ";
-    cout << endl << endl;
+//    cout << "Original shift:" << endl;
+//    for (auto x : shift) cout << x << " ";
+//    cout << endl << endl;
 
 
     bool found = false;
