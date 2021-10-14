@@ -10,6 +10,7 @@
 #include <algorithm> //sort
 #include "NTL/GF2.h"
 #include "boost/dynamic_bitset.hpp"
+#include <memory>
 using namespace std;
 
 typedef NTL::GF2 GF2;
@@ -62,6 +63,7 @@ public:
     void RST_NEW(int ordering = 1);
     void RST_simple();
     void RST_simpleNEW();
+    void RST_simpleNEW2();
 } ;
 
 //void insertBefore(vector< vector<GF2> >&, int&, const int&);
@@ -469,14 +471,34 @@ boost::dynamic_bitset<> rowPiAlpha(const Monomial<m>& alpha, const blitz::Array<
     boost::dynamic_bitset<> row(n);
     for (unsigned int i = 0; i < n; i++) {
         Monomial<m> index = exponentsColumn[i]+alpha;
+//        cout << index.mod(period).exponent() << " ";
         if (A(index.mod(period).exponent()) == one)
             row[i] = true;
     }
+//    cout << endl;
 //    cout << "Row PI(" << alpha << "):" << endl;
 //    for(int i=0; i<n; i++) {
 //        cout << row[i] << " ";
 //    } cout << endl << endl;
     return row;
+}
+
+template<int m>
+boost::dynamic_bitset<>* rowPiAlphaNEW(const Monomial<m>& alpha, const blitz::Array<GF2,m>& A,
+                                   vector< Monomial<m> >& exponentsColumn, Monomial<m> period) {
+    unsigned long n = exponentsColumn.size();
+    GF2 one(1);
+    auto *ptr = new  boost::dynamic_bitset<>(n);
+    for (unsigned int i = 0; i < n; i++) {
+        Monomial<m> index = exponentsColumn[i]+alpha;
+        if (A(index.mod(period).exponent()) == one)
+            (*ptr)[i] = true;
+    }
+//    cout << "Row PI(" << alpha << "):" << endl;
+//    for(int i=0; i<n; i++) {
+//        cout << row[i] << " ";
+//    } cout << endl << endl;
+    return ptr;
 }
 
 // Functor used in exponentsRow.remove_if() for removing all the multiples of alpha
@@ -499,6 +521,8 @@ MultivarPolynomial<GF2,m> get_polynomial(vector< boost::dynamic_bitset<> >& id_m
     }
     return poly;
 }
+
+
 
 /******************************************************
 *
@@ -545,6 +569,7 @@ void MultiDimArray_GF2<m>::RST(int ordering) {
     delta_size = 0;
     lead_monomials.empty();
     groebner_basis.empty();
+    ordering_number = ordering;
 
     Monomial<m>  alpha; //dummy container
     Monomial<m>  e_period(period);
@@ -553,7 +578,8 @@ void MultiDimArray_GF2<m>::RST(int ordering) {
         bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    const unsigned width = sizeOfDivisors(bound);
+    const unsigned long width = sizeOfDivisors(bound);
+    const unsigned long id_width = sizeOfDivisors(e_period);
 
     vector< Monomial<m> >  exponentsColumn(width);
     vector< Monomial<m> >  id_column;
@@ -603,7 +629,7 @@ void MultiDimArray_GF2<m>::RST(int ordering) {
 //        cout << rowPiAlpha<m>(alpha, A, exponentsColumn, e_period) << endl << endl;
 
 //        Adding a row to the identity matrix
-        boost::dynamic_bitset<> id_row(sizeOfDivisors(e_period));
+        boost::dynamic_bitset<> id_row(id_width);
         id_row[ctr] = true;
         id_matrix.push_back(id_row);
 
@@ -646,6 +672,7 @@ void MultiDimArray_GF2<m>::RST_simple() {
     delta_size = 0;
     lead_monomials.empty();
     groebner_basis.empty();
+    ordering_number = 1;
 
     Monomial<m> alpha; //dummy container
     Monomial<m> e_period(period);
@@ -722,7 +749,6 @@ void MultiDimArray_GF2<m>::RST_simpleNEW() {
     const unsigned long width = sizeOfDivisors(bound);
 
     vector<Monomial<m> > exponentsColumn(width);
-    vector<Monomial<m> > id_column;
     forward_list<Monomial<m> > exponentsRow;
 
     int index = 0;
@@ -733,33 +759,26 @@ void MultiDimArray_GF2<m>::RST_simpleNEW() {
             exponentsRow.push_front(*e);
     }
 
-    vector< boost::dynamic_bitset<> > matrix;
-    map<unsigned long, unsigned long> pivot;
+    unordered_map<unsigned long, boost::dynamic_bitset<>*> pivot;
+    boost::dynamic_bitset<>* last_row;
 
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
-        matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
-
-        if (matrix.empty())
-            return;
-
-        const unsigned long height = matrix.size() - 1;
-
-        boost::dynamic_bitset<> *last_row = &(matrix[height]);
+        last_row = rowPiAlphaNEW<m>(alpha, A, exponentsColumn, e_period);
         boost::dynamic_bitset<>::size_type j = last_row->find_first();
         bool new_pivot = false;
         while (!new_pivot and j != boost::dynamic_bitset<>::npos) {
             if (pivot.count(j)) {
-                (*last_row) ^= matrix[pivot[j]];
+                (*last_row) ^= *(pivot[j]);
                 j = last_row->find_next(j);
             }
             else {
-                pivot[j] = height;
+                pivot[j] = last_row;
                 new_pivot = true;
             }
         }
         if (j == boost::dynamic_bitset<>::npos) { // implies last row is of all zeros
-            matrix.pop_back();
+            delete last_row;
             exponentsRow.remove_if(isMultiple<m>(alpha));
         }
         else {
@@ -767,133 +786,61 @@ void MultiDimArray_GF2<m>::RST_simpleNEW() {
             delta_size++;
         }
     }
+
+    for (auto &x : pivot) delete x.second;
 }
 
 
+
 template<int m>
-void MultiDimArray_GF2<m>::RST_NEW(int ordering) {
+void MultiDimArray_GF2<m>::RST_simpleNEW2() {
     delta_size = 0;
     lead_monomials.empty();
     groebner_basis.empty();
 
-    Monomial<m>  alpha; //dummy container
-    Monomial<m>  e_period(period);
-    Monomial<m>  bound;
+    Monomial<m> alpha; //dummy container
+    Monomial<m> e_period(period);
+    Monomial<m> bound;
     for (int i = 0; i < m; i++) {
         bound.get_exponent()[i] = 2 * period[i] - 1;
     }
 
-    const unsigned width = sizeOfDivisors(bound);
+    const unsigned long width = sizeOfDivisors(bound);
 
-    vector< Monomial<m> >  exponentsColumn(width);
-    vector< Monomial<m> >  id_column;
-    forward_list< Monomial<m> >  exponentsRow;
+    vector<Monomial<m> > exponentsColumn(width);
+    forward_list<Monomial<m> > exponentsRow;
 
     int index = 0;
     generateDivisors<m>(m, index, alpha, bound, exponentsColumn);
-
-    switch (ordering) {
-        case 1 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
-            break;
-        case 2 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_2<m>);
-            break;
-        case 3 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_3<m>);
-            break;
-        case 4 :
-            sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_4<m>);
-            break;
-        default:
-            cerr << "Invalid ordering argument in RST." << endl;
-            delta_size = -1;
-            return;
-    }
-
+    sort(exponentsColumn.begin(), exponentsColumn.end(), ordering_1<m>);
     for (auto e = exponentsColumn.rbegin(); e != exponentsColumn.rend(); e++) {
         if (e->leq_d(e_period))
             exponentsRow.push_front(*e);
     }
 
-//    cout << "exponent row" << endl;
-//    for (auto e = exponentsRow.begin(); e != exponentsRow.end(); e++) {
-//        cout << *e << " ";
-//    } cout << endl;
+    unordered_map<unsigned long, unique_ptr<boost::dynamic_bitset<> > > pivot;
 
-    vector< boost::dynamic_bitset<> > matrix;
-    vector< boost::dynamic_bitset<> > id_matrix;
-    unsigned long ctr = 0;
-    unsigned long height;
     while (!exponentsRow.empty()) {
         alpha = exponentsRow.front();
-        matrix.push_back(rowPiAlpha<m>(alpha, A, exponentsColumn, e_period));
-
-//        cout << "Row PI" << alpha << endl;
-//        cout << rowPiAlpha<m>(alpha, A, exponentsColumn, e_period) << endl << endl;
-
-//        Adding a row to the identity matrix
-        boost::dynamic_bitset<> id_row(sizeOfDivisors(e_period));
-        id_row[ctr] = true;
-        id_matrix.push_back(id_row);
-
-        id_column.push_back(alpha);
-
-        cout << "Before reduce" << endl;
-        printMatrix(matrix);
-
-        height = matrix.size() - 1;
-        unsigned long j = 0;
-
-        boost::dynamic_bitset<> *last_row = &(matrix[height]);
-        boost::dynamic_bitset<> *id_last_row = &(id_matrix[height]);
-
-        boost::dynamic_bitset<> *mi, *idi;
-
-        mi = &(matrix[0]);
-        idi = &(id_matrix[0]);
-        for (int i = 0; i < height; i++) {
-            while ((*mi)[j] == 0 && j < width) {
-                if ((*last_row)[j] != 0) { // insert last row before row i
-                    for (int n = 0; n < (height - i); n++) {
-                        matrix[height-n].swap(matrix[height-n-1]) ;
-                    }
-                    for (int n = 0; n < (height - i); n++) {
-                        id_matrix[height-n].swap(id_matrix[height-n-1]) ;
-                    }
-                    return;
-                }
-                j++;
+        unique_ptr<boost::dynamic_bitset<> > last_row(rowPiAlphaNEW<m>(alpha, A, exponentsColumn, e_period));
+        boost::dynamic_bitset<>::size_type j = last_row->find_first();
+        bool new_pivot = false;
+        while (!new_pivot and j != boost::dynamic_bitset<>::npos) {
+            if (pivot.count(j)) {
+                (*last_row) ^= *(pivot[j]);
+                j = last_row->find_next(j);
             }
-            if (j == width) // implies matrix has row of zeros: ERROR
-                return;
-
-            if ((*last_row)[j]) { //add row i to eliminate the one in M[m][j]
-                (*last_row) ^= (*mi);
-                (*id_last_row) ^= (*idi);
+            else {
+                pivot[j] = std::move(last_row);
+                new_pivot = true;
             }
-            j++;
-            mi++;
-            idi++;
         }
-
-
-        cout << "After reduce" << endl;
-        printMatrix(matrix);
-        cout << "\n\n" << endl;
-
-
-        if (matrix[height].none()) {
-            lead_monomials.push_back(alpha);
-            groebner_basis.push_back(get_polynomial(id_matrix, id_column));
-            matrix.pop_back();
-            id_matrix.pop_back();
+        if (j == boost::dynamic_bitset<>::npos) { // implies last row is of all zeros
             exponentsRow.remove_if(isMultiple<m>(alpha));
         }
         else {
             exponentsRow.pop_front();
             delta_size++;
         }
-        ctr++;
     }
 }
