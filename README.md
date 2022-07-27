@@ -1,4 +1,4 @@
-# RST_Complexity
+# The Rubio-Sweedler-Taylor Algorithm & Linear Complexity
 Implementation of the Rubio-Sweedler-Taylor Algorithm for computing the Groebner basis of the ideal of linear recurring polynomials on a multidimensional periodic array with entries in a field.
 
 The code has two dependencies: 
