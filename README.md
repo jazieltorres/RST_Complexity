@@ -17,3 +17,8 @@ The <code>RST()</code> method is the member function implementing the Rubio-Swee
 
 
 The file <code>MultiDimArray_GF2.cpp</code> is an especialization of <code>MultiDimArray.cpp</code> for arrays with entries in GF(2), i.e., binary arrays. This runs way faster than the general <code>MultiDimArray.cpp</code>.
+
+<code>Monomial.cpp</code> and <code>MultivarPolynomial.cpp</code> are axiliary classes used in <code>MultiDimArray.cpp</code>. Their contents are self explanatory.
+
+The rest of the <code>cpp</code> files are clients of the <code>MultiDimArray</code> class. 
+
