@@ -12,4 +12,5 @@ The code has two dependencies:
 </ul>
 
 
-Most of the action occurs in the file <code>MultiDimArray</code>.
+Most of the action occurs in the file <code>MultiDimArray.cpp</code>. This a class consisting of a multidimensional packed with additional information such as its size, periodicity and complexity.
+The <code>RST()</code> method is the member function implementing the Rubio-Sweedler-Taylor algorithms, and in the pocess of obtaining the Groebner basis, it computes the linear complexity.
