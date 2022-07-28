@@ -8,7 +8,7 @@ The code has two dependencies:
   </li>
   <li>
     <code>NTL</code> A high-performance, portable C++ library providing data structures and algorithms for manipulating signed, arbitrary length integers, and for vectors, matrices, and polynomials over the integers and over finite fields, found at 
-    href="https://libntl.org/">https://libntl.org/</a>
+    <a href="https://libntl.org/">https://libntl.org/</a>
   </li>
 </ul>
 
