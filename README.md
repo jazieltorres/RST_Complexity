@@ -22,3 +22,4 @@ The file <code>MultiDimArray_GF2.cpp</code> is an especialization of <code>Multi
 <code>Monomial.cpp</code> and <code>MultivarPolynomial.cpp</code> are axiliary classes used in <code>MultiDimArray.cpp</code>.
 The rest of the <code>cpp</code> files are clients of the <code>MultiDimArray</code> class. 
 
+This software is distributed under the terms of the MIT License.
